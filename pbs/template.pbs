@@ -16,8 +16,9 @@ ARGS=""
 PRM=""
 BASE_FOLDER="output"
 RUN_FOLDER="run"
-PI_DOMUS_DIR="/home/mbarde/git/NeSSUs/_modules/pi-DoMUS"
 NESSUS_DIR="/home/mbarde/git/NeSSUs"
+PI_DOMUS_DIR=${NESSUS_DIR}"/_modules/pi-DoMUS"
+BASIL_DIR=${NESSUS_DIR}"/_modules/BASiL"
 
 # Exec:
 FLUID_DYNAMICS=${PI_DOMUS_DIR}/build/fluid-dynamics
@@ -26,16 +27,10 @@ TURBULENCE=${PI_DOMUS_DIR}/build/turbulence
 # Module:
 ################################################################################
 source /home/mbarde/opt/module.conf
+source $BASIL_DIR/dir.sh
 
 # Functions:
 ################################################################################
-function get_next_dir {
-  num=`ls -d ${1}* | sed "s#${1}_##" | sort -n | tail -1`
-  let num+=0 # to initialize the value
-  echo ${num}
-}
-export -f get_next_dir
-
 function mkdir_if_not_exist {
   if [ ! -d $1 ]; then
     mkdir $1
