@@ -1,8 +1,8 @@
 #!/bin/bash
 
-#PBS -N template
+#PBS -N flow_past_a_cylinder_2D_02
 #PBS -l walltime=12:00:00
-#PBS -l nodes=10:ppn=20
+#PBS -l nodes=8:ppn=20
 #PBS -q regular
 #PBS -M mbarde@sissa.it
 #PBS -m abe
@@ -12,7 +12,7 @@ set -e
 # Configuration:
 ################################################################################
 NESSUS_DIR="/home/mbarde/git/NeSSUs"
-NP=160
+NP=128
 ARGS="--dim=2"
 PRM="--prm=${NESSUS_DIR}/prm/navier_stokes/flow_past_a_cylinder_2D_02.prm"
 BASE_FOLDER="output"
@@ -43,7 +43,9 @@ export -f mkdir_if_not_exist
 # Compute:
 ################################################################################
 
-NEXT_DIR=`${GET_NEXT_DIR} -F${BASE_FOLDER} -f${RUN_FOLDER}`
+cd ${NESSUS_DIR}
+
+NEXT_DIR=`${GET_NEXT_DIR} -F ${BASE_FOLDER} -f ${RUN_FOLDER}`
 mkdir ${NEXT_DIR}
 cd ${NEXT_DIR}
 

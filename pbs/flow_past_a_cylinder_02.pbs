@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#PBS -N template
+#PBS -N flow_past_a_cylinder_2D_02
 #PBS -l walltime=12:00:00
 #PBS -l nodes=8:ppn=20
 #PBS -q regular
@@ -43,7 +43,9 @@ export -f mkdir_if_not_exist
 # Compute:
 ################################################################################
 
-NEXT_DIR=`${GET_NEXT_DIR} -F${BASE_FOLDER} -f${RUN_FOLDER}`
+cd ${NESSUS_DIR}
+
+NEXT_DIR=`${GET_NEXT_DIR} -F ${BASE_FOLDER} -f ${RUN_FOLDER}`
 mkdir ${NEXT_DIR}
 cd ${NEXT_DIR}
 
