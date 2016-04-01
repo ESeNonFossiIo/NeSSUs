@@ -3,4 +3,4 @@
 	url = https://github.com/mathLab/pi-DoMUS.git
 [submodule "_modules/BASiL"]
 	path = _modules/BASiL
-	url = git@github.com:ESeNonFossiIo/BASiL.git
+	url = https://github.com/ESeNonFossiIo/BASiL.git
