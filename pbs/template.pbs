@@ -31,6 +31,7 @@ source /home/mbarde/opt/module.conf
 ################################################################################
 function get_next_dir {
   num=`ls -d ${1}* | sed "s#${1}_##" | sort -n | tail -1`
+  let num+=0 # to initialize the value
   echo ${num}
 }
 export -f get_next_dir
