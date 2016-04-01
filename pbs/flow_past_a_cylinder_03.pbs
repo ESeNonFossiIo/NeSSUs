@@ -49,7 +49,7 @@ NEXT_DIR=`${GET_NEXT_DIR} -F ${BASE_FOLDER} -f ${RUN_FOLDER}`
 mkdir ${NEXT_DIR}
 cd ${NEXT_DIR}
 
-mpirun -npernode ${NP} ${FLUID_DYNAMICS} ${ARGS} ${PRM} &> output.txt
+mpirun -npernode 16 ${FLUID_DYNAMICS} ${ARGS} ${PRM} &> output.txt
 
 mkdir images
 mv *vtu images
