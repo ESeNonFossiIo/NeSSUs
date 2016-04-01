@@ -85,7 +85,7 @@ end
 subsection Domain
   set Grid to generate           = file
   set Input grid file name       = \
-      ../utilities/grids/rectangle_with_circular_hole.ucd
+      ./../../grids/rectangle_with_circular_hole.ucd
   set Colorize                   = true
   set Manifold descriptors       = 5=HyperBallBoundary
   set Optional Point<spacedim> 1 = 0,0

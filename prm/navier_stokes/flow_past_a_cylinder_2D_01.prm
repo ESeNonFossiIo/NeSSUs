@@ -95,7 +95,7 @@ end
 subsection Domain
   set Grid to generate           = file
   set Input grid file name       = \
-      ../utilities/grids/2D/rectangle_with_circular_hole.inp
+      ./../../grids/2D/rectangle_with_circular_hole.inp
   set Colorize                   = true
   set Manifold descriptors       = 4=HyperBallBoundary
   set Optional Point<spacedim> 1 = 2,2

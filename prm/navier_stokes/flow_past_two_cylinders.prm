@@ -124,7 +124,7 @@ subsection Domain
   set Copy material to manifold ids = false
   set Create default manifolds      = true
   set Grid to generate              = file
-  set Input grid file name          = ../utilities/grids/rectangle_with_two_circular_holes.ucd
+  set Input grid file name          = ./../../grids/rectangle_with_two_circular_holes.ucd
   set Manifold descriptors          = 
   set Mesh smoothing alogrithm      = none
   set Optional Point<spacedim> 1    = 0,0
