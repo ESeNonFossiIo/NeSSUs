@@ -17,17 +17,17 @@ source ${SOURCE_MODULE_PATH}
 
 # Configuration:
 ################################################################################
-ARGS="--dim=2"
-PRM="--prm=${NESSUS_DIR}/prm/navier_stokes/flow_past_a_cylinder_2D_00.prm"
+ARGS="--dim=__DIM__"
+PRM="--prm=${NESSUS_DIR}/prm/navier_stokes/__PRM__"
 
 # Parameters
 ################################################################################
 # viscosity:
-nu=0.1
+nu="__NU__"
 # number of refinemens:
-ref=7
+ref="__REF__"
 # stepper (euler|ida):
-stepper=euler
+stepper="__STEPPER__"
 
 # Compute:
 ################################################################################
