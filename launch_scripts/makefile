@@ -1,4 +1,5 @@
 .Phony: clean
 
 clean:
-	rm -rf *~ *.e* *.o*
+	echo "---> removing *~ *.e* *.o* _tmp_* files"
+	@rm -rf *~ *.e* *.o*
