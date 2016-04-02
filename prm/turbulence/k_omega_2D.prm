@@ -33,7 +33,7 @@ subsection k-omega
   set Non linear term                      = linear
 
   # Parameters:
-  set nu [Pa s]                            = 1e-5
+  set nu [Pa s]                            = _NU_
   set rho [kg m^3]                         = 1.0
 
   set alpha                                = 0.5555555556
@@ -125,14 +125,14 @@ end
 
 subsection piDoMUS
   set Use direct solver if available                 = true
-  set Initial global refinement                      = 7
+  set Initial global refinement                      = _REF_
   set Jacobian solver tolerance                      = 1e-6
 
   set Max iterations                                 = 20
   set Enable finer preconditioner                    = true
   set Max iterations finer prec.                     = 20
     
-  set Time stepper                                   = euler
+  set Time stepper                                   = _STEPPER_
 
   set Adaptive refinement                            = true
   set Refine mesh during transient                   = true

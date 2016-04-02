@@ -48,13 +48,13 @@ subsection Navier Stokes Interface
   set Invert Ap using inverse_operator     = true
   set Invert Mp using inverse_operator     = true
   
-  set nu [Pa s]                            = 0.001
+  set nu [Pa s]                            = _NU_
   set rho [kg m^3]                         = 1.0
-  set div-grad stabilization parameter     = 0.099
+  set div-grad stabilization parameter     = 0.1
 end
 
 subsection piDoMUS
-  set Initial global refinement                      = 2
+  set Initial global refinement                      = _REF_
   set Adaptive refinement                            = true
   
   set Max iterations                                 = 30
@@ -69,7 +69,7 @@ subsection piDoMUS
   set Refine mesh during transient                   = true
   set Show timer                                     = true
   set Threshold for solver's restart                 = 1e-2
-  set Time stepper                                   = euler
+  set Time stepper                                   = _STEPPER_
   set Use direct solver if available                 = true
 end
 

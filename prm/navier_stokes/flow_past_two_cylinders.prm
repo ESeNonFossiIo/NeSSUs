@@ -10,7 +10,7 @@
 
 subsection piDoMUS
   set Adaptive refinement                            = true
-  set Initial global refinement                      = 0
+  set Initial global refinement                      = _REF_
   set Jacobian solver tolerance                      = 1e-6
   set Maximum number of time steps                   = 10000
   set Number of cycles                               = 1
@@ -19,7 +19,7 @@ subsection piDoMUS
   set Refine mesh during transient                   = true
   set Show timer                                     = true
   set Threshold for solver's restart                 = 1e-1
-  set Time stepper                                   = euler
+  set Time stepper                                   = _STEPPER_
   set Use direct solver if available                 = true
 end
 
@@ -59,8 +59,8 @@ subsection Navier Stokes Interface
   set Non linear term                      = linear
   set Preconditioner                       = default
   
-  set div-grad stabilization parameter     = 0.0
-  set nu [Pa s]                            = 0.1
+  set div-grad stabilization parameter     = 0.1
+  set nu [Pa s]                            = _NU_
   set p-q stabilization parameter          = 0.0
   set rho [kg m^3]                         = 1.0
 end

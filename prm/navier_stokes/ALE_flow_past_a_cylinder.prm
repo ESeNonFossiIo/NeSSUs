@@ -5,13 +5,13 @@
 # DEAL_II_GIT_SHORTREV= 6bdde74
 
 subsection piDoMUS
-  set Initial global refinement                      = 3
+  set Initial global refinement                      = _REF_
   set Jacobian solver tolerance                      = 1e-6
   set Maximum number of time steps                   = 10000
   set Number of cycles                               = 1
   set Overwrite Newton's iterations                  = false
   set Print some useful informations about processes = false
-  set Time stepper                                   = euler
+  set Time stepper                                   = _STEPPER_
   set Use direct solver if available                 = true
   
   set Adaptive refinement                            = false
@@ -36,7 +36,7 @@ end
 
 subsection ALE Navier Stokes Interface
   # Physical parameters:
-  set nu [Pa s]                        = .1
+  set nu [Pa s]                        = _NU_
   set rho [Kg m^-d]                    = 1.0
   set c                                = 0.0
   set k                                = 0.0

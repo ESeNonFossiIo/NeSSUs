@@ -22,8 +22,8 @@ subsection Navier Stokes Interface
   set Non linear term                      = linear
   set Preconditioner                       = default
 
-  set div-grad stabilization parameter     = 5.0
-  set nu [Pa s]                            = 0.01
+  set div-grad stabilization parameter     = 0.1
+  set nu [Pa s]                            = _NU_
   set p-q stabilization parameter          = 0.0
 
   set rho [kg m^3]                         = 1.0
@@ -31,7 +31,7 @@ end
 
 subsection piDoMUS
   set Adaptive refinement                            = false
-  set Initial global refinement                      = 7
+  set Initial global refinement                      = _REF_
 
   set Jacobian solver tolerance                      = 1e-8
 
@@ -41,7 +41,7 @@ subsection piDoMUS
   set Overwrite Newton's iterations                  = false
   set Print some useful informations about processes = true
 
-  set Time stepper                                   = euler
+  set Time stepper                                   = _STEPPER_
 
   set Show timer                                     = true
   set Use direct solver if available                 = true

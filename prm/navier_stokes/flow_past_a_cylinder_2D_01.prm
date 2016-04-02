@@ -22,7 +22,7 @@ subsection Navier Stokes Interface
   
   set div-grad stabilization parameter     = 0.1
   
-  set nu [Pa s]                            = 1e-3
+  set nu [Pa s]                            = _NU_
   set rho [kg m^3]                         = 1.0
 
   set Compute sigma on the obstacle        = true
@@ -37,14 +37,14 @@ subsection piDoMUS
   set Max iterations                                 = 0
   set Max iterations finer prec.                     = 0
 
-  set Initial global refinement                      = 4
+  set Initial global refinement                      = _REF_
   
   set Maximum number of time steps                   = 10000
   set Number of cycles                               = 1
   set Overwrite Newton's iterations                  = false
   set Print some useful informations about processes = true
   
-  set Time stepper                                   = euler
+  set Time stepper                                   = _STEPPER_
   
   set Show timer                                     = true
   set Use direct solver if available                 = true
@@ -103,23 +103,41 @@ subsection Domain
   set Output grid file name      = output.vtk
 end
 
+subsection IDA Solver Parameters
+  set Final time                                    = 30
+  set Initial time                                  = 0
+  
+  set Absolute error tolerance                      = 1e-6
+  set Relative error tolerance                      = 1e-4
+  
+  set Initial step size                             = 1e-4
+  set Min step size                                 = 5e-5
+  set Seconds between each output                   = 1e-1
+  
+  set Ignore algebraic terms for error computations = false
+  set Initial condition Newton max iterations       = 5
+  set Initial condition Newton parameter            = 0.33
+  set Initial condition type                        = use_y_dot
+  set Initial condition type after restart          = use_y_dot
+  set Maximum number of nonlinear iterations        = 10
+  set Maximum order of BDF                          = 5
+  set Show output of time steps                     = true
+  set Use local tolerances                          = false
+end
+
 subsection IMEX Parameters
   set Absolute error tolerance                     = 1.0e-6
   set Relative error tolerance                     = 1.0e-4
-  
   set Final time                                   = 30
   set Initial time                                 = 0
-  
-  set Intervals between outputs                    = 2000
-  
+  set Intervals between outputs                    = 10
   set Maximum number of inner nonlinear iterations = 3
   set Maximum number of outer nonlinear iterations = 20
-  
-  set Method used                                  = LS_backtracking #fixed_alpha # 
+  set Method used                                  = LS_backtracking
   set Newton relaxation parameter                  = 1
   set Number of elements in backtracking sequence  = 5
-
-  set Step size                                    = 1.0e-4
+  set Print useful informations                    = true
+  set Step size                                    = 1.0e-2
   set Update continuously Jacobian                 = true
 end
 
