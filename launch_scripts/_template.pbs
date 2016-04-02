@@ -18,7 +18,7 @@ source ${SOURCE_MODULE_PATH}
 # Configuration:
 ################################################################################
 ARGS="--dim=__DIM__"
-PRM="--prm=${NESSUS_DIR}/prm/navier_stokes/__PRM__"
+PRM="${NESSUS_DIR}/prm/navier_stokes/__PRM__"
 
 # Parameters
 ################################################################################
@@ -49,3 +49,5 @@ mpirun -npernode 16 ${FLUID_DYNAMICS} ${ARGS} \
 
 mkdir ${IMAGES_DIR}
 mv *vtu ${IMAGES_DIR}
+
+touch "END"
