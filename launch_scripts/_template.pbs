@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#PBS -N flow_past_a_cylinder_2D_02
+#PBS -N __PRM__
 #PBS -l walltime=12:00:00
 #PBS -l nodes=8:ppn=20
 #PBS -q regular

@@ -14,11 +14,10 @@ ref=7
 stepper=euler
 
 
-
-NAME_JOBS="${prm}_nu=${nu}_ref=${ref}_stepper=${stepper}"
-cp "_template.pbs" ${NAME_JOBS}
-${FIND_AND_REPLACE} "__DIM__" ${dim} ${NAME_JOBS}
-${FIND_AND_REPLACE} "__PRM__" ${prm} ${NAME_JOBS}
-${FIND_AND_REPLACE} "__NU__" ${nu} ${NAME_JOBS}
-${FIND_AND_REPLACE} "__REF__" ${ref} ${NAME_JOBS}
-${FIND_AND_REPLACE} "__STEPPER__" ${stepper} ${NAME_JOBS}
+NAME_JOB="_tmp_${prm}_nu=${nu}_ref=${ref}_stepper=${stepper}"
+cp "_template.pbs" ${NAME_JOB}
+${FIND_AND_REPLACE} "__DIM__" ${dim} ${NAME_JOB}
+${FIND_AND_REPLACE} "__PRM__" ${prm} ${NAME_JOB}
+${FIND_AND_REPLACE} "__NU__" ${nu} ${NAME_JOB}
+${FIND_AND_REPLACE} "__REF__" ${ref} ${NAME_JOB}
+${FIND_AND_REPLACE} "__STEPPER__" ${stepper} ${NAME_JOB}
