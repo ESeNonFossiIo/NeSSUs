@@ -42,7 +42,7 @@ ${FIND_AND_REPLACE} "_REF_" ${ref} ${PRM_USED}
 ${FIND_AND_REPLACE} "_STEPPER_" ${stepper} ${PRM_USED}
 ${FIND_AND_REPLACE} "_UTILS_PATH_" "${NESSUS_DIR}/_utils" ${PRM_USED}
 
-mpirun -npernode 16 ${FLUID_DYNAMICS} ${ARGS} \
+mpirun -npernode 16 ${EXECUTABLE_FOLDER}/${PDE} ${ARGS} \
   "--prm=${PRM_USED}" | tee ${OUTPUT_LOG_FILE}
 
 CHECK=`ls *vtu 2>/dev/null`
