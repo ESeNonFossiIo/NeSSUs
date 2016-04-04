@@ -15,30 +15,28 @@ subsection Navier Stokes Interface
   set Finite element space                 = FESystem[FE_Q(2)^d-FE_Q(1)]
   set Linearize using time                 = true
   
-  set Preconditioner                       = cah-cha
+  set Preconditioner                       = default
   
   set Invert Mp using inverse_operator     = true
   set Invert Ap using inverse_operator     = true
   
   set div-grad stabilization parameter     = 0.1
-  
   set nu [Pa s]                            = _NU_
+  
   set rho [kg m^3]                         = 1.0
 
   set Compute sigma on the obstacle        = true
 end
 
 subsection piDoMUS
-  set Adaptive refinement                            = true
-  set Refine mesh during transient                   = true
-  set Threshold for solver's restart                 = 5.0e-1
+  set Adaptive refinement                            = false
+  set Refine mesh during transient                   = false
 
   set Enable finer preconditioner                    = true
   set Max iterations                                 = 0
   set Max iterations finer prec.                     = 0
-
-  set Initial global refinement                      = _REF_
   
+  set Initial global refinement                      = _REF_
   set Maximum number of time steps                   = 10000
   set Number of cycles                               = 1
   set Overwrite Newton's iterations                  = false
@@ -80,8 +78,8 @@ end
 
 subsection Dirichlet boundary conditions
 
-  set IDs and component masks = 1 = u % 2= u % 4=u
-  set IDs and expressions     = 1 = 0;0;0 % 2 = k * (4-y)*y * ( t<tau ? (1/tau) *t:1 );0;0 % 4=0;0;0 
+  set IDs and component masks = 1= u % 5=u % 3=u % 4=u
+  set IDs and expressions     = 1= k * ( 1-y^2 ) * ( t<tau ? (1/tau) *t:1 );0;0 % 3=0;0;0 % 4=0;0;0 % 5=0;0;0
   set Known component names   = u,u,p
   set Used constants          = k=1, tau=0.5
 end
@@ -95,11 +93,11 @@ end
 subsection Domain
   set Grid to generate           = file
   set Input grid file name       = \
-      ./../../grids/2D/rectangle_with_circular_hole.inp
+      _UTILS_PATH_/grids/2D/rectangle_with_circular_hole.ucd
   set Colorize                   = true
-  set Manifold descriptors       = 4=HyperBallBoundary
-  set Optional Point<spacedim> 1 = 2,2
-  set Optional double 1          = .5
+  set Manifold descriptors       = 5=HyperBallBoundary
+  set Optional Point<spacedim> 1 = 0,0
+  set Optional double 1          = .2
   set Output grid file name      = output.vtk
 end
 
@@ -153,7 +151,7 @@ end
 
 subsection Refinement
   set Bottom fraction                        = 0.100000
-  set Maximum number of cells (if available) = 150000
+  set Maximum number of cells (if available) = 0
   set Order (optimize)                       = 2
   set Refinement strategy                    = fraction
   set Top fraction                           = 0.300000

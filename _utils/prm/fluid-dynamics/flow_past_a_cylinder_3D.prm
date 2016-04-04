@@ -84,7 +84,7 @@ end
 
 subsection Domain
   set Grid to generate           = file
-  set Input grid file name       = ./../../grids/3D/hyper_rectangle_with_cylinder_hole.ucd
+  set Input grid file name       = _UTILS_PATH_/grids/3D/hyper_rectangle_with_cylinder_hole.ucd
   # set Colorize                   = true
   # set Manifold descriptors       = 5=SphericalManifold
   # set Manifold descriptors       = 4=HyperBallBoundary

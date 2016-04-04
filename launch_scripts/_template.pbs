@@ -15,39 +15,41 @@ cd ${PBS_O_WORKDIR}
 source "./_export.cfg"
 source ${SOURCE_MODULE_PATH}
 
-# Configuration:
+# Configuration/Parameters:
 ################################################################################
 ARGS="--dim=__DIM__"
-PRM="${NESSUS_DIR}/prm/navier_stokes/__PRM__"
-
-# Parameters
-################################################################################
-# viscosity:
+PDE="__PDE__"
+PRM_FILE="__PRM__"
 nu="__NU__"
-# number of refinemens:
 ref="__REF__"
-# stepper (euler|ida):
 stepper="__STEPPER__"
 
 # Compute:
 ################################################################################
 
+BASE_FOLDER="__simulations/${PDE}/prm=${PRM_FILE}/nu=${nu}/ref=${ref}/stepper=${stepper}/"
+
 cd ${NESSUS_DIR}
 NEXT_DIR=`${GET_NEXT_DIR} -F ${BASE_FOLDER} -f ${RUN_FOLDER}`
-mkdir ${NEXT_DIR}
+mkdir -p ${NEXT_DIR}
 cd ${NEXT_DIR}
 
 PRM_USED="parameters.prm"
-cp ${PRM} ${PRM_USED}
+cp "${NESSUS_DIR}/_utils/prm/${PDE}/${PRM_FILE}" ${PRM_USED}
 
 ${FIND_AND_REPLACE} "_NU_" ${nu} ${PRM_USED}
 ${FIND_AND_REPLACE} "_REF_" ${ref} ${PRM_USED}
 ${FIND_AND_REPLACE} "_STEPPER_" ${stepper} ${PRM_USED}
+${FIND_AND_REPLACE} "_UTILS_PATH_" "${NESSUS_DIR}/_utils" ${PRM_USED}
 
 mpirun -npernode 16 ${FLUID_DYNAMICS} ${ARGS} \
   "--prm=${PRM_USED}" | tee ${OUTPUT_LOG_FILE}
 
-mkdir ${IMAGES_DIR}
-mv *vtu ${IMAGES_DIR}
+CHECK=`ls *vtu 2>/dev/null`
+if [[ ! -z ${CHECK} ]] 
+then
+  mkdir ${IMAGES_DIR}
+  mv *vtu ${IMAGES_DIR} 
+fi
 
-touch "END"
+touch "__JOB_COMPLETED__"
