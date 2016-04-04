@@ -27,4 +27,4 @@ ${FIND_AND_REPLACE} "__PRM__" ${prm} ${NAME_JOB}
 ${FIND_AND_REPLACE} "__NU__" ${nu} ${NAME_JOB}
 ${FIND_AND_REPLACE} "__REF__" ${ref} ${NAME_JOB}
 ${FIND_AND_REPLACE} "__STEPPER__" ${stepper} ${NAME_JOB}
-${FIND_AND_REPLACE} "__DIV-GRAD__" ${div_grad} ${NAME_JOB}
+${FIND_AND_REPLACE} "__DIV_GRAD__" ${div_grad} ${NAME_JOB}

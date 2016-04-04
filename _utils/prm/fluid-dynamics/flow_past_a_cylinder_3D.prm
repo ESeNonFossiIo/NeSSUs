@@ -50,7 +50,7 @@ subsection Navier Stokes Interface
   
   set nu [Pa s]                            = _NU_
   set rho [kg m^3]                         = 1.0
-  set div-grad stabilization parameter     = _DIV-GRAD_
+  set div-grad stabilization parameter     = _DIV_GRAD_
 end
 
 subsection piDoMUS
