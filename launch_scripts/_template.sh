@@ -20,7 +20,7 @@ ref=7
 # stepper (euler|ida):
 stepper=euler
 # div-grad stabilization
-div-grad=1.0
+div_grad=1.0
 
 # Compute:
 ################################################################################
@@ -38,7 +38,7 @@ cp "${NESSUS_DIR}/_utils/prm/${PDE}/${PRM_FILE}" ${PRM_USED}
 ${FIND_AND_REPLACE} "_NU_" ${nu} ${PRM_USED}
 ${FIND_AND_REPLACE} "_REF_" ${ref} ${PRM_USED}
 ${FIND_AND_REPLACE} "_STEPPER_" ${stepper} ${PRM_USED}
-${FIND_AND_REPLACE} "_DIV-GRAD_" ${div-grad} ${PRM_USED}
+${FIND_AND_REPLACE} "_DIV-GRAD_" ${div_grad} ${PRM_USED}
 ${FIND_AND_REPLACE} "_UTILS_PATH_" "${NESSUS_DIR}/_utils" ${PRM_USED}
 
 mpirun -np 3 ${EXECUTABLE_FOLDER}/${PDE} ${ARGS} \
