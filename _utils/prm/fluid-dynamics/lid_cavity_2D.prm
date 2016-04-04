@@ -22,7 +22,7 @@ subsection Navier Stokes Interface
   set Non linear term                      = linear
   set Preconditioner                       = default
 
-  set div-grad stabilization parameter     = 1.0
+  set div-grad stabilization parameter     = _DIV-GRAD_
   set nu [Pa s]                            = _NU_
   set p-q stabilization parameter          = 0.0
 

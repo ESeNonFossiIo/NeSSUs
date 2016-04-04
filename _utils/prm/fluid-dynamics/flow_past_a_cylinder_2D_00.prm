@@ -20,7 +20,7 @@ subsection Navier Stokes Interface
   set Invert Mp using inverse_operator     = true
   set Invert Ap using inverse_operator     = true
   
-  set div-grad stabilization parameter     = 0.1
+  set div-grad stabilization parameter     = _DIV-GRAD_
   set nu [Pa s]                            = _NU_
   
   set rho [kg m^3]                         = 1.0

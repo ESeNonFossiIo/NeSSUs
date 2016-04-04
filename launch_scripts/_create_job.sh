@@ -14,6 +14,8 @@ nu=0.1
 ref=7
 # stepper (euler|ida):
 stepper=euler
+# div-grad stabilization
+div-grad=1.0
 
 
 NAME_JOB="_tmp_${prm}_nu=${nu}_ref=${ref}_stepper=${stepper}"
@@ -25,3 +27,4 @@ ${FIND_AND_REPLACE} "__PRM__" ${prm} ${NAME_JOB}
 ${FIND_AND_REPLACE} "__NU__" ${nu} ${NAME_JOB}
 ${FIND_AND_REPLACE} "__REF__" ${ref} ${NAME_JOB}
 ${FIND_AND_REPLACE} "__STEPPER__" ${stepper} ${NAME_JOB}
+${FIND_AND_REPLACE} "__DIV-GRAD__" ${div-grad} ${NAME_JOB}
