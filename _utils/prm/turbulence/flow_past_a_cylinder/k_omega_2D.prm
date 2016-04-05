@@ -1,8 +1,6 @@
-# Parameter file generated with 
-# D2K_GIT_BRANCH=       master
-# D2K_GIT_SHORTREV=     3a08110
-# DEAL_II_GIT_BRANCH=   opencascade
-# DEAL_II_GIT_SHORTREV= f14c48e
+################################################################################
+#   This parameter files solves for a flow past a cylinder for a turbulent flow 	
+################################################################################
 
 subsection Amg for A
   set Aggregation threshold              = 10

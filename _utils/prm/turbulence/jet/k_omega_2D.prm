@@ -1,9 +1,7 @@
-# Parameter file generated with 
-# D2K_GIT_BRANCH=       master
-# D2K_GIT_SHORTREV=     3a08110
-# DEAL_II_GIT_BRANCH=   opencascade
-# DEAL_II_GIT_SHORTREV= f14c48e
-
+################################################################################
+#   This parameter files solves for a jet for a turbulent flow 	
+################################################################################
+#
 subsection Amg for A
   set Aggregation threshold              = 10
   set Coarse type                        = Amesos-KLU
@@ -86,7 +84,7 @@ subsection Dirichlet boundary conditions
                                 2 = 0 ; (a-x)*(x+a) > 0 ? (a-x)*(x+a) * ( t < k ? (t/k) : 1) : 0 ;  0 ; 0 ; 0 # % \
                               #  3 = 0 ; 0 ; 0 ; 0 ; 0
   set Known component names   = u,u,p,w,k
-  set Used constants          = k=1, a=0.5
+  set Used constants          = k=3, a=0.01
 end
 
 # subsection Dirichlet boundary conditions
@@ -123,7 +121,7 @@ subsection IMEX Parameters
   set Number of elements in backtracking sequence  = 5
   
   set Print useful informations                    = true
-  set Step size                                    = 1e-3
+  set Step size                                    = 1e-4
   
   set Update continuously Jacobian                 = true
 end
@@ -151,7 +149,7 @@ subsection piDoMUS
   set Enable finer preconditioner                    = true
   set Max iterations finer prec.                     = 20
     
-  set Time stepper                                   = euler
+  set Time stepper                                   = ida
 
   set Adaptive refinement                            = true
   set Refine mesh during transient                   = true
