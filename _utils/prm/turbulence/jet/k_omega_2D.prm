@@ -4,26 +4,60 @@
 # DEAL_II_GIT_BRANCH=   opencascade
 # DEAL_II_GIT_SHORTREV= f14c48e
 
-subsection k-omega
-  set A - Amg Aggregation Threshold        = 0.2
-  set A - Amg Elliptic                     = false
-  set A - Amg High Order Elements          = true
-  set A - Amg Smoother Sweeps              = 2
-  
-  set Ap - Amg Aggregation Threshold       = 0.2
-  set Ap - Amg Elliptic                    = true
-  set Ap - Amg Smoother Sweeps             = 2
+subsection Amg for A
+  set Aggregation threshold              = 10
+  set Coarse type                        = Amesos-KLU
+  set Elliptic                           = true
+  set High Order Elements                = false
+  set Number of cycles                   = 1
+  set Output details                     = false
+  set Smoother overlap                   = 0
+  set Smoother sweeps                    = 2
+  set Smoother type                      = Chebyshev
+  set Variable related to constant modes = none
+  set w-cycle                            = false
+end
+subsection Amg for Ap
+  set Aggregation threshold              = 0.100
+  set Coarse type                        = Amesos-KLU
+  set Elliptic                           = true
+  set High Order Elements                = false
+  set Number of cycles                   = 1
+  set Output details                     = false
+  set Smoother overlap                   = 0
+  set Smoother sweeps                    = 2
+  set Smoother type                      = Chebyshev
+  set Variable related to constant modes = none
+  set w-cycle                            = false
+end
+subsection Amg for k
+  set Aggregation threshold              = 1.0
+  set Coarse type                        = Amesos-KLU
+  set Elliptic                           = true
+  set High Order Elements                = false
+  set Number of cycles                   = 1
+  set Output details                     = false
+  set Smoother overlap                   = 0
+  set Smoother sweeps                    = 2
+  set Smoother type                      = Chebyshev
+  set Variable related to constant modes = none
+  set w-cycle                            = false
+end
+subsection Amg for omega
+  set Aggregation threshold              = 1.0
+  set Coarse type                        = Amesos-KLU
+  set Elliptic                           = true
+  set High Order Elements                = false
+  set Number of cycles                   = 1
+  set Output details                     = false
+  set Smoother overlap                   = 0
+  set Smoother sweeps                    = 2
+  set Smoother type                      = Chebyshev
+  set Variable related to constant modes = none
+  set w-cycle                            = false
+end
 
-  set k - Amg Aggregation Threshold        = 0.2
-  set k - Amg Elliptic                     = false
-  set k - Amg High Order Elements          = false
-  set k - Amg Smoother Sweeps              = 2
-
-  set w - Amg Aggregation Threshold        = 0.2
-  set w - Amg Elliptic                     = false
-  set w - Amg High Order Elements          = false
-  set w - Amg Smoother Sweeps              = 2
-  
+subsection k-omega  
   set Block of differential components     = 1,0,1,1
   set Blocking of the finite element       = u,u,p,k,w
   set CG Solver tolerance                  = 1e-8
@@ -33,7 +67,7 @@ subsection k-omega
   set Non linear term                      = linear
 
   # Parameters:
-  set nu [Pa s]                            = _NU_
+  set nu [Pa s]                            = 1e-5
   set rho [kg m^3]                         = 1.0
 
   set alpha                                = 0.5555555556
@@ -47,12 +81,12 @@ end
 
 subsection Dirichlet boundary conditions
   set IDs and component masks = 0 = u % 1 = u  % 2 = u  # % 3 = p
-  set IDs and expressions     = 0 = 0 ; 0 ; 0 ; 0 ; 0 % \
-                                1 = 0 ; 0 ; 0 ; 0 ; 0 % \
+  set IDs and expressions     = 0 = 0 ; 0 ; 0 ; 1e-10 ; 1e-10 % \
+                                1 = 0 ; 0 ; 0 ; 1e-10 ; 1e-10 % \
                                 2 = 0 ; (a-x)*(x+a) > 0 ? (a-x)*(x+a) * ( t < k ? (t/k) : 1) : 0 ;  0 ; 0 ; 0 # % \
                               #  3 = 0 ; 0 ; 0 ; 0 ; 0
   set Known component names   = u,u,p,w,k
-  set Used constants          = k=.75, a=0.5
+  set Used constants          = k=1, a=0.5
 end
 
 # subsection Dirichlet boundary conditions
@@ -65,31 +99,16 @@ end
 
 subsection Domain
   set Colorize                      = true
-  set Copy boundary to manifold ids = false
-  set Copy material to manifold ids = false
-  set Create default manifolds      = true
   set Grid to generate              = rectangle
-  set Input grid file name          = 
-  set Manifold descriptors          = 
-  set Mesh smoothing alogrithm      = none
-#  set Optional Point<spacedim> 1    = 0,0
-#  set Optional Point<spacedim> 2    = 1,1  
   set Optional Point<spacedim> 1    = -.5,0
-  set Optional Point<spacedim> 2    = .5,1
-  set Optional double 1             = 1.0
-  set Optional double 2             = 0.5
-  set Optional double 3             = 1.5
-  set Optional int 1                = 1
-  set Optional int 2                = 2
-  set Optional vector of dim int    = 1,1
-  set Output grid file name         = 
+  set Optional Point<spacedim> 2    = .5,10
 end
 
 subsection IMEX Parameters
   set Absolute error tolerance                     = 1e-8
   set Relative error tolerance                     = 1e-6
   
-  set Final time                                   = 1
+  set Final time                                   = 30
   set Initial time                                 = 0
   
   set Intervals between outputs                    = 1
@@ -99,8 +118,8 @@ subsection IMEX Parameters
   
   set Newton relaxation parameter                  = 1
 
-  # set Method used                                  = LS_backtracking
-  set Method used                                  = fixed_alpha
+  set Method used                                  = LS_backtracking
+  #set Method used                                  = fixed_alpha
   set Number of elements in backtracking sequence  = 5
   
   set Print useful informations                    = true
@@ -111,7 +130,7 @@ end
 
 subsection Initial solution
   set Function constants  = 
-  set Function expression = 0; 0; 0; 1; 1
+  set Function expression = 0; 0; 0; 750; 0.075 
   set Variable names      = x,y,t
 end
 
@@ -125,14 +144,14 @@ end
 
 subsection piDoMUS
   set Use direct solver if available                 = true
-  set Initial global refinement                      = _REF_
+  set Initial global refinement                      = 7
   set Jacobian solver tolerance                      = 1e-6
 
   set Max iterations                                 = 20
   set Enable finer preconditioner                    = true
   set Max iterations finer prec.                     = 20
     
-  set Time stepper                                   = _STEPPER_
+  set Time stepper                                   = euler
 
   set Adaptive refinement                            = true
   set Refine mesh during transient                   = true

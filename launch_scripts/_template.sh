@@ -10,13 +10,13 @@ source "./_export.cfg"
 ################################################################################
 ARGS="--dim=2"
 # PDE (fluid-dynamics|turbulence)
-PDE="fluid-dynamics"
-PRM_FILE="lid_cavity_2D.prm"
+PDE="turbulence"
+PRM_FILE="jet/k_omega_2D.prm"
 # PRM_FILE="flow_past_a_cylinder_2D_00.prm"
 # viscosity:
-nu=0.1
+nu=1e-4
 # number of refinemens:
-ref=7
+ref=5
 # stepper (euler|ida):
 stepper=euler
 # div-grad stabilization
