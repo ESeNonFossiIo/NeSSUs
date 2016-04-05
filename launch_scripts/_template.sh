@@ -25,7 +25,7 @@ div_grad=1.0
 # Compute:
 ################################################################################
 
-BASE_FOLDER="__simulations/${PDE}/prm=${PRM_FILE}/nu=${nu}/ref=${ref}/stepper=${stepper}/"
+BASE_FOLDER="__simulations/${PDE}/${PRM_FILE}/${nu}/${ref}/${stepper}/"
 
 cd ${NESSUS_DIR}
 NEXT_DIR=`${GET_NEXT_DIR} -F ${BASE_FOLDER} -f ${RUN_FOLDER}`

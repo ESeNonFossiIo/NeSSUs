@@ -17,6 +17,10 @@ stepper=euler
 # div-grad stabilization
 div_grad=1.0
 
+init_time=30
+fin_time=0
+time_step=1e-3
+out_time=1e-1
 
 NAME_JOB="_tmp_${prm}_nu=${nu}_ref=${ref}_stepper=${stepper}"
 cp "_template.pbs" ${NAME_JOB}
