@@ -29,15 +29,15 @@ subsection Navier Stokes Interface
 end
 
 subsection piDoMUS
-set Adaptive refinement                            = _ADAPTATIVE_
-set Refine mesh during transient                   = _ADAPTATIVE_
+  set Adaptive refinement                            = _ADAPTATIVE_
+  set Refine mesh during transient                   = _ADAPTATIVE_
+  set Initial global refinement                      = _REF_
+  
   set Threshold for solver's restart                 = 5.0e-1
 
   set Enable finer preconditioner                    = true
   set Max iterations                                 = 0
   set Max iterations finer prec.                     = 0
-
-  set Initial global refinement                      = _REF_
   
   set Maximum number of time steps                   = 10000
   set Number of cycles                               = 1

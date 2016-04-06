@@ -121,7 +121,7 @@ subsection piDoMUS
   set Refine mesh during transient                   = _ADAPTATIVE_
 
   set Use direct solver if available                 = true
-  set Initial global refinement                      = 7
+  set Initial global refinement                      = _REF_
   set Jacobian solver tolerance                      = 1e-6
 
   set Max iterations                                 = 20
