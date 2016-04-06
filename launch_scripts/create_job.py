@@ -142,7 +142,7 @@ for s in simulations:
             if get_value(run, "_PBS_NAME_") != "__NULL__" :
               pbs = "\n#PBS -N " + get_value(run, "_PBS_NAME_")
             else:
-              pbs =  "\n#PBS -N " + prm_filename.replace(".prm", "")
+              pbs =  "\n#PBS -N " + get_value(run, "_PRM_").replace(".prm", "")
             if get_value(run, "_PBS_WALLTIME_") != "__NULL__" :
               pbs += "\n#PBS -l walltime=" + get_value(run, "_PBS_WALLTIME_")
             if get_value(run, "_PBS_NODES_") != "__NULL__" :
