@@ -64,11 +64,18 @@ pp.pprint(simulations)
 
 BASE_FOLDER="__simulations/${PDE}/${PRM_FILE}/${nu}/${ref}/${stepper}/"
 
-base_name=config.get("OUTPUT", "BASE_FOLDER")
 prm_filename=config.get("OUTPUT","PRM_FILENAME")
+base_name=config.get("OUTPUT", "BASE_FOLDER")
+run_folder=config.get("OUTPUT","RUN_FOLDER")
+images_dir=config.get("OUTPUT","IMAGES_DIR")
+output_log_file=config.get("OUTPUT","OUTPUT_LOG_FILE")
 
 NeSSUs_dir=config.get("PATHS","NESSUS_DIR")
 NeSSUs_dir=NeSSUs_dir.replace('@PWD',os.getcwd())
+utils_path=NeSSUs_dir+"/_utils/"
+
+executable_folder=config.get("PATHS","EXECUTABLE_FOLDER")
+executable_folder=executable_folder.replace('@PWD',os.getcwd())
 
 # cp "${NESSUS_DIR}/_utils/prm/${PDE}/${PRM_FILE}" ${PRM_USED}
 
@@ -79,6 +86,7 @@ def get_value(dictionary, value):
     return_value=""
   return return_value
 
+num=0
 for s in simulations:
   for run in simulations[s]:
     pde=get_value(run, "_PDE_")
@@ -107,19 +115,64 @@ for s in simulations:
     new_prm_file=folder
     new_prm_file+="/"+prm_filename
 
+    ext=get_value(run,"_TYPE_")
+    
+    job_file="_job_"
+    job_file+=str(num)
+    job_file+="_"+pde
+    job_file+="_"+prm_file
+    job_file+="."+ext
+
+    num+=1
 # with open('path/to/input/file') as infile, open('path/to/output/file', 'w') as outfile:
 #     for line in infile:
 #         for src, target in replacements.iteritems():
 #             line = line.replace(src, target)
 #         outfile.write(line)
-        
+
+# Write new prm file:
     with open(new_prm_file, "wt") as fout,\
          open(old_prm_file, "rt") as fin:
       for line in fin:
           for src, target in run.iteritems():
               line = line.replace(src, target)
-          fout.write(line)        
+          line = line.replace("_UTILS_PATH_",utils_path)
+          fout.write(line)
+
+# Write new job_file
+    with open(job_file, "wt") as fout,\
+         open("./_conf/_template."+ext, "rt") as fin:
+      for line in fin:
         
+          if get_value(run, "_PBS_NAME_") != "__NULL__" :
+            pbs = "\n#PBS -N " + get_value(run, "_PBS_NAME_")
+          else:
+            pbs =  "\n#PBS -N " + prm_filename.replace(".prm", "")
+          if get_value(run, "_PBS_WALLTIME_") != "__NULL__" :
+            pbs += "\n#PBS -l walltime=" + get_value(run, "_PBS_WALLTIME_")
+          if get_value(run, "_PBS_NODES_") != "__NULL__" :
+            pbs += "\n#PBS -l " + get_value(run, "_PBS_NODES_")
+          if get_value(run, "_PBS_QUEUE_") != "__NULL__" :
+            pbs += "\n#PBS -q " + get_value(run, "_PBS_QUEUE_") 
+          if get_value(run, "_PBS_MAIL_") != "__NULL__" :
+            pbs += "\n#PBS -M " + get_value(run, "_PBS_MAIL_")
+            pbs +=  "\n#PBS -m abe"
+          pbs+="\n"
+          
+          for src, target in run.iteritems():
+            if target != "__NULL__" :
+              line = line.replace(src, target)
+            else:
+              line = line.replace(src, " ")
+          line = line.replace("_EXECUTABLE_FOLDER_", executable_folder)
+          line = line.replace("_OUTPUT_LOG_FILE_", output_log_file)
+          line = line.replace("_IMAGES_DIR_", images_dir)
+          line = line.replace("_PBS_", pbs)
+          line = line.replace("_PRMNAME_", prm_filename)
+          line = line.replace("_SOURCE_MODULE_PATH_", images_dir)
+          line = line.replace("_WORK_DIR_", NeSSUs_dir+"/launch_scripts/"+folder)
+          fout.write(line)
+
     # print old_prm_file
     # print folder
     # print 
