@@ -76,8 +76,7 @@ utils_path=NeSSUs_dir+"/_utils/"
 
 executable_folder=config.get("PATHS","EXECUTABLE_FOLDER")
 executable_folder=executable_folder.replace('@PWD',os.getcwd())
-
-# cp "${NESSUS_DIR}/_utils/prm/${PDE}/${PRM_FILE}" ${PRM_USED}
+source_module_path=config.get("PATHS", "SOURCE_MODULE_PATH")
 
 def get_value(dictionary, value):
   try:
@@ -124,12 +123,7 @@ for s in simulations:
     job_file+="."+ext
 
     num+=1
-# with open('path/to/input/file') as infile, open('path/to/output/file', 'w') as outfile:
-#     for line in infile:
-#         for src, target in replacements.iteritems():
-#             line = line.replace(src, target)
-#         outfile.write(line)
-
+    
 # Write new prm file:
     with open(new_prm_file, "wt") as fout,\
          open(old_prm_file, "rt") as fin:
@@ -169,54 +163,7 @@ for s in simulations:
           line = line.replace("_IMAGES_DIR_", images_dir)
           line = line.replace("_PBS_", pbs)
           line = line.replace("_PRMNAME_", prm_filename)
-          line = line.replace("_SOURCE_MODULE_PATH_", images_dir)
           line = line.replace("_WORK_DIR_", NeSSUs_dir+"/launch_scripts/"+folder)
+          line = line.replace("_SOURCE_MODULE_PATH_", source_module_path)
           fout.write(line)
 
-    # print old_prm_file
-    # print folder
-    # print 
-  # v=simulation.options(s)
-  # for combination in combinations:
-  #   file_name=s+str(num)
-  # 
-  #   
-  #     fout.write("#!/bin/bash\n")
-  #     if simulation.get(s,"_TYPE_") == "pbs":
-  #       fout.write("#!/bin/bash\n")
-  #     with open("./_template.pbs", "rt") as fin:
-  #         for line in fin:
-  #           new_line = line
-  #           for i in combination:
-  #               old, new = i.split("=")
-  #               print new_line
-  #               new_line=new_line.replace(old, new)
-  #               print new_line
-  #               print old + "---->" + new
-  #           fout.write(new_line)
-  #   fout.close()
-  # 
-  #   num+=1
-    
-    #   print var
-    # 
-    # name_job="_tmp_$
-    # name_job+="_prm="+str(prm)
-    # name_job+="_nu="+str(nu)
-    # name_job+="_ref="+str(ref)
-    # name_job+="_stepper="+str(stepper)
-    # copyfile("_template.pbs", name_job)
-    # 
-    # ${FIND_AND_REPLACE} "__PDE__" ${PDE} ${NAME_JOB}
-    # ${FIND_AND_REPLACE} "__DIM__" ${dim} ${NAME_JOB}
-    # ${FIND_AND_REPLACE} "__PRM__" ${prm} ${NAME_JOB}
-    # ${FIND_AND_REPLACE} "__NU__" ${nu} ${NAME_JOB}
-    # ${FIND_AND_REPLACE} "__REF__" ${ref} ${NAME_JOB}
-    # ${FIND_AND_REPLACE} "__STEPPER__" ${stepper} ${NAME_JOB}
-    # ${FIND_AND_REPLACE} "__DIV_GRAD__" ${div_grad} ${NAME_JOB}
-# f1 = open('yourBigFile.txt', 'r')
-# f2 = open('yourBigFile.txt.tmp', 'w')
-# for line in f1:
-#     f2.write(line.replace(';', ' '))
-# f1.close()
-# f2.close()
