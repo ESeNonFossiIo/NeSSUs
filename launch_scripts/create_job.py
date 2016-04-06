@@ -126,45 +126,45 @@ for s in simulations:
     num+=1
     
 # Write new prm file:
-    with open(new_prm_file, "wt") as fout,\
-         open(old_prm_file, "rt") as fin:
-      for line in fin:
-          for src, target in run.iteritems():
-              line = line.replace(src, target)
-          line = line.replace("_UTILS_PATH_",utils_path)
-          fout.write(line)
+    with open(new_prm_file, "wt") as fout:
+      with open(old_prm_file, "rt") as fin:
+        for line in fin:
+            for src, target in run.iteritems():
+                line = line.replace(src, target)
+            line = line.replace("_UTILS_PATH_",utils_path)
+            fout.write(line)
 
 # Write new job_file
-    with open(job_file, "wt") as fout,\
-         open("./_conf/_template."+ext, "rt") as fin:
-      for line in fin:
-        
-          if get_value(run, "_PBS_NAME_") != "__NULL__" :
-            pbs = "\n#PBS -N " + get_value(run, "_PBS_NAME_")
-          else:
-            pbs =  "\n#PBS -N " + prm_filename.replace(".prm", "")
-          if get_value(run, "_PBS_WALLTIME_") != "__NULL__" :
-            pbs += "\n#PBS -l walltime=" + get_value(run, "_PBS_WALLTIME_")
-          if get_value(run, "_PBS_NODES_") != "__NULL__" :
-            pbs += "\n#PBS -l " + get_value(run, "_PBS_NODES_")
-          if get_value(run, "_PBS_QUEUE_") != "__NULL__" :
-            pbs += "\n#PBS -q " + get_value(run, "_PBS_QUEUE_") 
-          if get_value(run, "_PBS_MAIL_") != "__NULL__" :
-            pbs += "\n#PBS -M " + get_value(run, "_PBS_MAIL_")
-            pbs +=  "\n#PBS -m abe"
-          pbs+="\n"
+    with open(job_file, "wt") as fout:
+      with open("./_conf/_template."+ext, "rt") as fin:
+        for line in fin:
           
-          for src, target in run.iteritems():
-            if target != "__NULL__" :
-              line = line.replace(src, target)
+            if get_value(run, "_PBS_NAME_") != "__NULL__" :
+              pbs = "\n#PBS -N " + get_value(run, "_PBS_NAME_")
             else:
-              line = line.replace(src, " ")
-          line = line.replace("_EXECUTABLE_FOLDER_", executable_folder)
-          line = line.replace("_OUTPUT_LOG_FILE_", output_log_file)
-          line = line.replace("_IMAGES_DIR_", images_dir)
-          line = line.replace("_PBS_", pbs)
-          line = line.replace("_PRMNAME_", prm_filename)
-          line = line.replace("_WORK_DIR_", NeSSUs_dir+"/launch_scripts/"+folder)
-          line = line.replace("_SOURCE_MODULE_PATH_", source_module_path)
-          fout.write(line)
+              pbs =  "\n#PBS -N " + prm_filename.replace(".prm", "")
+            if get_value(run, "_PBS_WALLTIME_") != "__NULL__" :
+              pbs += "\n#PBS -l walltime=" + get_value(run, "_PBS_WALLTIME_")
+            if get_value(run, "_PBS_NODES_") != "__NULL__" :
+              pbs += "\n#PBS -l " + get_value(run, "_PBS_NODES_")
+            if get_value(run, "_PBS_QUEUE_") != "__NULL__" :
+              pbs += "\n#PBS -q " + get_value(run, "_PBS_QUEUE_") 
+            if get_value(run, "_PBS_MAIL_") != "__NULL__" :
+              pbs += "\n#PBS -M " + get_value(run, "_PBS_MAIL_")
+              pbs +=  "\n#PBS -m abe"
+            pbs+="\n"
+            
+            for src, target in run.iteritems():
+              if target != "__NULL__" :
+                line = line.replace(src, target)
+              else:
+                line = line.replace(src, " ")
+            line = line.replace("_EXECUTABLE_FOLDER_", executable_folder)
+            line = line.replace("_OUTPUT_LOG_FILE_", output_log_file)
+            line = line.replace("_IMAGES_DIR_", images_dir)
+            line = line.replace("_PBS_", pbs)
+            line = line.replace("_PRMNAME_", prm_filename)
+            line = line.replace("_WORK_DIR_", NeSSUs_dir+"/launch_scripts/"+folder)
+            line = line.replace("_SOURCE_MODULE_PATH_", source_module_path)
+            fout.write(line)
 
