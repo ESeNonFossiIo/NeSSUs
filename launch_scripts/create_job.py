@@ -116,7 +116,8 @@ for s in simulations:
 
     ext=get_value(run,"_TYPE_")
     
-    job_file="_job_"
+    job_file="_job"
+    job_file+="_"+s+"_"
     job_file+=str(num)
     job_file+="_"+pde
     job_file+="_"+prm_file
