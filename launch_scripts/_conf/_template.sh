@@ -1,15 +1,12 @@
 #!/bin/bash
 
-_PBS_
-
 set -e
-source _SOURCE_MODULE_PATH_
 
 cd _WORK_DIR_
 
 # Compute:
 ################################################################################
-mpirun -npernode 16 _EXECUTABLE_FOLDER_/_PDE_ _ARGS_ \
+mpirun -np 3 _EXECUTABLE_FOLDER_/_PDE_ _ARGS_ \
   --dim=_DIM_\
   --prm=_PRMNAME_ | tee _OUTPUT_LOG_FILE_
 
