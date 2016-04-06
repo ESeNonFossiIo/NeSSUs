@@ -1,0 +1,32 @@
+#!/bin/bash
+
+#PBS -N __PRM__
+#PBS -l walltime=12:00:00
+#PBS -l nodes=8:ppn=20
+#PBS -q regular
+#PBS -M mbarde@sissa.it
+#PBS -m abe
+
+set -e
+source ${SOURCE_MODULE_PATH}
+
+
+cd ${_WORK_DIR_}
+
+# Compute:
+################################################################################
+mpirun -npernode 16 ${_EXECUTABLE_FOLDER_}/${_PDE_} ${_ARGS_} \
+  "--prm=${_PRM_NAME_}" | tee ${_OUTPUT_LOG_FILE_}
+
+# Post processing:
+################################################################################
+CHECK=`ls *vtu 2>/dev/null`
+if [[ ! -z ${CHECK} ]] 
+then
+  mkdir ${IMAGES_DIR}
+  mv *vtu ${IMAGES_DIR} 
+fi
+
+# End:
+################################################################################
+touch "__JOB_COMPLETED__"
