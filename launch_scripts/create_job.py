@@ -1,38 +1,25 @@
 #!/usr/bin/env python
 
+
 import ConfigParser
 import os
-
-def make_next_dir(  progress_dir="run", 
-                    separation_char="_", 
-                    base_directory="output/",
-                    lenght=4):
-  
-  if not os.path.exists(base_directory):
-    os.makedirs(base_directory)
-
-  numbers=[]
-  for name in os.listdir(base_directory):
-    if (  os.path.isdir(os.path.join(base_directory, name)) and
-          name.find(progress_dir)>=0 ) :
-      numbers.append( int( str(name).replace(progress_dir + separation_char, '') ) )
-  numbers.append(-1)
-  maximum = str ( max(numbers) + 1 )
-  zeroes =  "0" * ( lenght - len(maximum) )
-  new_dir = base_directory + progress_dir + separation_char + zeroes + maximum
-  os.makedirs(new_dir)
-  
-  return new_dir
-
+import sys
 from shutil import copyfile
-
-# copyfile(src, dst)
+import itertools
 
 config = ConfigParser.ConfigParser()
 config.optionxform=str
 config.read('./_conf/configuration.conf')
 
-import itertools
+NeSSUs_dir=config.get("PATHS","NESSUS_DIR")
+NeSSUs_dir=NeSSUs_dir.replace('@PWD',os.getcwd())
+
+# Add path tu PUlSe:
+PUlSe_dir=NeSSUs_dir+"/_modules/PUlSe/lib/"
+sys.path.append(PUlSe_dir)
+
+print sys.path
+from PUlSe_directories import *
 
 simulation = ConfigParser.ConfigParser()
 simulation.optionxform=str
@@ -64,14 +51,12 @@ pp.pprint(simulations)
 
 BASE_FOLDER="__simulations/${PDE}/${PRM_FILE}/${nu}/${ref}/${stepper}/"
 
-prm_filename=config.get("OUTPUT","PRM_FILENAME")
+prmname=config.get("OUTPUT","PRM_FILENAME")
 base_name=config.get("OUTPUT", "BASE_FOLDER")
 run_folder=config.get("OUTPUT","RUN_FOLDER")
 images_dir=config.get("OUTPUT","IMAGES_DIR")
 output_log_file=config.get("OUTPUT","OUTPUT_LOG_FILE")
 
-NeSSUs_dir=config.get("PATHS","NESSUS_DIR")
-NeSSUs_dir=NeSSUs_dir.replace('@PWD',os.getcwd())
 utils_path=NeSSUs_dir+"/_utils/"
 
 executable_folder=config.get("PATHS","EXECUTABLE_FOLDER")
@@ -85,6 +70,9 @@ def get_value(dictionary, value):
     return_value=""
   return return_value
 
+def get_var_name(**arg):
+  return arg.keys()[0]
+
 num=0
 for s in simulations:
   for run in simulations[s]:
@@ -93,6 +81,7 @@ for s in simulations:
     nu=get_value(run, "_NU_")
     ref=get_value(run, "_REF_")
     stepper=get_value(run, "_STEPPER_")
+    
     
     folder="./"+base_name
     folder+="/"+pde
@@ -105,6 +94,8 @@ for s in simulations:
                             separation_char="_", 
                             base_directory=folder,
                             lenght=4)
+    
+    work_dir=NeSSUs_dir+"/launch_scripts/"+folder
                     
     old_prm_file=NeSSUs_dir
     old_prm_file+="/_utils/prm"
@@ -112,7 +103,7 @@ for s in simulations:
     old_prm_file+="/"+prm_file
 
     new_prm_file=folder
-    new_prm_file+="/"+prm_filename
+    new_prm_file+="/"+prmname
 
     ext=get_value(run,"_TYPE_")
     
@@ -159,12 +150,8 @@ for s in simulations:
                 line = line.replace(src, target)
               else:
                 line = line.replace(src, " ")
-            line = line.replace("_EXECUTABLE_FOLDER_", executable_folder)
-            line = line.replace("_OUTPUT_LOG_FILE_", output_log_file)
-            line = line.replace("_IMAGES_DIR_", images_dir)
-            line = line.replace("_PBS_", pbs)
-            line = line.replace("_PRMNAME_", prm_filename)
-            line = line.replace("_WORK_DIR_", NeSSUs_dir+"/launch_scripts/"+folder)
-            line = line.replace("_SOURCE_MODULE_PATH_", source_module_path)
+            for src in [ "_EXECUTABLE_FOLDER_", "_WORK_DIR_", "_OUTPUT_LOG_FILE_", "_IMAGES_DIR_", "_PBS_", "_PRMNAME_", "_SOURCE_MODULE_PATH_"]:
+              target = eval(src[1:-1].lower())
+              line = line.replace(src, target)
             fout.write(line)
 
