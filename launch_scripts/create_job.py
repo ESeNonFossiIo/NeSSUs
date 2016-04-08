@@ -49,13 +49,14 @@ import pprint
 pp = pprint.PrettyPrinter(indent=4)
 pp.pprint(simulations)
 
-BASE_FOLDER="__simulations/${PDE}/${PRM_FILE}/${nu}/${ref}/${stepper}/"
+# BASE_FOLDER="__simulations/${PDE}/${PRM_FILE}/${nu}/${ref}/${stepper}/"
 
 prmname=config.get("OUTPUT","PRM_FILENAME")
 base_name=config.get("OUTPUT", "BASE_FOLDER")
 run_folder=config.get("OUTPUT","RUN_FOLDER")
 images_dir=config.get("OUTPUT","IMAGES_DIR")
 output_log_file=config.get("OUTPUT","OUTPUT_LOG_FILE")
+jobs_folder_name=config.get("OUTPUT","JOBS_FOLDER_NAME")
 
 utils_path=NeSSUs_dir+"/_utils/"
 
@@ -77,41 +78,49 @@ num=0
 for s in simulations:
   for run in simulations[s]:
     pde=get_value(run, "_PDE_")
+    dim=get_value(run, "_DIM_")
     prm_file=get_value(run, "_PRM_")
     nu=get_value(run, "_NU_")
     ref=get_value(run, "_REF_")
     stepper=get_value(run, "_STEPPER_")
     
-    
-    folder="./"+base_name
+    print "BASE NAME: " 
+    folder="./"+ str(base_name)
     folder+="/"+pde
     folder+="/"+prm_file
-    folder+="/"+nu
-    folder+="/"+ref
-    folder+="/"+stepper+"/"
+    # folder+="/"
+    # folder+="/"+nu
+    # folder+="/"+ref
+    # folder+="/"+stepper+"/"
 
+    print "aa"
     folder = make_next_dir( progress_dir="run", 
                             separation_char="_", 
                             base_directory=folder,
                             lenght=4)
+    print "bb"
     
     work_dir=NeSSUs_dir+"/launch_scripts/"+folder
                     
     old_prm_file=NeSSUs_dir
     old_prm_file+="/_utils/prm"
     old_prm_file+="/"+pde
+    old_prm_file+="/"+dim+"D"
     old_prm_file+="/"+prm_file
 
     new_prm_file=folder
     new_prm_file+="/"+prmname
 
     ext=get_value(run,"_TYPE_")
+
+    if not os.path.exists("./"+jobs_folder_name+"/"):
+      os.makedirs("./"+jobs_folder_name+"/")
     
-    job_file="_job"
-    job_file+="_"+s+"_"
+    job_file="./"+jobs_folder_name+"/_job_"
     job_file+=str(num)
+    job_file+="_"+s+"_"
     job_file+="_"+pde
-    job_file+="_"+prm_file
+    job_file+="_"+prm_file.replace("prm", "")
     job_file+="."+ext
 
     num+=1
@@ -129,11 +138,12 @@ for s in simulations:
     with open(job_file, "wt") as fout:
       with open("./_conf/_template."+ext, "rt") as fin:
         for line in fin:
-          
+
+            pbs = "\n#PBS -N job_" + str(num) + " "
             if get_value(run, "_PBS_NAME_") != "__NULL__" :
-              pbs = "\n#PBS -N " + get_value(run, "_PBS_NAME_")
+              pbs += get_value(run, "_PBS_NAME_")
             else:
-              pbs =  "\n#PBS -N " + get_value(run, "_PRM_").replace(".prm", "")
+              pbs += get_value(run, "_PRM_").replace(".prm", "")
             if get_value(run, "_PBS_WALLTIME_") != "__NULL__" :
               pbs += "\n#PBS -l walltime=" + get_value(run, "_PBS_WALLTIME_")
             if get_value(run, "_PBS_NODES_") != "__NULL__" :
