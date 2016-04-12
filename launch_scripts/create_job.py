@@ -18,14 +18,14 @@ NeSSUs_dir=NeSSUs_dir.replace('@PWD',os.getcwd())
 PUlSe_dir=NeSSUs_dir+"/_modules/PUlSe/lib/"
 sys.path.append(PUlSe_dir)
 
-print sys.path
+# print sys.path
 from PUlSe_directories import *
 
 simulation = ConfigParser.ConfigParser()
 simulation.optionxform=str
 simulation.read('./job_settings.conf')
 
-print simulation.sections()
+# print simulation.sections()
 
 
 
@@ -45,9 +45,9 @@ for s in simulation.sections():
         item[1]="__NULL__"
     val.append(dict(c))
   simulations[s] = val
-import pprint
-pp = pprint.PrettyPrinter(indent=4)
-pp.pprint(simulations)
+# import pprint
+# pp = pprint.PrettyPrinter(indent=4)
+# pp.pprint(simulations)
 
 # BASE_FOLDER="__simulations/${PDE}/${PRM_FILE}/${nu}/${ref}/${stepper}/"
 
@@ -76,6 +76,7 @@ def get_var_name(**arg):
 
 num=0
 for s in simulations:
+  print "\n\n SIMULATION: " + str(s)
   for run in simulations[s]:
     pde=get_value(run, "_PDE_")
     dim=get_value(run, "_DIM_")
@@ -84,21 +85,19 @@ for s in simulations:
     ref=get_value(run, "_REF_")
     stepper=get_value(run, "_STEPPER_")
     
-    print "BASE NAME: " 
     folder="./"+ str(base_name)
-    folder+="/"+pde
-    folder+="/"+prm_file
+    folder+="/"+ str(s) 
+    folder+="/"+ pde
+    folder+="/"+ prm_file
     # folder+="/"
     # folder+="/"+nu
     # folder+="/"+ref
     # folder+="/"+stepper+"/"
 
-    print "aa"
     folder = make_next_dir( progress_dir="run", 
                             separation_char="_", 
                             base_directory=folder,
                             lenght=4)
-    print "bb"
     
     work_dir=NeSSUs_dir+"/launch_scripts/"+folder
                     
@@ -120,9 +119,10 @@ for s in simulations:
     job_file+=str(num)
     job_file+="_"+s+"_"
     job_file+="_"+pde
-    job_file+="_"+prm_file.replace("prm", "")
+    job_file+="_"+prm_file.replace(".prm", "")
     job_file+="."+ext
 
+    print " \tJob:  \t -> "+str(job_file)
     num+=1
     
 # Write new prm file:
