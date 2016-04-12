@@ -1,6 +1,13 @@
 NeSSUs - Navier-Stokes Simulator Utilities
 ==========================================
 
+Configure
+---------
+1. modify `launch_scripts/_conf/configuration.conf`
+2. modify `launch_scripts/_conf/job_settings.conf`
+3. `./create_job.py`
+4. Finally you can launch your jobs from `launch_scripts/_conf/__job/`
+
 Utilities:
 ----------
 - Grids:
@@ -31,4 +38,5 @@ Requirements
 `.gitignore`
 ------------
 
-- `output/`
+- `__simulations/`
+- `__jobs/`
