@@ -21,13 +21,13 @@ parser = OptionParser()
 parser.add_option("-f", "--file", 
                   dest="configuration_file",
                   default="./job.conf",
-                  help="`conf` file. (See _template/template.conf).", 
+                  help="`conf` file. (See _template/template_conf.template).", 
                   metavar="FILE")
 
 parser.add_option("-c", "--conf",
                   dest="new_configuration_file",
                   default="",
-                  help="generate ./filename.conf copying _template/template.conf.", 
+                  help="generate ./filename.conf copying _template/template_conf.template.", 
                   metavar="FILE")
 
 (options, args) = parser.parse_args()
@@ -37,7 +37,7 @@ parser.add_option("-c", "--conf",
 
 if options.new_configuration_file != "":
   # TODO: add a check on the existence of the file.
-  copyfile(  "_template/template.conf",
+  copyfile(  "_template/template_conf.template",
               options.new_configuration_file)
   sys.exit(1)
   
