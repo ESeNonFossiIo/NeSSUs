@@ -113,19 +113,19 @@ for s in simulations:
     if mode == "sh":
       pbs = ""
     elif mode == "pbs":
-      pbs = "\n#PBS -N job_" + str(num) + " "
-      if get_value(run, "_PBS_NAME_") != "__NULL__" :
-        pbs += get_value(run, "_PBS_NAME_") # TODO: check this!
+      pbs = "\n#PBS -N "
+      if dictionary_val.get("PBS_NAME") != "__NULL__" :
+        pbs += dictionary_val.get("PBS_NAME") # TODO: check this!
       else:
-        pbs += get_value(run, "_PRM_").replace(".prm", "")
-      if get_value(run, "_PBS_WALLTIME_") != "__NULL__" :
-        pbs += "\n#PBS -l walltime=" + get_value(run, "_PBS_WALLTIME_")
-      if get_value(run, "_PBS_NODES_") != "__NULL__" :
-        pbs += "\n#PBS -l " + get_value(run, "_PBS_NODES_")
-      if get_value(run, "_PBS_QUEUE_") != "__NULL__" :
-        pbs += "\n#PBS -q " + get_value(run, "_PBS_QUEUE_") 
-      if get_value(run, "_PBS_MAIL_") != "__NULL__" :
-        pbs += "\n#PBS -M " + get_value(run, "_PBS_MAIL_")
+        pbs += dictionary_val.get("PRM").replace(".prm", "")
+      if dictionary_val.get("PBS_WALLTIME") != "__NULL__" :
+        pbs += "\n#PBS -l walltime=" + dictionary_val.get("PBS_WALLTIME")
+      if dictionary_val.get("PBS_NODES") != "__NULL__" :
+        pbs += "\n#PBS -l " + dictionary_val.get("PBS_NODES")
+      if dictionary_val.get("PBS_QUEUE") != "__NULL__" :
+        pbs += "\n#PBS -q " + dictionary_val.get("PBS_QUEUE") 
+      if dictionary_val.get("PBS_MAIL") != "__NULL__" :
+        pbs += "\n#PBS -M " + dictionary_val.get("PBS_MAIL")
         pbs +=  "\n#PBS -m abe"
       pbs+="\n"
     else:
