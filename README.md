@@ -1,4 +1,4 @@
-# NeSSUs - Navier-Stokes Simulator Utilities
+# MaJOrCA - Multiple JObs CreAtor
 
 ## Configure
 1. modify `./create_job.py -c your_conf.conf`
