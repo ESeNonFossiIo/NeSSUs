@@ -9,6 +9,13 @@ class Output(object):
     print "\n\n"
     print self.BAR
 
+  def ASSERT(self, check, msg=""):
+    text = "\n\n" +self.BaR
+    text += "\n  ERROR: " + str(msg) + "\n"
+    text += self.BaR
+    assert check, text
+    
+    
   def title(self, txt):
     print self.BaR
     print " " + str(txt)
