@@ -49,7 +49,7 @@ out.title("Configuration ")
 PE = ProcessEntry(out)
 
 out.ASSERT( os.path.isfile(options.configuration_file), 
-            "`"+str(options.configuration_file) + "` does not exist!" )
+            str(options.configuration_file), "existence" )
 
 out.var("Conf file", options.configuration_file)
 config = ConfigParser.ConfigParser()

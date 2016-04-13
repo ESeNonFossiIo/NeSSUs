@@ -9,10 +9,12 @@ class Output(object):
     print "\n\n"
     print self.BAR
 
-  def ASSERT(self, check, msg=""):
+  def ASSERT(self, check, msg="", error_type=""):
     text = "\n\n" +self.BaR
-    text += "\n  ERROR: " + str(msg) + "\n"
-    text += self.BaR
+    text += "\n  ERROR: "
+    if error_type == "existence" :
+      text += "`"+str(msg)+"` does not exist! "
+    text += "\n" + self.BaR
     assert check, text
     
     
