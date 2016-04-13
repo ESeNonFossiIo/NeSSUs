@@ -9,3 +9,8 @@
 - In `conf` file you can generate multiple jobs adding new sections
 - For every varibale you can select multiples choice separating each entry with 
 a semicolon
+
+## makefile
+- `clean` : remove unused file.
+- `qsub` :  submit all `pbs` file. 
+- `sh` :  submit all `sh` file. 
