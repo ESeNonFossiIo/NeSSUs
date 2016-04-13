@@ -36,7 +36,8 @@ parser.add_option("-c", "--conf",
 ################################################################################ 
 
 if options.new_configuration_file != "":
-  # TODO: add a check on the existence of the file.
+  out.ASSERT( os.path.isfile("_template/template_conf.template"), 
+              "_template/template_conf.template", "existence" )
   copyfile(  "_template/template_conf.template",
               options.new_configuration_file)
   sys.exit(1)
@@ -63,6 +64,10 @@ sections.remove('GENERAL')
 general_val = GetValFromConfParser(out, config, "GENERAL")
 
 base_name         = general_val.get("BASE_FOLDER", output=True)
+output_log_file   = general_val.get("OUTPUT_LOG_FILE", output=True)
+error_log_file    = general_val.get("ERROR_LOG_FILE", output=True)
+jobs_folder_name  = general_val.get("JOBS_FOLDER_NAME", output=True)
+
 run_folder        = general_val.get("RUN_FOLDER", output=False)
 num_zeros         = run_folder.count('$')
 run_folder        = run_folder.replace('$', '')
@@ -71,9 +76,17 @@ run_folder        = run_folder[0:-1]
 out.var("RUN_FOLDER", run_folder)
 out.var("SEP CHAR", spc)
 out.var("NUM ZEROS", num_zeros)
-output_log_file   = general_val.get("OUTPUT_LOG_FILE", output=True)
-error_log_file    = general_val.get("ERROR_LOG_FILE", output=True)
-jobs_folder_name  = general_val.get("JOBS_FOLDER_NAME", output=True)
+
+jobs_name         = general_val.get("JOBS_NAME", output=False)
+jobs_num_zeros    = jobs_name.count('$')
+jobs_name         = jobs_name.replace('$', '')
+jobs_spc          = jobs_name[-1]
+jobs_name         = jobs_name[0:-1]
+out.var("JOBS NAME", jobs_name)
+out.var("SEP CHAR JOBS", jobs_spc)
+out.var("JOB NUM ZEROS", jobs_num_zeros)
+
+jobs_folder_name
 prm_filename      = general_val.get("PRM_FILENAME", output=True)
 
 # Fill the dictionary simulations with all possibile combination of every 
@@ -115,7 +128,7 @@ for s in simulations:
     elif mode == "pbs":
       pbs = "\n#PBS -N "
       if dictionary_val.get("PBS_NAME") != "__NULL__" :
-        pbs += dictionary_val.get("PBS_NAME") # TODO: check this!
+        pbs += dictionary_val.get("PBS_NAME")
       else:
         pbs += dictionary_val.get("PRM").replace(".prm", "")
       if dictionary_val.get("PBS_WALLTIME") != "__NULL__" :
@@ -132,7 +145,7 @@ for s in simulations:
       break    
 
     # create prm folder:
-    folder=base_name # TODO: improve using prm file...
+    folder=base_name
     for src, target in simulation.iteritems():
         folder = folder.replace("__"+str(src)+"__", target)
     if not os.path.exists(base_name):
@@ -157,10 +170,11 @@ for s in simulations:
     # create job foldes:
     job_file=jobs_folder_name
     for src, target in simulation.iteritems():
-        job_file = job_file.replace("__"+str(src)+"__", target)
+        job_file = job_file.replace("__"+str(src)+"__", target) 
     if not os.path.exists(job_file):
       os.makedirs(job_file)
-    job_file+=get_next("job",mode,job_file,"_",3)
+          
+    job_file+=get_next(jobs_name,mode,job_file,jobs_spc,jobs_num_zeros)
     job_file+="."+mode
     out.var("JOB FILE", job_file + "")
     
