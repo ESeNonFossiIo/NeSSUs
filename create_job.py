@@ -85,7 +85,7 @@ for s in sections:
   
   # Get all value of this simulation: 
   for v in config.options(s):
-    values.append( [ [v, opt]  for opt in config.get(s, v).split(";")] )
+    values.append( [ [v, PE.process(opt)]  for opt in config.get(s, v).split(";")] )
 
   # Evaluate all possibile combiation between values and store this result
   # as a dictionary:
