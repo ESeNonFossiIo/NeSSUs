@@ -34,12 +34,15 @@ class Output(object):
 
 class ProcessEntry(object):
 
-  def __init__(self, out):
+  def __init__(self, out, section=""):
     self.out = out
+    self.section = section
     
   def process(self, text):
     return_text = text
     return_text = text.replace("@HOME@", os.getcwd())
+    if self.section != "":
+      return_text = text.replace("@SIMULATION@", self.section)
     while return_text.find("@ENV[") > -1 :
       env = return_text[return_text.find("@ENV[")+5:return_text.find("]@")]
       var = os.environ[env]
@@ -52,7 +55,7 @@ class GetValFromConfParser(object):
     self.out = out
     self.config_parser = config_parser
     self.section = section
-    self.PE = ProcessEntry(out)
+    self.PE = ProcessEntry(out, section)
 
   def get(self, name, output=False):
     val = self.config_parser.get(self.section, name)

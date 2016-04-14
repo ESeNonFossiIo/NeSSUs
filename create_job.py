@@ -21,13 +21,13 @@ parser = OptionParser()
 parser.add_option("-f", "--file", 
                   dest="configuration_file",
                   default="./job.conf",
-                  help="`conf` file. (See _template/template_conf.template).", 
+                  help="`conf` file. (See _template/template.conf).", 
                   metavar="FILE")
 
 parser.add_option("-c", "--conf",
                   dest="new_configuration_file",
                   default="",
-                  help="generate ./filename.conf copying _template/template_conf.template.", 
+                  help="generate ./filename.conf copying _template/template.conf.", 
                   metavar="FILE")
 
 (options, args) = parser.parse_args()
@@ -35,20 +35,20 @@ parser.add_option("-c", "--conf",
 # Preliminary operations:
 ################################################################################ 
 
+out = Output(50)
+out.title("Configuration ")
+
 if options.new_configuration_file != "":
-  out.ASSERT( os.path.isfile("_template/template_conf.template"), 
-              "_template/template_conf.template", "existence" )
-  copyfile(  "_template/template_conf.template",
+  out.ASSERT( os.path.isfile("_template/template.conf"), 
+              "_template/template.conf", "existence" )
+  copyfile(  "_template/template.conf",
               options.new_configuration_file)
+  out.close_section()
   sys.exit(1)
   
 # Main:
 ################################################################################ 
-
-out = Output(50)
-out.title("Configuration ")
 PE = ProcessEntry(out)
-
 out.ASSERT( os.path.isfile(options.configuration_file), 
             str(options.configuration_file), "existence" )
 
@@ -58,16 +58,12 @@ config.optionxform=str #case sensitive
 config.read(options.configuration_file)
 
 sections = config.sections()
-sections.remove('GENERAL')
-
 # Get data from GENERAL section:
 general_val = GetValFromConfParser(out, config, "GENERAL")
-
 base_name         = general_val.get("BASE_FOLDER", output=True)
 output_log_file   = general_val.get("OUTPUT_LOG_FILE", output=True)
 error_log_file    = general_val.get("ERROR_LOG_FILE", output=True)
 jobs_folder_name  = general_val.get("JOBS_FOLDER_NAME", output=True)
-
 run_folder        = general_val.get("RUN_FOLDER", output=False)
 num_zeros         = run_folder.count('$')
 run_folder        = run_folder.replace('$', '')
@@ -76,7 +72,6 @@ run_folder        = run_folder[0:-1]
 out.var("RUN_FOLDER", run_folder)
 out.var("SEP CHAR", spc)
 out.var("NUM ZEROS", num_zeros)
-
 jobs_name         = general_val.get("JOBS_NAME", output=False)
 jobs_num_zeros    = jobs_name.count('$')
 jobs_name         = jobs_name.replace('$', '')
@@ -85,9 +80,10 @@ jobs_name         = jobs_name[0:-1]
 out.var("JOBS NAME", jobs_name)
 out.var("SEP CHAR JOBS", jobs_spc)
 out.var("JOB NUM ZEROS", jobs_num_zeros)
-
 jobs_folder_name
 prm_filename      = general_val.get("PRM_FILENAME", output=True)
+
+sections.remove('GENERAL')
 
 # Fill the dictionary simulations with all possibile combination of every 
 # parameter of every single simulation:
@@ -95,7 +91,8 @@ simulations=dict()
 for s in sections:
   simulation=[]
   values=[]
-  
+
+  PE = ProcessEntry(out, section=s)
   # Get all value of this simulation: 
   for v in config.options(s):
     values.append( [ [v, PE.process(opt)]  for opt in config.get(s, v).split(";")] )
@@ -185,7 +182,7 @@ for s in simulations:
     
     # Write job file:
     with open(job_file, "wt") as fout:
-      with open("./_template/template_job.template", "rt") as fin:
+      with open("./_template/template.sh", "rt") as fin:
         for line in fin:  
           for src, target in simulation.iteritems():
             if target != "__NULL__" :
