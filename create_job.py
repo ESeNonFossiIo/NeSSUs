@@ -20,7 +20,7 @@ parser = OptionParser()
 
 parser.add_option("-f", "--file", 
                   dest="configuration_file",
-                  default="./job.conf",
+                  default="./_template/template.conf",
                   help="`conf` file. (See _template/template.conf).", 
                   metavar="FILE")
 
@@ -61,6 +61,7 @@ sections = config.sections()
 # Get data from GENERAL section:
 general_val = GetValFromConfParser(out, config, "GENERAL")
 sep_char          = general_val.get("SEP", output=True)
+parsing_token     = general_val.get("PTOKEN", output=True)
 base_name         = general_val.get("BASE_FOLDER", output=True)
 output_log_file   = general_val.get("OUTPUT_LOG_FILE", output=True)
 error_log_file    = general_val.get("ERROR_LOG_FILE", output=True)
@@ -86,6 +87,9 @@ prm_filename      = general_val.get("PRM_FILENAME", output=True)
 
 sections.remove('GENERAL')
 
+# placeholder for NULL entries
+null_token = parsing_token+"NULL"+parsing_token
+
 # Fill the dictionary simulations with all possibile combination of every 
 # parameter of every single simulation:
 simulations=dict()
@@ -104,7 +108,7 @@ for s in sections:
   for c in combinations:
     for item in c:
       if item[1] == '' :
-        item[1]="__NULL__"
+        item[1]=null_token
     simulation.append(dict(c))
   simulations[s] = simulation
 
@@ -125,17 +129,17 @@ for s in simulations:
       pbs = ""
     elif mode == "pbs":
       pbs = "\n#PBS -N "
-      if dictionary_val.get("PBS_NAME") != "__NULL__" :
+      if dictionary_val.get("PBS_NAME") != null_token :
         pbs += dictionary_val.get("PBS_NAME")
       else:
         pbs += dictionary_val.get("PRM").replace(".prm", "")
-      if dictionary_val.get("PBS_WALLTIME") != "__NULL__" :
+      if dictionary_val.get("PBS_WALLTIME") != null_token :
         pbs += "\n#PBS -l walltime=" + dictionary_val.get("PBS_WALLTIME")
-      if dictionary_val.get("PBS_NODES") != "__NULL__" :
+      if dictionary_val.get("PBS_NODES") != null_token :
         pbs += "\n#PBS -l " + dictionary_val.get("PBS_NODES")
-      if dictionary_val.get("PBS_QUEUE") != "__NULL__" :
+      if dictionary_val.get("PBS_QUEUE") != null_token :
         pbs += "\n#PBS -q " + dictionary_val.get("PBS_QUEUE") 
-      if dictionary_val.get("PBS_MAIL") != "__NULL__" :
+      if dictionary_val.get("PBS_MAIL") != null_token :
         pbs += "\n#PBS -M " + dictionary_val.get("PBS_MAIL")
         pbs +=  "\n#PBS -m abe"
       pbs+="\n"
@@ -145,7 +149,7 @@ for s in simulations:
     # create prm folder:
     folder=base_name
     for src, target in simulation.iteritems():
-        folder = folder.replace("__"+str(src)+"__", target)
+        folder = folder.replace(parsing_token+str(src)+parsing_token, target)
     if not os.path.exists(base_name):
           os.makedirs(base_name)
 
@@ -162,20 +166,20 @@ for s in simulations:
       with open(bp_prm, "rt") as fin:
         for line in fin:
             for src, target in simulation.iteritems():
-              if target != "__NULL__" :
-                line = line.replace("__"+src+"__", target)
+              if target != null_token :
+                line = line.replace(parsing_token+src+parsing_token, target)
               else:
-                size  = 6 + len(src)
-                start = line.find("__"+src+"__[[")+size
+                size  = len(parsing_token)*2+2 + len(src)
+                start = line.find(parsing_token+src+parsing_token+"[[")+size
                 end   = line.find("]]", start)
                 val   = line[start:end]
-                line  = line.replace("__"+src+"__[["+val+"]]", val)
+                line  = line.replace(parsing_token+src+parsing_token+"[["+val+"]]", val)
             fout.write(line)
 
     # create job foldes:
     job_file=jobs_folder_name
     for src, target in simulation.iteritems():
-        job_file = job_file.replace("__"+str(src)+"__", target) 
+        job_file = job_file.replace(parsing_token+str(src)+parsing_token, target) 
     if not os.path.exists(job_file):
       os.makedirs(job_file)
           
@@ -193,14 +197,14 @@ for s in simulations:
       with open("./_template/template.sh", "rt") as fin:
         for line in fin:  
           for src, target in simulation.iteritems():
-            if target != "__NULL__" :
-              line = line.replace("__"+src+"__", target)
+            if target != null_token :
+              line = line.replace(parsing_token+src+parsing_token, target)
             else:
-              size  = 6 + len(src)
-              start = line.find("__"+src+"__[[")+size
+              size  = len(parsing_token)*2+2 + len(src)
+              start = line.find(parsing_token+src+parsing_token+"[[")+size
               end   = line.find("]]", start)
               val   = line[start:end]
-              line  = line.replace("__"+src+"__[["+val+"]]", val)
+              line  = line.replace(parsing_token+src+parsing_token+"[["+val+"]]", val)
           for src in [  "WORK_DIR", 
                         "OUTPUT_LOG_FILE", 
                         "ERROR_LOG_FILE",
@@ -208,7 +212,7 @@ for s in simulations:
                         "EXECUTABLE",
                         "ARGS_EXEC"]:
             target = eval(src.lower())
-            line = line.replace("__"+src+"__", target)
+            line = line.replace(parsing_token+src+parsing_token, target)
           fout.write(line)
   out.close_subsection()
 
