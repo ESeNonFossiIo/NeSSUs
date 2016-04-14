@@ -40,14 +40,14 @@ class ProcessEntry(object):
     
   def process(self, text):
     return_text = text
-    return_text = text.replace("@HOME@", os.getcwd())
+    return_text = text.replace("@PWD@", os.getcwd())
     if self.section != "":
       return_text = text.replace("@SIMULATION@", self.section)
     while return_text.find("@ENV[") > -1 :
       env = return_text[return_text.find("@ENV[")+5:return_text.find("]@")]
       var = os.environ[env]
       return_text = return_text.replace("@ENV[" + str(env) + "]@", var)
-    return return_text
+    return return_text.strip()
     
 class GetValFromConfParser(object):
 
