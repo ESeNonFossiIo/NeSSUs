@@ -2,12 +2,12 @@
 
 from optparse import OptionParser
 from shutil import copyfile
+import os
 import sys
 import itertools
 import ConfigParser
 from _lib.utils import *
-
-# import os
+import copy
 
 # Add path to PUlSe and this module:
 PUlSe_dir="./_modules/PUlSe/lib/"
@@ -60,161 +60,166 @@ config.read(options.configuration_file)
 sections = config.sections()
 # Get data from GENERAL section:
 general_val = GetValFromConfParser(out, config, "GENERAL")
-sep_char          = general_val.get("SEP", output=True)
-parsing_token     = general_val.get("PTOKEN", output=True)
-base_name         = general_val.get("BASE_FOLDER", output=True)
-output_log_file   = general_val.get("OUTPUT_LOG_FILE", output=True)
-error_log_file    = general_val.get("ERROR_LOG_FILE", output=True)
-jobs_folder_name  = general_val.get("JOBS_FOLDER_NAME", output=True)
-run_folder        = general_val.get("RUN_FOLDER", output=False)
-num_zeros         = run_folder.count('$')
-run_folder        = run_folder.replace('$', '')
-spc               = run_folder[-1]
-run_folder        = run_folder[0:-1]
-out.var("RUN_FOLDER", run_folder)
-out.var("SEP CHAR", spc)
-out.var("NUM ZEROS", num_zeros)
-jobs_name         = general_val.get("JOBS_NAME", output=False)
-jobs_num_zeros    = jobs_name.count('$')
-jobs_name         = jobs_name.replace('$', '')
-jobs_spc          = jobs_name[-1]
-jobs_name         = jobs_name[0:-1]
-out.var("JOBS NAME", jobs_name)
-out.var("SEP CHAR JOBS", jobs_spc)
-out.var("JOB NUM ZEROS", jobs_num_zeros)
-jobs_folder_name
-prm_filename      = general_val.get("PRM_FILENAME", output=True)
+general=dict()
+
+for key in config.items("GENERAL"):
+  general[key[0]] = general_val.get(key[0], output=True)
+
+# Run folder vars
+general['RUN_FOLDER-LEN']       = general['RUN_FOLDER'].count('$')
+general['RUN_FOLDER']           = general['RUN_FOLDER'].replace('$', '')
+general['RUN_FOLDER-SEP_CHAR']  = general['RUN_FOLDER'][-1]
+general['RUN_FOLDER']           = general['RUN_FOLDER'][0:-1]
+out.var("RUN_FOLDER", general['RUN_FOLDER'])
+out.var("SEP CHAR", general['RUN_FOLDER-SEP_CHAR'])
+out.var("NUM ZEROS", general['RUN_FOLDER-LEN'])
+
+# Jobs name vars:
+general['JOBS_NAME-LEN']      = general['JOBS_NAME'].count('$')
+general['JOBS_NAME']          = general['JOBS_NAME'].replace('$', '')
+general['JOBS_NAME-SEP_CHAR'] = general['JOBS_NAME'][-1]
+general['JOBS_NAME']          = general['JOBS_NAME'][0:-1]
+out.var("JOBS NAME",     general['JOBS_NAME'])
+out.var("SEP CHAR JOBS", general['JOBS_NAME-SEP_CHAR'])
+out.var("JOB NUM ZEROS", general['JOBS_NAME-LEN'])
 
 sections.remove('GENERAL')
 
 # placeholder for NULL entries
-null_token = parsing_token+"NULL"+parsing_token
+null_token = general['PTOKEN']+"NULL"+general['PTOKEN']
 
 # Fill the dictionary simulations with all possibile combination of every 
 # parameter of every single simulation:
 simulations=dict()
+local_var=dict()
 for s in sections:
   simulation=[]
   values=[]
-
+  local_vars=[]
+  
   PE = ProcessEntry(out, section=s)
   # Get all value of this simulation: 
   for v in config.options(s):
-    values.append( [ [v, PE.process(opt)]  for opt in config.get(s, v).split(sep_char)] )
+    values.append( [ [v, PE.process(opt)]  for opt in config.get(s, v).split(general['SEP'])] )
 
   # Evaluate all possibile combiation between values and store this result
   # as a dictionary:
   combinations = list(itertools.product(*values))
+  
   for c in combinations:
     for item in c:
       if item[1] == '' :
         item[1]=null_token
     simulation.append(dict(c))
+    local_vars.append(copy.deepcopy(general))
   simulations[s] = simulation
+  local_var[s] = local_vars
 
 out.close_section()
 
 # Create folders and jobs:
 for s in simulations:
   out.title("SIMULATION "+str(s))
-  for simulation in simulations[s]:
+  for n in xrange(len(simulations[s])):
     out.close_subsection()
-    dictionary_val = GetValFromDictionary(out, simulation)
-    executable = dictionary_val.get("EXECUTABLE",    output=True)
+    dictionary_val = GetValFromDictionary(out, simulations[s][n])
+    local_var[s][n]["EXECUTABLE"] = dictionary_val.get("EXECUTABLE",    output=True)
+    local_var[s][n]["ARGS"] = dictionary_val.get("ARGS",    output=True)
     bp_prm     = dictionary_val.get("BLUEPRINT_PRM", output=True)
     mode       = dictionary_val.get("MODE",          output=True)
 
     # fix mode:
     if mode == "sh":
-      pbs = ""
+      local_var[s][n]["PBS"] = ""
     elif mode == "pbs":
-      pbs = "\n#PBS -N "
+      local_var[s][n]["PBS"] = "\n#PBS -N "
       if dictionary_val.get("PBS_NAME") != null_token :
-        pbs += dictionary_val.get("PBS_NAME")
+        local_var[s][n]["PBS"] += dictionary_val.get("PBS_NAME")
       else:
-        pbs += dictionary_val.get("PRM").replace(".prm", "")
+        local_var[s][n]["PBS"] += dictionary_val.get("PRM").replace(".prm", "")
       if dictionary_val.get("PBS_WALLTIME") != null_token :
-        pbs += "\n#PBS -l walltime=" + dictionary_val.get("PBS_WALLTIME")
+        local_var[s][n]["PBS"] += "\n#PBS -l walltime=" + dictionary_val.get("PBS_WALLTIME")
       if dictionary_val.get("PBS_NODES") != null_token :
-        pbs += "\n#PBS -l " + dictionary_val.get("PBS_NODES")
+        local_var[s][n]["PBS"] += "\n#PBS -l " + dictionary_val.get("PBS_NODES")
       if dictionary_val.get("PBS_QUEUE") != null_token :
-        pbs += "\n#PBS -q " + dictionary_val.get("PBS_QUEUE") 
+        local_var[s][n]["PBS"] += "\n#PBS -q " + dictionary_val.get("PBS_QUEUE") 
       if dictionary_val.get("PBS_MAIL") != null_token :
-        pbs += "\n#PBS -M " + dictionary_val.get("PBS_MAIL")
-        pbs +=  "\n#PBS -m abe"
-      pbs+="\n"
+        local_var[s][n]["PBS"] += "\n#PBS -M " + dictionary_val.get("PBS_MAIL")
+        local_var[s][n]["PBS"] +=  "\n#PBS -m abe"
+      local_var[s][n]["PBS"] +="\n"
     else:
       break    
 
     # create prm folder:
-    folder=base_name
-    for src, target in simulation.iteritems():
-        folder = folder.replace(parsing_token+str(src)+parsing_token, target)
-    if not os.path.exists(base_name):
-          os.makedirs(base_name)
+    local_var[s][n]['FOLDER']=general['BASE_FOLDER']
+    for src, target in simulations[s][n].iteritems():
+        local_var[s][n]['FOLDER'] = local_var[s][n]['FOLDER'].replace(local_var[s][n]['PTOKEN']+str(src)+local_var[s][n]['PTOKEN'], target)
 
-    folder = make_next_dir( progress_dir=run_folder, 
-                            separation_char=spc, 
-                            base_directory=folder,
-                            lenght=num_zeros)
+    local_var[s][n]['FOLDER'] = make_next_dir( progress_dir=local_var[s][n]['RUN_FOLDER'], 
+                            separation_char=general['RUN_FOLDER-SEP_CHAR'], 
+                            base_directory=local_var[s][n]['FOLDER'],
+                            lenght=general['RUN_FOLDER-LEN'])
 
-    prm=folder+"/"+prm_filename
+    prm=os.path.normpath(local_var[s][n]['FOLDER']+"/"+local_var[s][n]['PRM_FILENAME'])
     out.var("PRM FILE", prm)
 
     # Write new prm file:
     with open(prm, "wt") as fout:
       with open(bp_prm, "rt") as fin:
         for line in fin:
-            for src, target in simulation.iteritems():
+            for src, target in simulations[s][n].iteritems():
               if target != null_token :
-                line = line.replace(parsing_token+src+parsing_token, target)
+                line = line.replace(local_var[s][n]['PTOKEN']+src+local_var[s][n]['PTOKEN'], target)
                 val   = get_name_inside(line, "[[", "]]")
                 line  = line.replace( "[[" +val+ "]]", "" )                
               else:
-                begin = parsing_token+src+parsing_token+"[["
+                begin = local_var[s][n]['PTOKEN']+src+local_var[s][n]['PTOKEN']+"[["
                 end   = "]]"
                 val   = get_name_inside(line, begin, end)
                 line  = line.replace( begin+val+end, val )
             fout.write(line)
 
     # create job foldes:
-    job_file=jobs_folder_name
-    for src, target in simulation.iteritems():
-        job_file = job_file.replace(parsing_token+str(src)+parsing_token, target) 
-    if not os.path.exists(job_file):
-      os.makedirs(job_file)
-          
-    job_file+=get_next(jobs_name,mode,job_file,jobs_spc,jobs_num_zeros)
-    job_file+="."+mode
-    out.var("JOB FILE", job_file + "")
-    
-    # Job vars:
-    work_dir=folder
-    # mpirun_flags=" "
-    args_exec=""
+    for src, target in simulations[s][n].iteritems():
+        local_var[s][n]['JOBS_FOLDER_NAME'] = local_var[s][n]['JOBS_FOLDER_NAME'].replace(local_var[s][n]['PTOKEN']+str(src)+local_var[s][n]['PTOKEN'], target) 
+    if not os.path.exists(local_var[s][n]['JOBS_FOLDER_NAME']):
+      os.makedirs(local_var[s][n]['JOBS_FOLDER_NAME'])
+
+    local_var[s][n]['JOBS_NAME']=get_next( 
+                                  local_var[s][n]['JOBS_NAME'], 
+                                  mode, local_var[s][n]['JOBS_FOLDER_NAME'], 
+                                  general['JOBS_NAME-SEP_CHAR'],
+                                  general['JOBS_NAME-LEN'])
+    local_var[s][n]['JOBS_NAME']+="."+mode
+    out.var("JOB FILE", local_var[s][n]['JOBS_FOLDER_NAME']+local_var[s][n]['JOBS_NAME'])
+
+    local_var[s][n]['WORK_DIR'] = local_var[s][n]['FOLDER']
     
     # Write job file:
-    with open(job_file, "wt") as fout:
+    with open(local_var[s][n]['JOBS_FOLDER_NAME']+local_var[s][n]['JOBS_NAME'], "wt") as fout:
       with open("./_template/template.sh", "rt") as fin:
         for line in fin:  
-          for src, target in simulation.iteritems():
+          for src, target in simulations[s][n].iteritems():
             if target != null_token :
-              line = line.replace(parsing_token+src+parsing_token, target)
+              line = line.replace(local_var[s][n]['PTOKEN']+src+local_var[s][n]['PTOKEN'], target)
               val   = get_name_inside(line, "[[", "]]")
               line  = line.replace( "[[" +val+ "]]", "" )
             else:
-              begin = parsing_token+src+parsing_token+"[["
+              begin = local_var[s][n]['PTOKEN']+src+local_var[s][n]['PTOKEN']+"[["
               end   = "]]"
               val   = get_name_inside(line, begin, end)
               line  = line.replace( begin+val+end, val )
-          for src in [  "WORK_DIR", 
+          for src in [  "FOLDER", 
+                        "WORK_DIR",
                         "OUTPUT_LOG_FILE", 
                         "ERROR_LOG_FILE",
                         "PBS",
                         "EXECUTABLE",
-                        "ARGS_EXEC"]:
-            target = eval(src.lower())
-            line = line.replace(parsing_token+src+parsing_token, target)
+                        "ARGS"]:
+            target = local_var[s][n][src]
+            line = line.replace(local_var[s][n]['PTOKEN']+src+local_var[s][n]['PTOKEN'], target)
+          for key, val in local_var[s][n].iteritems():
+            line = line.replace("@"+str(key)+"@", str(val))
           fout.write(line)
   out.close_subsection()
 

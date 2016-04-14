@@ -11,8 +11,8 @@ cd __WORK_DIR__
 mpirun __MPIRUN_FLAGS__ \
   __EXECUTABLE__ \
   __ARGS__ \
-  2>__ERROR_LOG_FILE__
-  | tee __OUTPUT_LOG_FILE__
+  2>>__ERROR_LOG_FILE__
+  | -a tee __OUTPUT_LOG_FILE__
 
 # End:
 ################################################################################

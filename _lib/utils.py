@@ -40,6 +40,8 @@ class ProcessEntry(object):
     
   def process(self, text):
     return_text = text
+    if return_text.find("PATH") > -1 :
+      return_text = os.path.normpath(return_text)
     return_text = text.replace("@PWD@", os.getcwd())
     if self.section != "":
       return_text = text.replace("@SIMULATION@", self.section)
