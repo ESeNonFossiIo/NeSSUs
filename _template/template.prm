@@ -1,0 +1,21 @@
+# Listing of Parameters
+# ---------------------
+subsection Finite element system
+  set Dimension of problem = __DIM__[[2]]
+
+  # Gauss quadrature order
+  set Quadrature order  = 3
+end
+
+
+subsection Geometry
+  # Global refinement level
+  set Global refinement   = __REF__[[2]]
+
+  # Global grid scaling factor
+  set Grid scale          = 1e-3
+
+  # Ratio of applied pressure to reference pressure
+  set Pressure ratio p/p0 = __NU__
+end
+
