@@ -161,7 +161,14 @@ for s in simulations:
       with open(bp_prm, "rt") as fin:
         for line in fin:
             for src, target in simulation.iteritems():
-                line = line.replace("__"+str(src)+"__", target)
+              if target != "__NULL__" :
+                line = line.replace("__"+src+"__", target)
+              else:
+                size  = 6 + len(src)
+                start = line.find("__"+src+"__[[")+size
+                end   = line.find("]]", start)
+                val   = line[start:end]
+                line  = line.replace("__"+src+"__[["+val+"]]", val)
             fout.write(line)
 
     # create job foldes:
@@ -188,7 +195,11 @@ for s in simulations:
             if target != "__NULL__" :
               line = line.replace("__"+src+"__", target)
             else:
-              line = line.replace("__"+src+"__", " ")
+              size  = 6 + len(src)
+              start = line.find("__"+src+"__[[")+size
+              end   = line.find("]]", start)
+              val   = line[start:end]
+              line  = line.replace("__"+src+"__[["+val+"]]", val)
           for src in [  "WORK_DIR", 
                         "OUTPUT_LOG_FILE", 
                         "ERROR_LOG_FILE",
