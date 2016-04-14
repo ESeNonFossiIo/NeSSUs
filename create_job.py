@@ -136,7 +136,7 @@ for s in simulations:
       if dictionary_val.get("PBS_NAME") != null_token :
         local_var[s][n]["PBS"] += dictionary_val.get("PBS_NAME")
       else:
-        local_var[s][n]["PBS"] += dictionary_val.get("PRM").replace(".prm", "")
+        local_var[s][n]["PBS"] += local_var[s][n]['PRM_FILENAME'].replace(".prm", "")
       if dictionary_val.get("PBS_WALLTIME") != null_token :
         local_var[s][n]["PBS"] += "\n#PBS -l walltime=" + dictionary_val.get("PBS_WALLTIME")
       if dictionary_val.get("PBS_NODES") != null_token :
