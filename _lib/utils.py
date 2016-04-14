@@ -1,4 +1,8 @@
 import os
+from enum import Enum
+
+class Error(Enum):
+  not_found = 1
 
 class Output(object):
   
@@ -17,6 +21,9 @@ class Output(object):
     text += "\n" + self.BaR
     assert check, text
     
+  def EXCEPTION(self, error, txt):
+    if error == Error.not_found:
+      print '\t{:>20} {:>3} {:12}'.format(str(txt), " -> ", "NOT FOUND") 
     
   def title(self, txt):
     print self.BaR
@@ -89,6 +96,9 @@ def get_name_inside(  line,
     size = len(begin_container)
     start = line.find(begin_container)+size
     end = line.find(end_container, start)
-    return line[start:end] 
+    if end > -1 and start > -1:
+      return line[start:end] 
+    else :
+      return ""
   
   

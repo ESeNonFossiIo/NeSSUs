@@ -198,29 +198,42 @@ for s in simulations:
     # Write job file:
     with open(local_var[s][n]['JOBS_FOLDER_NAME']+local_var[s][n]['JOBS_NAME'], "wt") as fout:
       with open("./_template/template.sh", "rt") as fin:
+        not_found_variables = []
         for line in fin:  
           for src, target in simulations[s][n].iteritems():
             if target != null_token :
+              
               line = line.replace(local_var[s][n]['PTOKEN']+src+local_var[s][n]['PTOKEN'], target)
               val   = get_name_inside(line, "[[", "]]")
               line  = line.replace( "[[" +val+ "]]", "" )
+              
             else:
               begin = local_var[s][n]['PTOKEN']+src+local_var[s][n]['PTOKEN']+"[["
               end   = "]]"
               val   = get_name_inside(line, begin, end)
-              line  = line.replace( begin+val+end, val )
+              if val != "":
+                line  = line.replace( begin+val+end, val )
+              else:
+                line  = line.replace( local_var[s][n]['PTOKEN']+src+local_var[s][n]['PTOKEN'], "" )
           for src in [  "FOLDER", 
                         "WORK_DIR",
                         "OUTPUT_LOG_FILE", 
                         "ERROR_LOG_FILE",
+                        "PREPROCESS",
+                        "POSTPROCESS",
                         "PBS",
-                        "EXECUTABLE",
-                        "ARGS"]:
+                        "EXECUTABLE"]:
             target = local_var[s][n][src]
             line = line.replace(local_var[s][n]['PTOKEN']+src+local_var[s][n]['PTOKEN'], target)
+            if target.strip() == "" :
+              line  = line.replace( local_var[s][n]['PTOKEN']+src+local_var[s][n]['PTOKEN'], "" )
+              not_found_variables.append(src)
+              pass
           for key, val in local_var[s][n].iteritems():
             line = line.replace("@"+str(key)+"@", str(val))
           fout.write(line)
+        for var in list(set(not_found_variables)):
+          out.EXCEPTION(Error.not_found, local_var[s][n]['PTOKEN']+var+local_var[s][n]['PTOKEN'])
   out.close_subsection()
 
 out.close_section()
