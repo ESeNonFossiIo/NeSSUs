@@ -35,7 +35,7 @@ parser.add_option("-c", "--conf",
 # Preliminary operations:
 ################################################################################ 
 
-out = Output(50)
+out = Output(100)
 out.title("Configuration ")
 
 if options.new_configuration_file != "":
@@ -168,12 +168,13 @@ for s in simulations:
             for src, target in simulation.iteritems():
               if target != null_token :
                 line = line.replace(parsing_token+src+parsing_token, target)
+                val   = get_name_inside(line, "[[", "]]")
+                line  = line.replace( "[[" +val+ "]]", "" )                
               else:
-                size  = len(parsing_token)*2+2 + len(src)
-                start = line.find(parsing_token+src+parsing_token+"[[")+size
-                end   = line.find("]]", start)
-                val   = line[start:end]
-                line  = line.replace(parsing_token+src+parsing_token+"[["+val+"]]", val)
+                begin = parsing_token+src+parsing_token+"[["
+                end   = "]]"
+                val   = get_name_inside(line, begin, end)
+                line  = line.replace( begin+val+end, val )
             fout.write(line)
 
     # create job foldes:
@@ -199,12 +200,13 @@ for s in simulations:
           for src, target in simulation.iteritems():
             if target != null_token :
               line = line.replace(parsing_token+src+parsing_token, target)
+              val   = get_name_inside(line, "[[", "]]")
+              line  = line.replace( "[[" +val+ "]]", "" )
             else:
-              size  = len(parsing_token)*2+2 + len(src)
-              start = line.find(parsing_token+src+parsing_token+"[[")+size
-              end   = line.find("]]", start)
-              val   = line[start:end]
-              line  = line.replace(parsing_token+src+parsing_token+"[["+val+"]]", val)
+              begin = parsing_token+src+parsing_token+"[["
+              end   = "]]"
+              val   = get_name_inside(line, begin, end)
+              line  = line.replace( begin+val+end, val )
           for src in [  "WORK_DIR", 
                         "OUTPUT_LOG_FILE", 
                         "ERROR_LOG_FILE",

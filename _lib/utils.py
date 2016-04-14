@@ -81,3 +81,12 @@ class GetValFromDictionary(object):
       self.out.var(value, return_value)
     return return_value
 
+def get_name_inside(  line, 
+                      begin_container="(", 
+                      end_container=")"):
+    size = len(begin_container)
+    start = line.find(begin_container)+size
+    end = line.find(end_container, start)
+    return line[start:end] 
+  
+  

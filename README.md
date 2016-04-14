@@ -1,5 +1,7 @@
 # MaJOrCA - Multiple JObs CreAtor
 
+[![Build Status](https://travis-ci.org/ESeNonFossiIo/MaJOrCA.svg?branch=master)](https://travis-ci.org/ESeNonFossiIo/MaJOrCA)
+
 ## Configure
 1. modify `./create_job.py -c your_conf.conf`
 2. modify `your_conf.conf`
