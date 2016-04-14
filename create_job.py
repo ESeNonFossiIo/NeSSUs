@@ -60,6 +60,7 @@ config.read(options.configuration_file)
 sections = config.sections()
 # Get data from GENERAL section:
 general_val = GetValFromConfParser(out, config, "GENERAL")
+sep_char          = general_val.get("SEP", output=True)
 base_name         = general_val.get("BASE_FOLDER", output=True)
 output_log_file   = general_val.get("OUTPUT_LOG_FILE", output=True)
 error_log_file    = general_val.get("ERROR_LOG_FILE", output=True)
@@ -95,7 +96,7 @@ for s in sections:
   PE = ProcessEntry(out, section=s)
   # Get all value of this simulation: 
   for v in config.options(s):
-    values.append( [ [v, PE.process(opt)]  for opt in config.get(s, v).split(";")] )
+    values.append( [ [v, PE.process(opt)]  for opt in config.get(s, v).split(sep_char)] )
 
   # Evaluate all possibile combiation between values and store this result
   # as a dictionary:
