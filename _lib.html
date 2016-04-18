@@ -42,11 +42,118 @@
 <div class="section" id="submodules">
 <h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this headline">¶</a></h2>
 </div>
-<div class="section" id="lib-utils-module">
-<h2>_lib.utils module<a class="headerlink" href="#lib-utils-module" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-_lib.utils">
+<span id="lib-utils-module"></span><h2>_lib.utils module<a class="headerlink" href="#module-_lib.utils" title="Permalink to this headline">¶</a></h2>
+<dl class="class">
+<dt id="_lib.utils.Error">
+<em class="property">class </em><code class="descclassname">_lib.utils.</code><code class="descname">Error</code><a class="reference internal" href="_modules/_lib/utils.html#Error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#_lib.utils.Error" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">enum.Enum</span></code></p>
+<dl class="attribute">
+<dt id="_lib.utils.Error.not_found">
+<code class="descname">not_found</code><em class="property"> = &lt;Error.not_found: 1&gt;</em><a class="headerlink" href="#_lib.utils.Error.not_found" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="_lib.utils.GetValFromConfParser">
+<em class="property">class </em><code class="descclassname">_lib.utils.</code><code class="descname">GetValFromConfParser</code><span class="sig-paren">(</span><em>out</em>, <em>config_parser</em>, <em>section</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/_lib/utils.html#GetValFromConfParser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#_lib.utils.GetValFromConfParser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dl class="method">
+<dt id="_lib.utils.GetValFromConfParser.get">
+<code class="descname">get</code><span class="sig-paren">(</span><em>name</em>, <em>output=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/_lib/utils.html#GetValFromConfParser.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#_lib.utils.GetValFromConfParser.get" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="_lib.utils.GetValFromDictionary">
+<em class="property">class </em><code class="descclassname">_lib.utils.</code><code class="descname">GetValFromDictionary</code><span class="sig-paren">(</span><em>out</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/_lib/utils.html#GetValFromDictionary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#_lib.utils.GetValFromDictionary" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dl class="method">
+<dt id="_lib.utils.GetValFromDictionary.get">
+<code class="descname">get</code><span class="sig-paren">(</span><em>value</em>, <em>output=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/_lib/utils.html#GetValFromDictionary.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#_lib.utils.GetValFromDictionary.get" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="_lib.utils.Output">
+<em class="property">class </em><code class="descclassname">_lib.utils.</code><code class="descname">Output</code><span class="sig-paren">(</span><em>lenght=50</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/_lib/utils.html#Output"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#_lib.utils.Output" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dl class="method">
+<dt id="_lib.utils.Output.ASSERT">
+<code class="descname">ASSERT</code><span class="sig-paren">(</span><em>check</em>, <em>msg=''</em>, <em>error_type=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/_lib/utils.html#Output.ASSERT"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#_lib.utils.Output.ASSERT" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="_lib.utils.Output.EXCEPTION">
+<code class="descname">EXCEPTION</code><span class="sig-paren">(</span><em>error</em>, <em>txt</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/_lib/utils.html#Output.EXCEPTION"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#_lib.utils.Output.EXCEPTION" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="_lib.utils.Output.close_section">
+<code class="descname">close_section</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/_lib/utils.html#Output.close_section"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#_lib.utils.Output.close_section" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="_lib.utils.Output.close_subsection">
+<code class="descname">close_subsection</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/_lib/utils.html#Output.close_subsection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#_lib.utils.Output.close_subsection" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="_lib.utils.Output.title">
+<code class="descname">title</code><span class="sig-paren">(</span><em>txt</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/_lib/utils.html#Output.title"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#_lib.utils.Output.title" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="method">
+<dt id="_lib.utils.Output.var">
+<code class="descname">var</code><span class="sig-paren">(</span><em>name</em>, <em>val</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/_lib/utils.html#Output.var"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#_lib.utils.Output.var" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="_lib.utils.ProcessEntry">
+<em class="property">class </em><code class="descclassname">_lib.utils.</code><code class="descname">ProcessEntry</code><span class="sig-paren">(</span><em>out</em>, <em>section=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/_lib/utils.html#ProcessEntry"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#_lib.utils.ProcessEntry" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<dl class="method">
+<dt id="_lib.utils.ProcessEntry.process">
+<code class="descname">process</code><span class="sig-paren">(</span><em>text</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/_lib/utils.html#ProcessEntry.process"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#_lib.utils.ProcessEntry.process" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="class">
+<dt id="_lib.utils.ReplaceHelper">
+<em class="property">class </em><code class="descclassname">_lib.utils.</code><code class="descname">ReplaceHelper</code><span class="sig-paren">(</span><em>sep=';'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/_lib/utils.html#ReplaceHelper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#_lib.utils.ReplaceHelper" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<p>Replace default values with the simulation ones.</p>
+<dl class="method">
+<dt id="_lib.utils.ReplaceHelper.replace">
+<code class="descname">replace</code><span class="sig-paren">(</span><em>line</em>, <em>src</em>, <em>target</em>, <em>remove_default=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/_lib/utils.html#ReplaceHelper.replace"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#_lib.utils.ReplaceHelper.replace" title="Permalink to this definition">¶</a></dt>
+<dd><p>Replace a sting of the form :param: sep + :param: src + :param: sep with 
+target</p>
+</dd></dl>
+
+<dl class="method">
+<dt id="_lib.utils.ReplaceHelper.replace_with_default_value">
+<code class="descname">replace_with_default_value</code><span class="sig-paren">(</span><em>line</em>, <em>src</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/_lib/utils.html#ReplaceHelper.replace_with_default_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#_lib.utils.ReplaceHelper.replace_with_default_value" title="Permalink to this definition">¶</a></dt>
+<dd><p>Replace a sting of the form :param: sep + :param: src + :param: sep with 
+default value.
+If no default value is specified the variable will be removed.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="function">
+<dt id="_lib.utils.get_name_inside">
+<code class="descclassname">_lib.utils.</code><code class="descname">get_name_inside</code><span class="sig-paren">(</span><em>line</em>, <em>begin_container='('</em>, <em>end_container=')'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/_lib/utils.html#get_name_inside"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#_lib.utils.get_name_inside" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
 </div>
-<div class="section" id="module-contents">
-<h2>Module contents<a class="headerlink" href="#module-contents" title="Permalink to this headline">¶</a></h2>
+<div class="section" id="module-_lib">
+<span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-_lib" title="Permalink to this headline">¶</a></h2>
 </div>
 </div>
 
@@ -60,8 +167,8 @@
   <ul>
 <li><a class="reference internal" href="#">_lib package</a><ul>
 <li><a class="reference internal" href="#submodules">Submodules</a></li>
-<li><a class="reference internal" href="#lib-utils-module">_lib.utils module</a></li>
-<li><a class="reference internal" href="#module-contents">Module contents</a></li>
+<li><a class="reference internal" href="#module-_lib.utils">_lib.utils module</a></li>
+<li><a class="reference internal" href="#module-_lib">Module contents</a></li>
 </ul>
 </li>
 </ul>

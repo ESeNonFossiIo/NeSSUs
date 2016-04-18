@@ -1,0 +1,225 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>_lib.utils &mdash; MaJOrCA 0.0 documentation</title>
+    
+    <link rel="stylesheet" href="../../_static/alabaster.css" type="text/css" />
+    <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '../../',
+        VERSION:     '0.0',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="../../_static/jquery.js"></script>
+    <script type="text/javascript" src="../../_static/underscore.js"></script>
+    <script type="text/javascript" src="../../_static/doctools.js"></script>
+    <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="top" title="MaJOrCA 0.0 documentation" href="../../index.html" />
+    <link rel="up" title="Module code" href="../index.html" />
+   
+  
+  <meta name="viewport" content="width=device-width, initial-scale=0.9, maximum-scale=0.9" />
+
+  </head>
+  <body role="document">  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for _lib.utils</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
+
+<div class="viewcode-block" id="Error"><a class="viewcode-back" href="../../_lib.html#_lib.utils.Error">[docs]</a><span class="k">class</span> <span class="nc">Error</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+  <span class="n">not_found</span> <span class="o">=</span> <span class="mi">1</span></div>
+
+<div class="viewcode-block" id="ReplaceHelper"><a class="viewcode-back" href="../../_lib.html#_lib.utils.ReplaceHelper">[docs]</a><span class="k">class</span> <span class="nc">ReplaceHelper</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Replace default values with the simulation ones.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;;&quot;</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">sep</span> <span class="o">=</span> <span class="n">sep</span>
+
+<div class="viewcode-block" id="ReplaceHelper.replace"><a class="viewcode-back" href="../../_lib.html#_lib.utils.ReplaceHelper.replace">[docs]</a>  <span class="k">def</span> <span class="nf">replace</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">,</span> <span class="n">src</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">remove_default</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">      Replace a sting of the form :param: sep + :param: src + :param: sep with </span>
+<span class="sd">      target </span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sep</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">src</span><span class="p">)</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">sep</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">target</span><span class="p">))</span>    
+    <span class="k">if</span> <span class="n">remove_default</span><span class="p">:</span>
+      <span class="n">val</span>   <span class="o">=</span> <span class="n">get_name_inside</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="s2">&quot;[[&quot;</span><span class="p">,</span> <span class="s2">&quot;]]&quot;</span><span class="p">)</span>
+      <span class="n">line</span>  <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span> <span class="s2">&quot;[[&quot;</span> <span class="o">+</span><span class="n">val</span><span class="o">+</span> <span class="s2">&quot;]]&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span> <span class="p">)</span>
+    <span class="k">return</span> <span class="n">line</span></div>
+
+<div class="viewcode-block" id="ReplaceHelper.replace_with_default_value"><a class="viewcode-back" href="../../_lib.html#_lib.utils.ReplaceHelper.replace_with_default_value">[docs]</a>  <span class="k">def</span> <span class="nf">replace_with_default_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">,</span> <span class="n">src</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">      Replace a sting of the form :param: sep + :param: src + :param: sep with </span>
+<span class="sd">      default value.</span>
+<span class="sd">      If no default value is specified the variable will be removed.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">begin</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sep</span><span class="o">+</span><span class="n">src</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">sep</span><span class="o">+</span><span class="s2">&quot;[[&quot;</span>
+    <span class="n">end</span>   <span class="o">=</span> <span class="s2">&quot;]]&quot;</span>
+    <span class="n">val</span>   <span class="o">=</span> <span class="n">get_name_inside</span><span class="p">(</span><span class="n">line</span><span class="p">,</span> <span class="n">begin</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">val</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+      <span class="n">line</span>  <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span> <span class="n">begin</span><span class="o">+</span><span class="n">val</span><span class="o">+</span><span class="n">end</span><span class="p">,</span> <span class="n">val</span> <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+      <span class="n">line</span>  <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span> <span class="bp">self</span><span class="o">.</span><span class="n">sep</span><span class="o">+</span><span class="n">src</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">sep</span><span class="p">,</span> <span class="s2">&quot;&quot;</span> <span class="p">)</span>
+    <span class="k">return</span> <span class="n">line</span></div></div>
+    
+
+<div class="viewcode-block" id="Output"><a class="viewcode-back" href="../../_lib.html#_lib.utils.Output">[docs]</a><span class="k">class</span> <span class="nc">Output</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+  
+  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lenght</span><span class="o">=</span><span class="mi">50</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">BAR</span><span class="o">=</span><span class="p">(</span><span class="n">lenght</span><span class="o">*</span><span class="s2">&quot;=&quot;</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;=&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">bar</span><span class="o">=</span><span class="p">(</span><span class="n">lenght</span><span class="o">*</span><span class="s2">&quot;-&quot;</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;-&quot;</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">BaR</span><span class="o">=</span><span class="p">((</span><span class="n">lenght</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="s2">&quot;-=&quot;</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;-&quot;</span>
+    <span class="k">print</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span>
+    <span class="k">print</span> <span class="bp">self</span><span class="o">.</span><span class="n">BAR</span>
+
+<div class="viewcode-block" id="Output.ASSERT"><a class="viewcode-back" href="../../_lib.html#_lib.utils.Output.ASSERT">[docs]</a>  <span class="k">def</span> <span class="nf">ASSERT</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">check</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">error_type</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+    <span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span> <span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">BaR</span>
+    <span class="n">text</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">  ERROR: &quot;</span>
+    <span class="k">if</span> <span class="n">error_type</span> <span class="o">==</span> <span class="s2">&quot;existence&quot;</span> <span class="p">:</span>
+      <span class="n">text</span> <span class="o">+=</span> <span class="s2">&quot;`&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;` does not exist! &quot;</span>
+    <span class="n">text</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">BaR</span>
+    <span class="k">assert</span> <span class="n">check</span><span class="p">,</span> <span class="n">text</span></div>
+    
+<div class="viewcode-block" id="Output.EXCEPTION"><a class="viewcode-back" href="../../_lib.html#_lib.utils.Output.EXCEPTION">[docs]</a>  <span class="k">def</span> <span class="nf">EXCEPTION</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">error</span><span class="p">,</span> <span class="n">txt</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">error</span> <span class="o">==</span> <span class="n">Error</span><span class="o">.</span><span class="n">not_found</span><span class="p">:</span>
+      <span class="k">print</span> <span class="s1">&#39;</span><span class="se">\t</span><span class="s1">{:&gt;20} {:&gt;3} {:12}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">txt</span><span class="p">),</span> <span class="s2">&quot; -&gt; &quot;</span><span class="p">,</span> <span class="s2">&quot;NOT FOUND&quot;</span><span class="p">)</span> </div>
+    
+<div class="viewcode-block" id="Output.title"><a class="viewcode-back" href="../../_lib.html#_lib.utils.Output.title">[docs]</a>  <span class="k">def</span> <span class="nf">title</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">txt</span><span class="p">):</span>
+    <span class="k">print</span> <span class="bp">self</span><span class="o">.</span><span class="n">BaR</span>
+    <span class="k">print</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">txt</span><span class="p">)</span>
+    <span class="k">print</span> <span class="bp">self</span><span class="o">.</span><span class="n">BaR</span></div>
+
+<div class="viewcode-block" id="Output.close_section"><a class="viewcode-back" href="../../_lib.html#_lib.utils.Output.close_section">[docs]</a>  <span class="k">def</span> <span class="nf">close_section</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">print</span> <span class="bp">self</span><span class="o">.</span><span class="n">BAR</span></div>
+
+<div class="viewcode-block" id="Output.close_subsection"><a class="viewcode-back" href="../../_lib.html#_lib.utils.Output.close_subsection">[docs]</a>  <span class="k">def</span> <span class="nf">close_subsection</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">print</span> <span class="bp">self</span><span class="o">.</span><span class="n">bar</span></div>
+    
+<div class="viewcode-block" id="Output.var"><a class="viewcode-back" href="../../_lib.html#_lib.utils.Output.var">[docs]</a>  <span class="k">def</span> <span class="nf">var</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">name</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+    <span class="k">print</span> <span class="s1">&#39;</span><span class="se">\t</span><span class="s1">{:&gt;20} {:&gt;3} {:12}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">name</span><span class="p">),</span> <span class="s2">&quot;  = &quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">val</span><span class="p">))</span> </div></div>
+
+<div class="viewcode-block" id="ProcessEntry"><a class="viewcode-back" href="../../_lib.html#_lib.utils.ProcessEntry">[docs]</a><span class="k">class</span> <span class="nc">ProcessEntry</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">out</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">out</span> <span class="o">=</span> <span class="n">out</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">section</span> <span class="o">=</span> <span class="n">section</span>
+    
+<div class="viewcode-block" id="ProcessEntry.process"><a class="viewcode-back" href="../../_lib.html#_lib.utils.ProcessEntry.process">[docs]</a>  <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
+    <span class="n">return_text</span> <span class="o">=</span> <span class="n">text</span>
+    <span class="k">if</span> <span class="n">return_text</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;PATH&quot;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span> <span class="p">:</span>
+      <span class="n">return_text</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">return_text</span><span class="p">)</span>
+    <span class="n">return_text</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;@PWD@&quot;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">getcwd</span><span class="p">())</span>
+    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">section</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+      <span class="n">return_text</span> <span class="o">=</span> <span class="n">text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;@SIMULATION@&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">section</span><span class="p">)</span>
+    <span class="k">while</span> <span class="n">return_text</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;@ENV[&quot;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span> <span class="p">:</span>
+      <span class="n">env</span> <span class="o">=</span> <span class="n">return_text</span><span class="p">[</span><span class="n">return_text</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;@ENV[&quot;</span><span class="p">)</span><span class="o">+</span><span class="mi">5</span><span class="p">:</span><span class="n">return_text</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;]@&quot;</span><span class="p">)]</span>
+      <span class="n">var</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="n">env</span><span class="p">]</span>
+      <span class="n">return_text</span> <span class="o">=</span> <span class="n">return_text</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;@ENV[&quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">env</span><span class="p">)</span> <span class="o">+</span> <span class="s2">&quot;]@&quot;</span><span class="p">,</span> <span class="n">var</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">return_text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span></div></div>
+    
+<div class="viewcode-block" id="GetValFromConfParser"><a class="viewcode-back" href="../../_lib.html#_lib.utils.GetValFromConfParser">[docs]</a><span class="k">class</span> <span class="nc">GetValFromConfParser</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">out</span><span class="p">,</span> <span class="n">config_parser</span><span class="p">,</span> <span class="n">section</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">out</span> <span class="o">=</span> <span class="n">out</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span> <span class="o">=</span> <span class="n">config_parser</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">section</span> <span class="o">=</span> <span class="n">section</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">PE</span> <span class="o">=</span> <span class="n">ProcessEntry</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">section</span><span class="p">)</span>
+
+<div class="viewcode-block" id="GetValFromConfParser.get"><a class="viewcode-back" href="../../_lib.html#_lib.utils.GetValFromConfParser.get">[docs]</a>  <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">section</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
+    <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">PE</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">output</span><span class="p">:</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">val</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">val</span></div></div>
+
+<div class="viewcode-block" id="GetValFromDictionary"><a class="viewcode-back" href="../../_lib.html#_lib.utils.GetValFromDictionary">[docs]</a><span class="k">class</span> <span class="nc">GetValFromDictionary</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+  <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">out</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">):</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">out</span> <span class="o">=</span> <span class="n">out</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">dictionary</span> <span class="o">=</span> <span class="n">dictionary</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">PE</span> <span class="o">=</span> <span class="n">ProcessEntry</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
+    
+<div class="viewcode-block" id="GetValFromDictionary.get"><a class="viewcode-back" href="../../_lib.html#_lib.utils.GetValFromDictionary.get">[docs]</a>  <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+      <span class="n">return_value</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dictionary</span><span class="p">[</span><span class="n">value</span><span class="p">]</span>
+    <span class="k">except</span><span class="p">:</span>
+      <span class="n">return_value</span><span class="o">=</span><span class="s2">&quot;&quot;</span>
+    <span class="n">return_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">PE</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">return_value</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">output</span><span class="p">:</span>
+      <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">return_value</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">return_value</span></div></div>
+
+<div class="viewcode-block" id="get_name_inside"><a class="viewcode-back" href="../../_lib.html#_lib.utils.get_name_inside">[docs]</a><span class="k">def</span> <span class="nf">get_name_inside</span><span class="p">(</span>  <span class="n">line</span><span class="p">,</span> 
+                      <span class="n">begin_container</span><span class="o">=</span><span class="s2">&quot;(&quot;</span><span class="p">,</span> 
+                      <span class="n">end_container</span><span class="o">=</span><span class="s2">&quot;)&quot;</span><span class="p">):</span>
+    <span class="n">size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">begin_container</span><span class="p">)</span>
+    <span class="n">start</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">begin_container</span><span class="p">)</span><span class="o">+</span><span class="n">size</span>
+    <span class="n">end</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">end_container</span><span class="p">,</span> <span class="n">start</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">end</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">start</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+      <span class="k">return</span> <span class="n">line</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">]</span> 
+    <span class="k">else</span> <span class="p">:</span>
+      <span class="k">return</span> <span class="s2">&quot;&quot;</span></div>
+  
+  
+</pre></div>
+
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="relations">
+<h3>Related Topics</h3>
+<ul>
+  <li><a href="../../index.html">Documentation overview</a><ul>
+  <li><a href="../index.html">Module code</a><ul>
+  </ul></li>
+  </ul></li>
+</ul>
+</div>
+<div id="searchbox" style="display: none" role="search">
+  <h3>Quick search</h3>
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="footer">
+      &copy;2016, Mauro Bardelloni.
+      
+      |
+      Powered by <a href="http://sphinx-doc.org/">Sphinx 1.3.5</a>
+      &amp; <a href="https://github.com/bitprophet/alabaster">Alabaster 0.7.7</a>
+      
+    </div>
+
+    
+
+    
+  </body>
+</html>
