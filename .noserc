@@ -1,0 +1,4 @@
+[nosetests]
+WHERE=_tests
+verbosity=3
+with-doctest=1

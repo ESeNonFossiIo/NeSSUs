@@ -87,6 +87,8 @@ sections.remove('GENERAL')
 
 # placeholder for NULL entries
 null_token = general['PTOKEN']+"NULL"+general['PTOKEN']
+# Define ReplaceHelper (see: lib/utils.py)
+rh = ReplaceHelper(general['PTOKEN'])
 
 # Fill the dictionary simulations with all possibile combination of every 
 # parameter of every single simulation:
@@ -169,14 +171,9 @@ for s in simulations:
         for line in fin:
             for src, target in simulations[s][n].iteritems():
               if target != null_token :
-                line = line.replace(local_var[s][n]['PTOKEN']+src+local_var[s][n]['PTOKEN'], target)
-                val   = get_name_inside(line, "[[", "]]")
-                line  = line.replace( "[[" +val+ "]]", "" )                
+                line = rh.replace(line, src, target)             
               else:
-                begin = local_var[s][n]['PTOKEN']+src+local_var[s][n]['PTOKEN']+"[["
-                end   = "]]"
-                val   = get_name_inside(line, begin, end)
-                line  = line.replace( begin+val+end, val )
+                line = rh.replace_with_default_value(line, src)  
             fout.write(line)
 
     # create job foldes:
@@ -201,20 +198,10 @@ for s in simulations:
         not_found_variables = []
         for line in fin:  
           for src, target in simulations[s][n].iteritems():
-            if target != null_token :
-              
-              line = line.replace(local_var[s][n]['PTOKEN']+src+local_var[s][n]['PTOKEN'], target)
-              val   = get_name_inside(line, "[[", "]]")
-              line  = line.replace( "[[" +val+ "]]", "" )
-              
+            if target != null_token :  
+              line = rh.replace(line, src, target)
             else:
-              begin = local_var[s][n]['PTOKEN']+src+local_var[s][n]['PTOKEN']+"[["
-              end   = "]]"
-              val   = get_name_inside(line, begin, end)
-              if val != "":
-                line  = line.replace( begin+val+end, val )
-              else:
-                line  = line.replace( local_var[s][n]['PTOKEN']+src+local_var[s][n]['PTOKEN'], "" )
+              line = rh.replace_with_default_value(line, src) 
           for src in [  "FOLDER", 
                         "WORK_DIR",
                         "OUTPUT_LOG_FILE", 
@@ -224,7 +211,7 @@ for s in simulations:
                         "PBS",
                         "EXECUTABLE"]:
             target = local_var[s][n][src]
-            line = line.replace(local_var[s][n]['PTOKEN']+src+local_var[s][n]['PTOKEN'], target)
+            line = rh.replace(line, src, target)
             if target.strip() == "" :
               line  = line.replace( local_var[s][n]['PTOKEN']+src+local_var[s][n]['PTOKEN'], "" )
               not_found_variables.append(src)

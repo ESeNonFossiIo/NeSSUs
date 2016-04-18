@@ -1,4 +1,4 @@
-.Phony: clean qsub sh tests
+.Phony: clean qsub sh tests gh-pages update
 
 clean:
 	@echo "======================================================================"
@@ -14,7 +14,7 @@ cleanf:
 
 
 tests:
-	@nosetests --verbosity=2 _tests/
+	@./_utilities/test.py
 
 qsub:
 	@echo "======================================================================"
@@ -29,3 +29,27 @@ sh:
 	@echo "======================================================================"
 	@for file in `find . -name *.sh`;do sh $$file; done
 	@echo "======================================================================"
+
+# .ONESHELL:
+GH_PAGES_SOURCES = _doc/source _doc/Makefile _lib/
+gh-pages:
+	@echo "======================================================================"
+	@echo " ---> Making documentation"
+	@echo "======================================================================"
+	@git checkout gh-pages
+	@rm -rf *
+	@git checkout master $(GH_PAGES_SOURCES)
+	@git reset HEAD
+	@cd "./_doc/"; make html
+	@mv -fv _doc/build/html/* ./
+	@rm -rf _doc/*
+	@git add -A
+	@git commit -m "Generated gh-pages for `git log master -1 --pretty=short --abbrev-commit`" && git push -f origin gh-pages
+	@git checkout master
+	@echo "======================================================================"
+
+update:
+	@echo "======================================================================"
+	@echo " ---> Updating submodule"
+	@echo "======================================================================"
+	@git submodule update --init
