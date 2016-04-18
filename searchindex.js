@@ -1,0 +1,1 @@
+Search.setIndex({envversion:46,filenames:["_lib","create_job","index","modules"],objects:{},objnames:{},objtypes:{},terms:{index:2,page:2,search:2},titles:["_lib package","create_job module","Welcome to MaJOrCA&#8217;s documentation!","PUlSe"],titleterms:{"_lib":0,content:0,create_job:1,document:2,indic:2,majorca:2,modul:[0,1],packag:0,puls:3,submodul:0,tabl:2,util:0,welcom:2}})
