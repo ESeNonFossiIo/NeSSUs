@@ -2,6 +2,9 @@
 
 [![Build Status](https://travis-ci.org/ESeNonFossiIo/MaJOrCA.svg?branch=master)](https://travis-ci.org/ESeNonFossiIo/MaJOrCA)
 
+[![Coverage Status](https://coveralls.io/repos/github/ESeNonFossiIo/MaJOrCA/badge.svg?branch=master)](https://coveralls.io/github/ESeNonFossiIo/MaJOrCA?branch=master)
+
+
 ## Configure
 1. modify `./create_job.py -c your_conf.conf`
 2. modify `your_conf.conf`

@@ -58,6 +58,7 @@ def test_process_entry():
   string="@PWD@"
   assert pe.process(string) == os.getcwd().strip()
   string="PATH"
+  string=pe.process(string)
   assert True
   string="@SIMULATION@"
   assert pe.process(string) == "section"
@@ -82,6 +83,7 @@ def test_GetValFromDictionary():
   dictionary['item'] = "val"
   extractor = GetValFromDictionary(out, dictionary)
   assert extractor.get("item") == "val"
+  assert extractor.get("not") == ""
   assert extractor.get("item", True) == "val"
   
 # Function get_name_inside:
