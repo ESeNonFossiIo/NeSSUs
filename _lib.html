@@ -24,6 +24,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="top" title="MaJOrCA 0.0 documentation" href="index.html" />
    
   
@@ -44,10 +45,17 @@
 </div>
 <div class="section" id="module-_lib.utils">
 <span id="lib-utils-module"></span><h2>_lib.utils module<a class="headerlink" href="#module-_lib.utils" title="Permalink to this headline">¶</a></h2>
+<p>Library used to simplify the code of <cite>create_job.py</cite></p>
 <dl class="class">
 <dt id="_lib.utils.Error">
 <em class="property">class </em><code class="descclassname">_lib.utils.</code><code class="descname">Error</code><a class="reference internal" href="_modules/_lib/utils.html#Error"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#_lib.utils.Error" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal"><span class="pre">enum.Enum</span></code></p>
+<p>Enum class used to deal with errors.</p>
+<dl class="docutils">
+<dt>Members:</dt>
+<dd>not_found (int): Error used when a file or more generally
+an object is not found.</dd>
+</dl>
 <dl class="attribute">
 <dt id="_lib.utils.Error.not_found">
 <code class="descname">not_found</code><em class="property"> = &lt;Error.not_found: 1&gt;</em><a class="headerlink" href="#_lib.utils.Error.not_found" title="Permalink to this definition">¶</a></dt>
@@ -59,10 +67,31 @@
 <dt id="_lib.utils.GetValFromConfParser">
 <em class="property">class </em><code class="descclassname">_lib.utils.</code><code class="descname">GetValFromConfParser</code><span class="sig-paren">(</span><em>out</em>, <em>config_parser</em>, <em>section</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/_lib/utils.html#GetValFromConfParser"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#_lib.utils.GetValFromConfParser" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<p>Get value from a <cite>ConfParser</cite>.</p>
 <dl class="method">
 <dt id="_lib.utils.GetValFromConfParser.get">
 <code class="descname">get</code><span class="sig-paren">(</span><em>name</em>, <em>output=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/_lib/utils.html#GetValFromConfParser.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#_lib.utils.GetValFromConfParser.get" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Get a value.</p>
+<p>Get a value from <cite>section</cite> of <cite>config_parser</cite>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Name of the variable.</li>
+<li><strong>output</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; Print the name of the variable and its value.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">value associated to <cite>name</cite>.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/library/string.html#module-string" title="(in Python v2.7)">string</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 </dd></dl>
 
@@ -70,10 +99,31 @@
 <dt id="_lib.utils.GetValFromDictionary">
 <em class="property">class </em><code class="descclassname">_lib.utils.</code><code class="descname">GetValFromDictionary</code><span class="sig-paren">(</span><em>out</em>, <em>dictionary</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/_lib/utils.html#GetValFromDictionary"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#_lib.utils.GetValFromDictionary" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<p>Get value from a <cite>Dictionary</cite>.</p>
 <dl class="method">
 <dt id="_lib.utils.GetValFromDictionary.get">
-<code class="descname">get</code><span class="sig-paren">(</span><em>value</em>, <em>output=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/_lib/utils.html#GetValFromDictionary.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#_lib.utils.GetValFromDictionary.get" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<code class="descname">get</code><span class="sig-paren">(</span><em>name</em>, <em>output=False</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/_lib/utils.html#GetValFromDictionary.get"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#_lib.utils.GetValFromDictionary.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Get a value.</p>
+<p>Get a value from <cite>dictionary</cite>.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>name</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Name of the variable.</li>
+<li><strong>output</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; Print the name of the variable and its value.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">value associated to <cite>name</cite>.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/library/string.html#module-string" title="(in Python v2.7)">string</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 </dd></dl>
 
@@ -81,35 +131,90 @@
 <dt id="_lib.utils.Output">
 <em class="property">class </em><code class="descclassname">_lib.utils.</code><code class="descname">Output</code><span class="sig-paren">(</span><em>lenght=50</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/_lib/utils.html#Output"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#_lib.utils.Output" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<p>Toolbox of utilities for the output.</p>
 <dl class="method">
-<dt id="_lib.utils.Output.ASSERT">
-<code class="descname">ASSERT</code><span class="sig-paren">(</span><em>check</em>, <em>msg=''</em>, <em>error_type=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/_lib/utils.html#Output.ASSERT"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#_lib.utils.Output.ASSERT" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
-
-<dl class="method">
-<dt id="_lib.utils.Output.EXCEPTION">
-<code class="descname">EXCEPTION</code><span class="sig-paren">(</span><em>error</em>, <em>txt</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/_lib/utils.html#Output.EXCEPTION"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#_lib.utils.Output.EXCEPTION" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dt id="_lib.utils.Output.assert_msg">
+<code class="descname">assert_msg</code><span class="sig-paren">(</span><em>check</em>, <em>msg=''</em>, <em>error_type=None</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/_lib/utils.html#Output.assert_msg"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#_lib.utils.Output.assert_msg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Assert.</p>
+<p>This metod is used to handle assert messages.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>check</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; Value to satisfy to pass the test.</li>
+<li><strong>msg</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Message to print.</li>
+<li><strong>error_type</strong> (<a class="reference internal" href="#_lib.utils.Error" title="_lib.utils.Error"><em>Error</em></a>) &#8211; Error give.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="method">
 <dt id="_lib.utils.Output.close_section">
 <code class="descname">close_section</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/_lib/utils.html#Output.close_section"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#_lib.utils.Output.close_section" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Close a section.</p>
+<p>Statement used to close a section.</p>
+</dd></dl>
 
 <dl class="method">
 <dt id="_lib.utils.Output.close_subsection">
 <code class="descname">close_subsection</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/_lib/utils.html#Output.close_subsection"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#_lib.utils.Output.close_subsection" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Close a subsection.</p>
+<p>Statement used to close a subsection.</p>
+</dd></dl>
+
+<dl class="staticmethod">
+<dt id="_lib.utils.Output.exception_msg">
+<em class="property">static </em><code class="descname">exception_msg</code><span class="sig-paren">(</span><em>error</em>, <em>txt</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/_lib/utils.html#Output.exception_msg"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#_lib.utils.Output.exception_msg" title="Permalink to this definition">¶</a></dt>
+<dd><p>Exception message.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>error</strong> (<a class="reference internal" href="#_lib.utils.Error" title="_lib.utils.Error"><em>Error</em></a>) &#8211; Kind of error.</li>
+<li><strong>txt</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Text of the message.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 <dl class="method">
 <dt id="_lib.utils.Output.title">
 <code class="descname">title</code><span class="sig-paren">(</span><em>txt</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/_lib/utils.html#Output.title"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#_lib.utils.Output.title" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Title.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>txt</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Text of the title.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
-<dl class="method">
+<dl class="staticmethod">
 <dt id="_lib.utils.Output.var">
-<code class="descname">var</code><span class="sig-paren">(</span><em>name</em>, <em>val</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/_lib/utils.html#Output.var"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#_lib.utils.Output.var" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<em class="property">static </em><code class="descname">var</code><span class="sig-paren">(</span><em>name</em>, <em>val</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/_lib/utils.html#Output.var"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#_lib.utils.Output.var" title="Permalink to this definition">¶</a></dt>
+<dd><p>Print a variable.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>name</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Name of the variable.</li>
+<li><strong>val</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Value of the variable.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 </dd></dl>
 
@@ -117,10 +222,24 @@
 <dt id="_lib.utils.ProcessEntry">
 <em class="property">class </em><code class="descclassname">_lib.utils.</code><code class="descname">ProcessEntry</code><span class="sig-paren">(</span><em>out</em>, <em>section=''</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/_lib/utils.html#ProcessEntry"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#_lib.utils.ProcessEntry" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
+<p>Toolbox to process entries.</p>
 <dl class="method">
 <dt id="_lib.utils.ProcessEntry.process">
 <code class="descname">process</code><span class="sig-paren">(</span><em>text</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/_lib/utils.html#ProcessEntry.process"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#_lib.utils.ProcessEntry.process" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Process a text.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>text</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Text to process and format.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">Processed text.</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><a class="reference external" href="https://docs.python.org/library/string.html#module-string" title="(in Python v2.7)">string</a></td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 </dd></dl>
 
@@ -128,20 +247,57 @@
 <dt id="_lib.utils.ReplaceHelper">
 <em class="property">class </em><code class="descclassname">_lib.utils.</code><code class="descname">ReplaceHelper</code><span class="sig-paren">(</span><em>sep=';'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/_lib/utils.html#ReplaceHelper"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#_lib.utils.ReplaceHelper" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference external" href="https://docs.python.org/library/functions.html#object" title="(in Python v2.7)"><code class="xref py py-class docutils literal"><span class="pre">object</span></code></a></p>
-<p>Replace default values with the simulation ones.</p>
+<p>Toolbox of utilities to replace words in a string.</p>
 <dl class="method">
 <dt id="_lib.utils.ReplaceHelper.replace">
 <code class="descname">replace</code><span class="sig-paren">(</span><em>line</em>, <em>src</em>, <em>target</em>, <em>remove_default=True</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/_lib/utils.html#ReplaceHelper.replace"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#_lib.utils.ReplaceHelper.replace" title="Permalink to this definition">¶</a></dt>
-<dd><p>Replace a sting of the form :param: sep + :param: src + :param: sep with 
-target</p>
+<dd><p>Replace <cite>src</cite> with <cite>target</cite> in <cite>line</cite>.</p>
+<p>Extended description of function.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>line</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Text where <cite>src</cite> will be replaced by <cite>target</cite>.</li>
+<li><strong>src</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Old tex.</li>
+<li><strong>target</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; New text.</li>
+<li><strong>remove_default</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#bool" title="(in Python v2.7)"><em>bool</em></a>) &#8211; Remove default value.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><cite>text</cite> with <cite>src</cite> replaced by <cite>target</cite>.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/library/string.html#module-string" title="(in Python v2.7)">string</a></p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 <dl class="method">
 <dt id="_lib.utils.ReplaceHelper.replace_with_default_value">
 <code class="descname">replace_with_default_value</code><span class="sig-paren">(</span><em>line</em>, <em>src</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/_lib/utils.html#ReplaceHelper.replace_with_default_value"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#_lib.utils.ReplaceHelper.replace_with_default_value" title="Permalink to this definition">¶</a></dt>
-<dd><p>Replace a sting of the form :param: sep + :param: src + :param: sep with 
-default value.
-If no default value is specified the variable will be removed.</p>
+<dd><p>Replace <cite>src</cite> with the <cite>default value</cite> in <cite>line</cite>.</p>
+<p>Extended description of function.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>line</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Text where <cite>src</cite> will be replaced by the <cite>default value</cite>.</li>
+<li><strong>src</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Old tex.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first"><cite>text</cite> with <cite>src</cite> replaced by the <cite>default value</cite>.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/library/string.html#module-string" title="(in Python v2.7)">string</a></p>
+</td>
+</tr>
+</tbody>
+</table>
 </dd></dl>
 
 </dd></dl>
@@ -149,7 +305,28 @@ If no default value is specified the variable will be removed.</p>
 <dl class="function">
 <dt id="_lib.utils.get_name_inside">
 <code class="descclassname">_lib.utils.</code><code class="descname">get_name_inside</code><span class="sig-paren">(</span><em>line</em>, <em>begin_container='('</em>, <em>end_container=')'</em><span class="sig-paren">)</span><a class="reference internal" href="_modules/_lib/utils.html#get_name_inside"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#_lib.utils.get_name_inside" title="Permalink to this definition">¶</a></dt>
-<dd></dd></dl>
+<dd><p>Get the value inside a container.</p>
+<p>Capture the text contained between two containers.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>line</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; Text string</li>
+<li><strong>begin_container</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; This delimiter is before the value to capture.</li>
+<li><strong>end_container</strong> (<a class="reference external" href="https://docs.python.org/library/functions.html#str" title="(in Python v2.7)"><em>str</em></a>) &#8211; This delimiter is after the value to capture.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first">value contained between <cite>begin_container</cite> and <cite>end_container</cite>.</p>
+</td>
+</tr>
+<tr class="field-odd field"><th class="field-name">Return type:</th><td class="field-body"><p class="first last"><a class="reference external" href="https://docs.python.org/library/string.html#module-string" title="(in Python v2.7)">string</a></p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
 
 </div>
 <div class="section" id="module-_lib">
@@ -163,6 +340,9 @@ If no default value is specified the variable will be removed.</p>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="index.html">
+              <img class="logo" src="_static/logo_MaJOrCA.png" alt="Logo"/>
+            </a></p>
   <h3><a href="index.html">Table Of Contents</a></h3>
   <ul>
 <li><a class="reference internal" href="#">_lib package</a><ul>

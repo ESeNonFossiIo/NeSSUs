@@ -24,6 +24,7 @@
     <script type="text/javascript" src="../../_static/underscore.js"></script>
     <script type="text/javascript" src="../../_static/doctools.js"></script>
     <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="../../_static/favicon.ico"/>
     <link rel="top" title="MaJOrCA 0.0 documentation" href="../../index.html" />
     <link rel="up" title="Module code" href="../index.html" />
    
@@ -39,23 +40,48 @@
           <div class="body" role="main">
             
   <h1>Source code for _lib.utils</h1><div class="highlight"><pre>
-<span></span><span class="kn">import</span> <span class="nn">os</span>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">  Library used to simplify the code of `create_job.py`</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">Enum</span>
 
 <div class="viewcode-block" id="Error"><a class="viewcode-back" href="../../_lib.html#_lib.utils.Error">[docs]</a><span class="k">class</span> <span class="nc">Error</span><span class="p">(</span><span class="n">Enum</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot; Enum class used to deal with errors.  </span>
+<span class="sd">  </span>
+<span class="sd">    Members: </span>
+<span class="sd">      not_found (int): Error used when a file or more generally </span>
+<span class="sd">      an object is not found.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
   <span class="n">not_found</span> <span class="o">=</span> <span class="mi">1</span></div>
 
 <div class="viewcode-block" id="ReplaceHelper"><a class="viewcode-back" href="../../_lib.html#_lib.utils.ReplaceHelper">[docs]</a><span class="k">class</span> <span class="nc">ReplaceHelper</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
   <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">    Replace default values with the simulation ones.</span>
+<span class="sd">    Toolbox of utilities to replace words in a string.</span>
 <span class="sd">  &quot;&quot;&quot;</span>
+  
   <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;;&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Constructor.</span>
+<span class="sd">    </span>
+<span class="sd">      Args:</span>
+<span class="sd">        sep (char): char used to separe different entries.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">sep</span> <span class="o">=</span> <span class="n">sep</span>
 
 <div class="viewcode-block" id="ReplaceHelper.replace"><a class="viewcode-back" href="../../_lib.html#_lib.utils.ReplaceHelper.replace">[docs]</a>  <span class="k">def</span> <span class="nf">replace</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">,</span> <span class="n">src</span><span class="p">,</span> <span class="n">target</span><span class="p">,</span> <span class="n">remove_default</span><span class="o">=</span><span class="bp">True</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">      Replace a sting of the form :param: sep + :param: src + :param: sep with </span>
-<span class="sd">      target </span>
+    <span class="sd">&quot;&quot;&quot; Replace `src` with `target` in `line`.</span>
+
+<span class="sd">      Extended description of function.</span>
+
+<span class="sd">      Args:</span>
+<span class="sd">          line (str): Text where `src` will be replaced by `target`.</span>
+<span class="sd">          src (str): Old tex.</span>
+<span class="sd">          target (str): New text.</span>
+<span class="sd">          remove_default (bool): Remove default value.</span>
+
+<span class="sd">      Returns:</span>
+<span class="sd">          string: `text` with `src` replaced by `target`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">line</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">sep</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">src</span><span class="p">)</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">sep</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">target</span><span class="p">))</span>    
     <span class="k">if</span> <span class="n">remove_default</span><span class="p">:</span>
@@ -64,10 +90,16 @@
     <span class="k">return</span> <span class="n">line</span></div>
 
 <div class="viewcode-block" id="ReplaceHelper.replace_with_default_value"><a class="viewcode-back" href="../../_lib.html#_lib.utils.ReplaceHelper.replace_with_default_value">[docs]</a>  <span class="k">def</span> <span class="nf">replace_with_default_value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">line</span><span class="p">,</span> <span class="n">src</span><span class="p">):</span>
-    <span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">      Replace a sting of the form :param: sep + :param: src + :param: sep with </span>
-<span class="sd">      default value.</span>
-<span class="sd">      If no default value is specified the variable will be removed.</span>
+    <span class="sd">&quot;&quot;&quot; Replace `src` with the `default value` in `line`.</span>
+
+<span class="sd">      Extended description of function.</span>
+
+<span class="sd">      Args:</span>
+<span class="sd">          line (str): Text where `src` will be replaced by the `default value`.</span>
+<span class="sd">          src (str): Old tex.</span>
+
+<span class="sd">      Returns:</span>
+<span class="sd">          string: `text` with `src` replaced by the `default value`.</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">begin</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">sep</span><span class="o">+</span><span class="n">src</span><span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">sep</span><span class="o">+</span><span class="s2">&quot;[[&quot;</span>
     <span class="n">end</span>   <span class="o">=</span> <span class="s2">&quot;]]&quot;</span>
@@ -80,47 +112,108 @@
     
 
 <div class="viewcode-block" id="Output"><a class="viewcode-back" href="../../_lib.html#_lib.utils.Output">[docs]</a><span class="k">class</span> <span class="nc">Output</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Toolbox of utilities for the output.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
   
   <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">lenght</span><span class="o">=</span><span class="mi">50</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Constructor.</span>
+<span class="sd">    </span>
+<span class="sd">      Args:</span>
+<span class="sd">          lenght (int): lenght of the output line.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">BAR</span><span class="o">=</span><span class="p">((</span><span class="n">lenght</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="s2">&quot;==&quot;</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;=&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">bar</span><span class="o">=</span><span class="p">((</span><span class="n">lenght</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="s2">&quot;--&quot;</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;-&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">BaR</span><span class="o">=</span><span class="p">((</span><span class="n">lenght</span><span class="o">/</span><span class="mi">2</span><span class="p">)</span><span class="o">*</span><span class="s2">&quot;-=&quot;</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;-&quot;</span>
     <span class="k">print</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span>
     <span class="k">print</span> <span class="bp">self</span><span class="o">.</span><span class="n">BAR</span>
 
-<div class="viewcode-block" id="Output.ASSERT"><a class="viewcode-back" href="../../_lib.html#_lib.utils.Output.ASSERT">[docs]</a>  <span class="k">def</span> <span class="nf">ASSERT</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">check</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">error_type</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+<div class="viewcode-block" id="Output.assert_msg"><a class="viewcode-back" href="../../_lib.html#_lib.utils.Output.assert_msg">[docs]</a>  <span class="k">def</span> <span class="nf">assert_msg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">check</span><span class="p">,</span> <span class="n">msg</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">error_type</span><span class="o">=</span><span class="bp">None</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;Assert.</span>
+<span class="sd">      </span>
+<span class="sd">      This metod is used to handle assert messages.</span>
+
+<span class="sd">      Args:</span>
+<span class="sd">        check (bool): Value to satisfy to pass the test.</span>
+<span class="sd">        msg (str): Message to print.</span>
+<span class="sd">        error_type (Error): Error give.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">text</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="se">\n\n</span><span class="s2">&quot;</span> <span class="o">+</span><span class="bp">self</span><span class="o">.</span><span class="n">BaR</span>
     <span class="n">text</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">  ERROR: &quot;</span>
     <span class="k">if</span> <span class="n">error_type</span> <span class="o">==</span> <span class="n">Error</span><span class="o">.</span><span class="n">not_found</span> <span class="p">:</span>
       <span class="n">text</span> <span class="o">+=</span> <span class="s2">&quot;`&quot;</span><span class="o">+</span><span class="nb">str</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span><span class="o">+</span><span class="s2">&quot;` does not exist! &quot;</span>
     <span class="n">text</span> <span class="o">+=</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">BaR</span>
     <span class="k">assert</span> <span class="n">check</span><span class="p">,</span> <span class="n">text</span></div>
-    
-<div class="viewcode-block" id="Output.EXCEPTION"><a class="viewcode-back" href="../../_lib.html#_lib.utils.Output.EXCEPTION">[docs]</a>  <span class="k">def</span> <span class="nf">EXCEPTION</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">error</span><span class="p">,</span> <span class="n">txt</span><span class="p">):</span>
+
+  <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="Output.exception_msg"><a class="viewcode-back" href="../../_lib.html#_lib.utils.Output.exception_msg">[docs]</a>  <span class="k">def</span> <span class="nf">exception_msg</span><span class="p">(</span><span class="n">error</span><span class="p">,</span> <span class="n">txt</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Exception message.</span>
+<span class="sd">      </span>
+<span class="sd">      Args:</span>
+<span class="sd">        error (Error): Kind of error.</span>
+<span class="sd">        txt (str): Text of the message.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">error</span> <span class="o">==</span> <span class="n">Error</span><span class="o">.</span><span class="n">not_found</span><span class="p">:</span>
       <span class="k">print</span> <span class="s1">&#39;</span><span class="se">\t</span><span class="s1">{:&gt;20} {:&gt;3} {:12}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">txt</span><span class="p">),</span> <span class="s2">&quot; -&gt; &quot;</span><span class="p">,</span> <span class="s2">&quot;NOT FOUND&quot;</span><span class="p">)</span> </div>
     
 <div class="viewcode-block" id="Output.title"><a class="viewcode-back" href="../../_lib.html#_lib.utils.Output.title">[docs]</a>  <span class="k">def</span> <span class="nf">title</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">txt</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Title.</span>
+<span class="sd">      </span>
+<span class="sd">      Args:</span>
+<span class="sd">        txt (str): Text of the title.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">print</span> <span class="bp">self</span><span class="o">.</span><span class="n">BaR</span>
     <span class="k">print</span> <span class="s2">&quot; &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">txt</span><span class="p">)</span>
     <span class="k">print</span> <span class="bp">self</span><span class="o">.</span><span class="n">BaR</span></div>
 
 <div class="viewcode-block" id="Output.close_section"><a class="viewcode-back" href="../../_lib.html#_lib.utils.Output.close_section">[docs]</a>  <span class="k">def</span> <span class="nf">close_section</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Close a section.</span>
+<span class="sd">      </span>
+<span class="sd">      Statement used to close a section.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">print</span> <span class="bp">self</span><span class="o">.</span><span class="n">BAR</span></div>
 
 <div class="viewcode-block" id="Output.close_subsection"><a class="viewcode-back" href="../../_lib.html#_lib.utils.Output.close_subsection">[docs]</a>  <span class="k">def</span> <span class="nf">close_subsection</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Close a subsection.</span>
+
+<span class="sd">      Statement used to close a subsection.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">print</span> <span class="bp">self</span><span class="o">.</span><span class="n">bar</span></div>
-    
-<div class="viewcode-block" id="Output.var"><a class="viewcode-back" href="../../_lib.html#_lib.utils.Output.var">[docs]</a>  <span class="k">def</span> <span class="nf">var</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span><span class="n">name</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+
+  <span class="nd">@staticmethod</span>
+<div class="viewcode-block" id="Output.var"><a class="viewcode-back" href="../../_lib.html#_lib.utils.Output.var">[docs]</a>  <span class="k">def</span> <span class="nf">var</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Print a variable.</span>
+
+<span class="sd">      Args:</span>
+<span class="sd">        name (str): Name of the variable.</span>
+<span class="sd">        val (str): Value of the variable.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">print</span> <span class="s1">&#39;</span><span class="se">\t</span><span class="s1">{:&gt;20} {:&gt;3} {:12}&#39;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">name</span><span class="p">),</span> <span class="s2">&quot;  = &quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">val</span><span class="p">))</span> </div></div>
 
 <div class="viewcode-block" id="ProcessEntry"><a class="viewcode-back" href="../../_lib.html#_lib.utils.ProcessEntry">[docs]</a><span class="k">class</span> <span class="nc">ProcessEntry</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Toolbox to process entries.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
 
   <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">out</span><span class="p">,</span> <span class="n">section</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Constructor.</span>
+<span class="sd">    </span>
+<span class="sd">      Args:</span>
+<span class="sd">          out (Output): `Output` objcet used to show the results.</span>
+<span class="sd">          section (str): name of the working section.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">out</span> <span class="o">=</span> <span class="n">out</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">section</span> <span class="o">=</span> <span class="n">section</span>
     
 <div class="viewcode-block" id="ProcessEntry.process"><a class="viewcode-back" href="../../_lib.html#_lib.utils.ProcessEntry.process">[docs]</a>  <span class="k">def</span> <span class="nf">process</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">text</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Process a text.</span>
+
+<span class="sd">      Args:</span>
+<span class="sd">        text (str): Text to process and format.</span>
+
+<span class="sd">      Returns:</span>
+<span class="sd">        string: Processed text.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">return_text</span> <span class="o">=</span> <span class="n">text</span>
     <span class="k">if</span> <span class="n">return_text</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;PATH&quot;</span><span class="p">)</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span> <span class="p">:</span>
       <span class="n">return_text</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">return_text</span><span class="p">)</span>
@@ -134,14 +227,35 @@
     <span class="k">return</span> <span class="n">return_text</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span></div></div>
     
 <div class="viewcode-block" id="GetValFromConfParser"><a class="viewcode-back" href="../../_lib.html#_lib.utils.GetValFromConfParser">[docs]</a><span class="k">class</span> <span class="nc">GetValFromConfParser</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get value from a `ConfParser`.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
 
   <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">out</span><span class="p">,</span> <span class="n">config_parser</span><span class="p">,</span> <span class="n">section</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Constructor.</span>
+<span class="sd">      </span>
+<span class="sd">      Args:</span>
+<span class="sd">        out (Output): Output.</span>
+<span class="sd">        config_parser (ConfParser): Dictionary where variables are stored.</span>
+<span class="sd">        section (str): Section of `config_parser` where variables are stored.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">out</span> <span class="o">=</span> <span class="n">out</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span> <span class="o">=</span> <span class="n">config_parser</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">section</span> <span class="o">=</span> <span class="n">section</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">PE</span> <span class="o">=</span> <span class="n">ProcessEntry</span><span class="p">(</span><span class="n">out</span><span class="p">,</span> <span class="n">section</span><span class="p">)</span>
 
 <div class="viewcode-block" id="GetValFromConfParser.get"><a class="viewcode-back" href="../../_lib.html#_lib.utils.GetValFromConfParser.get">[docs]</a>  <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Get a value.</span>
+
+<span class="sd">      Get a value from `section` of `config_parser`.</span>
+
+<span class="sd">      Args:</span>
+<span class="sd">        name (str): Name of the variable.</span>
+<span class="sd">        output (bool): Print the name of the variable and its value.</span>
+<span class="sd">        </span>
+<span class="sd">      Returns:</span>
+<span class="sd">        string: value associated to `name`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config_parser</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">section</span><span class="p">,</span> <span class="n">name</span><span class="p">)</span>
     <span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">PE</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">output</span><span class="p">:</span>
@@ -149,41 +263,76 @@
     <span class="k">return</span> <span class="n">val</span></div></div>
 
 <div class="viewcode-block" id="GetValFromDictionary"><a class="viewcode-back" href="../../_lib.html#_lib.utils.GetValFromDictionary">[docs]</a><span class="k">class</span> <span class="nc">GetValFromDictionary</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+  <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Get value from a `Dictionary`.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
 
   <span class="k">def</span> <span class="nf">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">out</span><span class="p">,</span> <span class="n">dictionary</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Constructor.</span>
+<span class="sd">      </span>
+<span class="sd">      Args:</span>
+<span class="sd">        out (Output): Output.</span>
+<span class="sd">        dictionary (dict): Dictionary where variables are stored.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">out</span> <span class="o">=</span> <span class="n">out</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">dictionary</span> <span class="o">=</span> <span class="n">dictionary</span>
     <span class="bp">self</span><span class="o">.</span><span class="n">PE</span> <span class="o">=</span> <span class="n">ProcessEntry</span><span class="p">(</span><span class="n">out</span><span class="p">)</span>
     
-<div class="viewcode-block" id="GetValFromDictionary.get"><a class="viewcode-back" href="../../_lib.html#_lib.utils.GetValFromDictionary.get">[docs]</a>  <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">value</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+<div class="viewcode-block" id="GetValFromDictionary.get"><a class="viewcode-back" href="../../_lib.html#_lib.utils.GetValFromDictionary.get">[docs]</a>  <span class="k">def</span> <span class="nf">get</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">output</span><span class="o">=</span><span class="bp">False</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; Get a value.</span>
+
+<span class="sd">      Get a value from `dictionary`.</span>
+
+<span class="sd">      Args:</span>
+<span class="sd">        name (str): Name of the variable.</span>
+<span class="sd">        output (bool): Print the name of the variable and its value.</span>
+
+<span class="sd">      Returns:</span>
+<span class="sd">        string: value associated to `name`.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
-      <span class="n">return_value</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dictionary</span><span class="p">[</span><span class="n">value</span><span class="p">]</span>
-    <span class="k">except</span><span class="p">:</span>
-      <span class="n">return_value</span><span class="o">=</span><span class="s2">&quot;&quot;</span>
-    <span class="n">return_value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">PE</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">return_value</span><span class="p">)</span>
+      <span class="n">value</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">dictionary</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+    <span class="k">except</span> <span class="ne">KeyError</span><span class="p">:</span>
+      <span class="n">value</span><span class="o">=</span><span class="s2">&quot;&quot;</span>
+    <span class="n">value</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">PE</span><span class="o">.</span><span class="n">process</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">output</span><span class="p">:</span>
-      <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">return_value</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">return_value</span></div></div>
+      <span class="bp">self</span><span class="o">.</span><span class="n">out</span><span class="o">.</span><span class="n">var</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">value</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">value</span></div></div>
 
 <div class="viewcode-block" id="get_name_inside"><a class="viewcode-back" href="../../_lib.html#_lib.utils.get_name_inside">[docs]</a><span class="k">def</span> <span class="nf">get_name_inside</span><span class="p">(</span>  <span class="n">line</span><span class="p">,</span> 
                       <span class="n">begin_container</span><span class="o">=</span><span class="s2">&quot;(&quot;</span><span class="p">,</span> 
                       <span class="n">end_container</span><span class="o">=</span><span class="s2">&quot;)&quot;</span><span class="p">):</span>
-    <span class="n">size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">begin_container</span><span class="p">)</span>
-    <span class="n">start</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">begin_container</span><span class="p">)</span><span class="o">+</span><span class="n">size</span>
-    <span class="n">end</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">end_container</span><span class="p">,</span> <span class="n">start</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">end</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">start</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
-      <span class="k">return</span> <span class="n">line</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">]</span> 
-    <span class="k">else</span> <span class="p">:</span>
-      <span class="k">return</span> <span class="s2">&quot;&quot;</span></div>
-  
-  
+  <span class="sd">&quot;&quot;&quot; Get the value inside a container.</span>
+<span class="sd">  </span>
+<span class="sd">    Capture the text contained between two containers.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">      line (str): Text string</span>
+<span class="sd">      begin_container (str): This delimiter is before the value to capture.</span>
+<span class="sd">      end_container (str): This delimiter is after the value to capture.</span>
+<span class="sd">      </span>
+<span class="sd">    Returns:</span>
+<span class="sd">      string: value contained between `begin_container` and `end_container`.</span>
+<span class="sd">  &quot;&quot;&quot;</span>
+  <span class="k">assert</span> <span class="n">begin_container</span><span class="o">!=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot; ERROR: `begin_container` is empty.&quot;</span>
+  <span class="k">assert</span> <span class="n">end_container</span><span class="o">!=</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot; ERROR: `end_container` is empty.&quot;</span>
+  <span class="n">size</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">begin_container</span><span class="p">)</span>
+  <span class="n">start</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">begin_container</span><span class="p">)</span><span class="o">+</span><span class="n">size</span>
+  <span class="n">end</span> <span class="o">=</span> <span class="n">line</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="n">end_container</span><span class="p">,</span> <span class="n">start</span><span class="p">)</span>
+  <span class="k">if</span> <span class="n">end</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span> <span class="ow">and</span> <span class="n">start</span> <span class="o">&gt;</span> <span class="o">-</span><span class="mi">1</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">line</span><span class="p">[</span><span class="n">start</span><span class="p">:</span><span class="n">end</span><span class="p">]</span> 
+  <span class="k">else</span> <span class="p">:</span>
+    <span class="k">return</span> <span class="s2">&quot;&quot;</span></div>
 </pre></div>
 
           </div>
         </div>
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
-        <div class="sphinxsidebarwrapper"><div class="relations">
+        <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="../../index.html">
+              <img class="logo" src="../../_static/logo_MaJOrCA.png" alt="Logo"/>
+            </a></p><div class="relations">
 <h3>Related Topics</h3>
 <ul>
   <li><a href="../../index.html">Documentation overview</a><ul>

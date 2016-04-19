@@ -6,7 +6,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Welcome to MaJOrCA’s documentation! &mdash; MaJOrCA 0.0 documentation</title>
+    <title>Multiple JObs CreAtor &mdash; MaJOrCA 0.0 documentation</title>
     
     <link rel="stylesheet" href="_static/alabaster.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -24,6 +24,7 @@
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
     <script type="text/javascript" src="https://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+    <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="top" title="MaJOrCA 0.0 documentation" href="#" />
    
   
@@ -37,21 +38,62 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="welcome-to-majorca-s-documentation">
-<h1>Welcome to MaJOrCA&#8217;s documentation!<a class="headerlink" href="#welcome-to-majorca-s-documentation" title="Permalink to this headline">¶</a></h1>
-<p>Contents:</p>
-<div class="toctree-wrapper compound">
+  <p><img alt="MaJOrCA" src="./_static/logo_MaJOrCA.png" /></p>
+<div class="section" id="multiple-jobs-creator">
+<span id="multiple-jobs-creator"></span><h1>Multiple JObs CreAtor<a class="headerlink" href="#multiple-jobs-creator" title="Permalink to this headline">¶</a></h1>
+<p><a class="reference external" href="https://travis-ci.org/ESeNonFossiIo/MaJOrCA"><img alt="Build Status" src="https://travis-ci.org/ESeNonFossiIo/MaJOrCA.svg?branch=master" /></a>
+<a class="reference external" href="https://coveralls.io/github/ESeNonFossiIo/MaJOrCA?branch=master"><img alt="Coverage Status" src="https://coveralls.io/repos/github/ESeNonFossiIo/MaJOrCA/badge.svg?branch=master" /></a>
+<a class="reference external" href="https://codecov.io/github/ESeNonFossiIo/MaJOrCA?branch=master"><img alt="codecov.io" src="https://codecov.io/github/ESeNonFossiIo/MaJOrCA/coverage.svg?branch=master" /></a>
+<a class="reference external" href="https://www.quantifiedcode.com/app/project/18dfccfa2b8b4c36bc65aa7dd95aaba4"><img alt="Code Issues" src="https://www.quantifiedcode.com/api/v1/project/18dfccfa2b8b4c36bc65aa7dd95aaba4/badge.svg" /></a></p>
+<div class="section" id="lib-documentation">
+<span id="lib-documentation"></span><h2><code class="docutils literal"><span class="pre">_lib</span></code> documentation:<a class="headerlink" href="#lib-documentation" title="Permalink to this headline">¶</a></h2>
+<p><a class="reference external" href="./_lib.html"><code class="docutils literal"><span class="pre">./_lib</span></code> documentation</a></p>
+</div>
+<div class="section" id="configure">
+<span id="configure"></span><h2>Configure<a class="headerlink" href="#configure" title="Permalink to this headline">¶</a></h2>
+<ol class="simple">
+<li>modify <code class="docutils literal"><span class="pre">./create_job.py</span> <span class="pre">-c</span> <span class="pre">your_conf.conf</span></code></li>
+<li>modify <code class="docutils literal"><span class="pre">your_conf.conf</span></code></li>
+<li>launch <code class="docutils literal"><span class="pre">./create_job.py</span> <span class="pre">-f</span> <span class="pre">your_conf.conf</span></code></li>
+</ol>
+</div>
+<div class="section" id="uasge">
+<span id="uasge"></span><h2>Uasge:<a class="headerlink" href="#uasge" title="Permalink to this headline">¶</a></h2>
+<p>This program takes a <code class="docutils literal"><span class="pre">prm</span></code> file like this:</p>
+<div class="highlight-conf"><div class="highlight"><pre><span></span>subsection Navier Stokes Interface  
+  set Preconditioner                   = __PREC__
+  set div-grad stabilization           = __DIV_GRAD__[[1]]
+  set nu [Pa s]                        = __NU__[[0.1]]
+  set rho [kg m^3]                     = 1.0
+end
+</pre></div>
+</div>
+<p>and generate all <code class="docutils literal"><span class="pre">sh</span></code> or <code class="docutils literal"><span class="pre">pbs</span></code> scripts to launch your simulation.</p>
+<p>In <code class="docutils literal"><span class="pre">your_conf.conf</span></code> you have to specify the values of your simulation (separated by a semilcon in case of multiple run):</p>
+<div class="highlight-python"><div class="highlight"><pre><span></span>[simulation_name]
+NU=0.1;0.01;0.001
+PREC=default
+DIV_GRAD=
+</pre></div>
+</div>
+<p>In this case the program will generate 3 runs, one for each <code class="docutils literal"><span class="pre">NU</span></code> and will assign to <code class="docutils literal"><span class="pre">DIV_GRAD</span></code> the default value (1).</p>
+</div>
+<div class="section" id="note">
+<span id="note"></span><h2>Note:<a class="headerlink" href="#note" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
+<li>In <code class="docutils literal"><span class="pre">conf</span></code> file you can generate multiple jobs adding new sections</li>
+<li>For every varibale you can select multiples choice separating each entry with
+a semicolon</li>
 </ul>
 </div>
-</div>
-<div class="section" id="indices-and-tables">
-<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="makefile">
+<span id="makefile"></span><h2>makefile<a class="headerlink" href="#makefile" title="Permalink to this headline">¶</a></h2>
 <ul class="simple">
-<li><a class="reference internal" href="genindex.html"><span>Index</span></a></li>
-<li><a class="reference internal" href="py-modindex.html"><span>Module Index</span></a></li>
-<li><a class="reference internal" href="search.html"><span>Search Page</span></a></li>
+<li><code class="docutils literal"><span class="pre">clean</span></code> : remove unused file.</li>
+<li><code class="docutils literal"><span class="pre">qsub</span></code> :  submit all <code class="docutils literal"><span class="pre">pbs</span></code> file.</li>
+<li><code class="docutils literal"><span class="pre">sh</span></code> :  submit all <code class="docutils literal"><span class="pre">sh</span></code> file.</li>
 </ul>
+</div>
 </div>
 
 
@@ -60,10 +102,19 @@
       </div>
       <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
         <div class="sphinxsidebarwrapper">
+            <p class="logo"><a href="#">
+              <img class="logo" src="_static/logo_MaJOrCA.png" alt="Logo"/>
+            </a></p>
   <h3><a href="#">Table Of Contents</a></h3>
   <ul>
-<li><a class="reference internal" href="#">Welcome to MaJOrCA&#8217;s documentation!</a></li>
-<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+<li><a class="reference internal" href="#">Multiple JObs CreAtor</a><ul>
+<li><a class="reference internal" href="#lib-documentation"><code class="docutils literal"><span class="pre">_lib</span></code> documentation:</a></li>
+<li><a class="reference internal" href="#configure">Configure</a></li>
+<li><a class="reference internal" href="#uasge">Uasge:</a></li>
+<li><a class="reference internal" href="#note">Note:</a></li>
+<li><a class="reference internal" href="#makefile">makefile</a></li>
+</ul>
+</li>
 </ul>
 <div class="relations">
 <h3>Related Topics</h3>

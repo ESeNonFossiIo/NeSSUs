@@ -1,20 +1,45 @@
+"""
+  Library used to simplify the code of `create_job.py`
+"""
+
 import os
 from enum import Enum
 
 class Error(Enum):
+  """ Enum class used to deal with errors.  
+  
+    Members: 
+      not_found (int): Error used when a file or more generally 
+      an object is not found.
+  """
   not_found = 1
 
 class ReplaceHelper(object):
   """
-    Replace default values with the simulation ones.
+    Toolbox of utilities to replace words in a string.
   """
+  
   def __init__(self, sep=";"):
+    """ Constructor.
+    
+      Args:
+        sep (char): char used to separe different entries.
+    """
     self.sep = sep
 
   def replace(self, line, src, target, remove_default=True):
-    """
-      Replace a sting of the form :param: sep + :param: src + :param: sep with 
-      target 
+    """ Replace `src` with `target` in `line`.
+
+      Extended description of function.
+
+      Args:
+          line (str): Text where `src` will be replaced by `target`.
+          src (str): Old tex.
+          target (str): New text.
+          remove_default (bool): Remove default value.
+
+      Returns:
+          string: `text` with `src` replaced by `target`.
     """
     line = line.replace(self.sep+str(src)+self.sep, str(target))    
     if remove_default:
@@ -23,10 +48,16 @@ class ReplaceHelper(object):
     return line
 
   def replace_with_default_value(self, line, src):
-    """
-      Replace a sting of the form :param: sep + :param: src + :param: sep with 
-      default value.
-      If no default value is specified the variable will be removed.
+    """ Replace `src` with the `default value` in `line`.
+
+      Extended description of function.
+
+      Args:
+          line (str): Text where `src` will be replaced by the `default value`.
+          src (str): Old tex.
+
+      Returns:
+          string: `text` with `src` replaced by the `default value`.
     """
     begin = self.sep+src+self.sep+"[["
     end   = "]]"
@@ -39,47 +70,108 @@ class ReplaceHelper(object):
     
 
 class Output(object):
+  """
+    Toolbox of utilities for the output.
+  """
   
   def __init__(self, lenght=50):
+    """ Constructor.
+    
+      Args:
+          lenght (int): lenght of the output line.
+    """
     self.BAR=((lenght/2)*"==")+"="
     self.bar=((lenght/2)*"--")+"-"
     self.BaR=((lenght/2)*"-=")+"-"
     print "\n\n"
     print self.BAR
 
-  def ASSERT(self, check, msg="", error_type=None):
+  def assert_msg(self, check, msg="", error_type=None):
+    """Assert.
+      
+      This metod is used to handle assert messages.
+
+      Args:
+        check (bool): Value to satisfy to pass the test.
+        msg (str): Message to print.
+        error_type (Error): Error give.
+    """
     text = "\n\n" +self.BaR
     text += "\n  ERROR: "
     if error_type == Error.not_found :
       text += "`"+str(msg)+"` does not exist! "
     text += "\n" + self.BaR
     assert check, text
-    
-  def EXCEPTION(self, error, txt):
+
+  @staticmethod
+  def exception_msg(error, txt):
+    """ Exception message.
+      
+      Args:
+        error (Error): Kind of error.
+        txt (str): Text of the message.
+    """
     if error == Error.not_found:
       print '\t{:>20} {:>3} {:12}'.format(str(txt), " -> ", "NOT FOUND") 
     
   def title(self, txt):
+    """ Title.
+      
+      Args:
+        txt (str): Text of the title.
+    """
     print self.BaR
     print " " + str(txt)
     print self.BaR
 
   def close_section(self):
+    """ Close a section.
+      
+      Statement used to close a section.
+    """
     print self.BAR
 
   def close_subsection(self):
+    """ Close a subsection.
+
+      Statement used to close a subsection.
+    """
     print self.bar
-    
-  def var(self,name, val):
+
+  @staticmethod
+  def var(name, val):
+    """ Print a variable.
+
+      Args:
+        name (str): Name of the variable.
+        val (str): Value of the variable.
+    """
     print '\t{:>20} {:>3} {:12}'.format(str(name), "  = ", str(val)) 
 
 class ProcessEntry(object):
+  """
+    Toolbox to process entries.
+  """
 
   def __init__(self, out, section=""):
+    """ Constructor.
+    
+      Args:
+          out (Output): `Output` objcet used to show the results.
+          section (str): name of the working section.
+    """
     self.out = out
     self.section = section
     
   def process(self, text):
+    """ Process a text.
+
+      Args:
+        text (str): Text to process and format.
+
+      Returns:
+        string: Processed text.
+    """
     return_text = text
     if return_text.find("PATH") > -1 :
       return_text = os.path.normpath(return_text)
@@ -93,14 +185,35 @@ class ProcessEntry(object):
     return return_text.strip()
     
 class GetValFromConfParser(object):
+  """
+    Get value from a `ConfParser`.
+  """
 
   def __init__(self, out, config_parser, section):
+    """ Constructor.
+      
+      Args:
+        out (Output): Output.
+        config_parser (ConfParser): Dictionary where variables are stored.
+        section (str): Section of `config_parser` where variables are stored.
+    """
     self.out = out
     self.config_parser = config_parser
     self.section = section
     self.PE = ProcessEntry(out, section)
 
   def get(self, name, output=False):
+    """ Get a value.
+
+      Get a value from `section` of `config_parser`.
+
+      Args:
+        name (str): Name of the variable.
+        output (bool): Print the name of the variable and its value.
+        
+      Returns:
+        string: value associated to `name`.
+    """
     val = self.config_parser.get(self.section, name)
     val = self.PE.process(val)
     if output:
@@ -108,31 +221,63 @@ class GetValFromConfParser(object):
     return val
 
 class GetValFromDictionary(object):
+  """
+    Get value from a `Dictionary`.
+  """
 
   def __init__(self, out, dictionary):
+    """ Constructor.
+      
+      Args:
+        out (Output): Output.
+        dictionary (dict): Dictionary where variables are stored.
+    """
     self.out = out
     self.dictionary = dictionary
     self.PE = ProcessEntry(out)
     
-  def get(self, value, output=False):
+  def get(self, name, output=False):
+    """ Get a value.
+
+      Get a value from `dictionary`.
+
+      Args:
+        name (str): Name of the variable.
+        output (bool): Print the name of the variable and its value.
+
+      Returns:
+        string: value associated to `name`.
+    """
     try:
-      return_value=self.dictionary[value]
-    except:
-      return_value=""
-    return_value = self.PE.process(return_value)
+      value=self.dictionary[name]
+    except KeyError:
+      value=""
+    value = self.PE.process(value)
     if output:
-      self.out.var(value, return_value)
-    return return_value
+      self.out.var(name, value)
+    return value
 
 def get_name_inside(  line, 
                       begin_container="(", 
                       end_container=")"):
-    size = len(begin_container)
-    start = line.find(begin_container)+size
-    end = line.find(end_container, start)
-    if end > -1 and start > -1:
-      return line[start:end] 
-    else :
-      return ""
+  """ Get the value inside a container.
   
-  
+    Capture the text contained between two containers.
+
+    Args:
+      line (str): Text string
+      begin_container (str): This delimiter is before the value to capture.
+      end_container (str): This delimiter is after the value to capture.
+      
+    Returns:
+      string: value contained between `begin_container` and `end_container`.
+  """
+  assert begin_container!="", " ERROR: `begin_container` is empty."
+  assert end_container!="", " ERROR: `end_container` is empty."
+  size = len(begin_container)
+  start = line.find(begin_container)+size
+  end = line.find(end_container, start)
+  if end > -1 and start > -1:
+    return line[start:end] 
+  else :
+    return ""
