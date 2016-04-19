@@ -41,16 +41,16 @@ class ReplaceHelper(object):
 class Output(object):
   
   def __init__(self, lenght=50):
-    self.BAR=(lenght*"=")+"="
-    self.bar=(lenght*"-")+"-"
+    self.BAR=((lenght/2)*"==")+"="
+    self.bar=((lenght/2)*"--")+"-"
     self.BaR=((lenght/2)*"-=")+"-"
     print "\n\n"
     print self.BAR
 
-  def ASSERT(self, check, msg="", error_type=""):
+  def ASSERT(self, check, msg="", error_type=None):
     text = "\n\n" +self.BaR
     text += "\n  ERROR: "
-    if error_type == "existence" :
+    if error_type == Error.not_found :
       text += "`"+str(msg)+"` does not exist! "
     text += "\n" + self.BaR
     assert check, text
@@ -83,9 +83,9 @@ class ProcessEntry(object):
     return_text = text
     if return_text.find("PATH") > -1 :
       return_text = os.path.normpath(return_text)
-    return_text = text.replace("@PWD@", os.getcwd())
+    return_text = return_text.replace("@PWD@", os.getcwd())
     if self.section != "":
-      return_text = text.replace("@SIMULATION@", self.section)
+      return_text = return_text.replace("@SIMULATION@", self.section)
     while return_text.find("@ENV[") > -1 :
       env = return_text[return_text.find("@ENV[")+5:return_text.find("]@")]
       var = os.environ[env]
