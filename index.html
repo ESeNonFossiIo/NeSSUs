@@ -49,12 +49,71 @@
 <span id="lib-documentation"></span><h2><code class="docutils literal"><span class="pre">_lib</span></code> documentation:<a class="headerlink" href="#lib-documentation" title="Permalink to this headline">¶</a></h2>
 <p><a class="reference external" href="./_lib.html"><code class="docutils literal"><span class="pre">./_lib</span></code> documentation</a></p>
 </div>
+</div>
+<div class="section" id="introduction">
+<span id="introduction"></span><h1>Introduction<a class="headerlink" href="#introduction" title="Permalink to this headline">¶</a></h1>
+<p>MaJOrCA is a generator of <code class="docutils literal"><span class="pre">prm</span></code> files from a blueprint <code class="docutils literal"><span class="pre">prm</span></code> file</p>
+<p>Consider a prm like this:</p>
+<div class="highlight-prm"><div class="highlight"><pre><span></span># Listing of Parameters
+# ---------------------
+subsection Finite element system
+  set Dimension of problem = __DIM__[[2]]
+
+  # Gauss quadrature order
+  set Quadrature order  = 3
+end
+
+subsection Geometry
+  # Global refinement level
+  set Global refinement   = __REF__[[2]]
+
+  # Global grid scaling factor
+  set Grid scale          = 1e-3
+
+  # Ratio of applied pressure to reference pressure
+  set Pressure ratio p/p0 = __NU__
+end
+</pre></div>
+</div>
+<p>and consider the case we would like to run the same simulation but for different
+values of <code class="docutils literal"><span class="pre">Global</span> <span class="pre">refinement</span></code>.</p>
+<p><code class="docutils literal"><span class="pre">MaJOrCA</span></code> is able to read a <code class="docutils literal"><span class="pre">conf</span></code> file where it is possible to specify this
+requirement:</p>
+<div class="highlight-conf"><div class="highlight"><pre><span></span>[GENERAL]
+
+# Char used to separe multiple values, used to generate
+# several runs
+SEP = ||
+
+# Parsing token: surround variables names with this token
+# to make substitutions
+PTOKEN = __
+
+# Name of the prm file:
+PRM_FILENAME = parameters.prm
+
+...
+
+################################################################################
+## SIMULATIONS:
+################################################################################
+
+[Simulation_01]
+
+...
+
+# Parameters
+DIM=2
+NU=1
+REF=9 || 8
+</pre></div>
+</div>
 <div class="section" id="configure">
 <span id="configure"></span><h2>Configure<a class="headerlink" href="#configure" title="Permalink to this headline">¶</a></h2>
 <ol class="simple">
-<li>modify <code class="docutils literal"><span class="pre">./create_job.py</span> <span class="pre">-c</span> <span class="pre">your_conf.conf</span></code></li>
+<li>modify <code class="docutils literal"><span class="pre">./MaJOrCA.py</span> <span class="pre">-c</span> <span class="pre">your_conf.conf</span></code></li>
 <li>modify <code class="docutils literal"><span class="pre">your_conf.conf</span></code></li>
-<li>launch <code class="docutils literal"><span class="pre">./create_job.py</span> <span class="pre">-f</span> <span class="pre">your_conf.conf</span></code></li>
+<li>launch <code class="docutils literal"><span class="pre">./MaJOrCA.py</span> <span class="pre">-f</span> <span class="pre">your_conf.conf</span></code></li>
 </ol>
 </div>
 <div class="section" id="uasge">
@@ -109,6 +168,9 @@ a semicolon</li>
   <ul>
 <li><a class="reference internal" href="#">Multiple JObs CreAtor</a><ul>
 <li><a class="reference internal" href="#lib-documentation"><code class="docutils literal"><span class="pre">_lib</span></code> documentation:</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#introduction">Introduction</a><ul>
 <li><a class="reference internal" href="#configure">Configure</a></li>
 <li><a class="reference internal" href="#uasge">Uasge:</a></li>
 <li><a class="reference internal" href="#note">Note:</a></li>
