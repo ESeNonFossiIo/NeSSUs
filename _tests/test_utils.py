@@ -1,18 +1,18 @@
 import sys
 sys.path.append("./_lib/")
 sys.path.append("./../_lib/")
-from utils import *
+import utils
 import os
 
 # Enum Error:
-def test_Error():
-  assert Error.not_found.value == 1
+def test_error():
+  assert utils.Error.not_found.value == 1
 
 # Class ReplaceHelper:
 def test_replace_helper():
   # Test for ReplaceHelper.replace
   string = "__TEST__[[]]"
-  rh = ReplaceHelper("__")
+  rh = utils.ReplaceHelper("__")
   string = rh.replace(string, "TEST", "NEW")
   assert string == "NEW"
   # Test for ReplaceHelper.replace_with_default_value
@@ -26,16 +26,16 @@ def test_replace_helper():
 
 # Class Output:
 def test_output():
-  out=Output(5)
+  out=utils.Output(5)
   assert out.BAR == "====="
   assert out.bar == "-----"
   assert out.BaR == "-=-=-"
 
-  out.ASSERT(True, error_type=Error.not_found)
-  out.ASSERT(True)
+  out.assert_msg(True, error_type=utils.Error.not_found)
+  out.assert_msg(True)
   assert True
 
-  out.EXCEPTION(Error.not_found, "filename")
+  out.exception_msg(utils.Error.not_found, "filename")
   assert True
 
   out.title("Title")
@@ -52,8 +52,8 @@ def test_output():
 
 # Class ProcessEntry
 def test_process_entry():
-  out = Output(5)
-  pe = ProcessEntry(out, section="section")
+  out = utils.Output(5)
+  pe = utils.ProcessEntry(out, section="section")
   
   string="@PWD@"
   assert pe.process(string) == os.getcwd().strip()
@@ -67,21 +67,21 @@ def test_process_entry():
 
 # Class GetValFromConfParser
 import ConfigParser
-def test_GetValFromConfParser():
-  out = Output(5)
+def test_get_val_from_conf_parser():
+  out = utils.Output(5)
   config = ConfigParser.RawConfigParser()
   config.add_section('Section1')
   config.set('Section1', 'item', 'val')
-  extractor = GetValFromConfParser(out, config, "Section1")
+  extractor = utils.GetValFromConfParser(out, config, "Section1")
   assert extractor.get("item") == "val"
   assert extractor.get("item", True) == "val"
 
 # Class GetValFromDictionary
-def test_GetValFromDictionary():
-  out = Output(5)
+def test_get_val_from_dictionary():
+  out = utils.Output(5)
   dictionary = dict()
   dictionary['item'] = "val"
-  extractor = GetValFromDictionary(out, dictionary)
+  extractor = utils.GetValFromDictionary(out, dictionary)
   assert extractor.get("item") == "val"
   assert extractor.get("not") == ""
   assert extractor.get("item", True) == "val"
@@ -90,14 +90,14 @@ def test_GetValFromDictionary():
 def test_get_name_inside():
   # test1
   string = "val=[num]"
-  assert get_name_inside(string, "[", "]") == "num"
+  assert utils.get_name_inside(string, "[", "]") == "num"
   # test2
   string = "val=__VAL__[num]"
-  assert get_name_inside(string, "__VAL__[", "]") == "num"
+  assert utils.get_name_inside(string, "__VAL__[", "]") == "num"
   # test3
   string = "val=__VAL__[num]"
-  assert get_name_inside(string, "__VAL__[", "]") == "num"
+  assert utils.get_name_inside(string, "__VAL__[", "]") == "num"
   # test4
   string = "val=__VAL__"
-  assert get_name_inside(string, "__VAL__[", "]") == ""
+  assert utils.get_name_inside(string, "__VAL__[", "]") == ""
 
