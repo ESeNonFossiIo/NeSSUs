@@ -3,4 +3,4 @@ __jobs
 _utils
 *.pyc
 *.conf
-!./_template/*
+!./_template/*.conf

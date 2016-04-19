@@ -10,10 +10,72 @@
 ## `_lib` documentation:
 [`./_lib` documentation](./_lib.html)
 
+
+# Introduction
+
+MaJOrCA is a generator of `prm` files from a blueprint `prm` file
+
+Consider a prm like this:
+``` prm
+# Listing of Parameters
+# ---------------------
+subsection Finite element system
+  set Dimension of problem = __DIM__[[2]]
+
+  # Gauss quadrature order
+  set Quadrature order  = 3
+end
+
+subsection Geometry
+  # Global refinement level
+  set Global refinement   = __REF__[[2]]
+
+  # Global grid scaling factor
+  set Grid scale          = 1e-3
+
+  # Ratio of applied pressure to reference pressure
+  set Pressure ratio p/p0 = __NU__
+end
+```
+and consider the case we would like to run the same simulation but for different
+values of `Global refinement`.
+
+`MaJOrCA` is able to read a `conf` file where it is possible to specify this 
+requirement:
+``` conf
+[GENERAL]
+
+# Char used to separe multiple values, used to generate
+# several runs
+SEP = ||
+
+# Parsing token: surround variables names with this token
+# to make substitutions
+PTOKEN = __
+
+# Name of the prm file:
+PRM_FILENAME = parameters.prm
+
+...
+
+################################################################################
+## SIMULATIONS:
+################################################################################
+
+[Simulation_01]
+
+...
+
+# Parameters
+DIM=2
+NU=1
+REF=9 || 8
+```
+
 ## Configure
-1. modify `./create_job.py -c your_conf.conf`
+1. modify `./MaJOrCA.py -c your_conf.conf`
 2. modify `your_conf.conf`
-3. launch `./create_job.py -f your_conf.conf`
+3. launch `./MaJOrCA.py -f your_conf.conf`
 
 ## Uasge:
 
@@ -43,7 +105,7 @@ In this case the program will generate 3 runs, one for each `NU` and will assign
 - In `conf` file you can generate multiple jobs adding new sections
 - For every varibale you can select multiples choice separating each entry with 
   a semicolon
-  
+
 ## makefile
 - `clean` : remove unused file.
 - `qsub` :  submit all `pbs` file. 
