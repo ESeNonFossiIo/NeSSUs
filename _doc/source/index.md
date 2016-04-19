@@ -1,9 +1,14 @@
 
-![MaJOrCA](./_doc/source/logo_MaJOrCA.png)
+![MaJOrCA](./_static/logo_MaJOrCA.png)
 # Multiple JObs CreAtor
 
-[![Build Status](https://travis-ci.org/ESeNonFossiIo/MaJOrCA.svg?branch=master)](https://travis-ci.org/ESeNonFossiIo/MaJOrCA) [![Coverage Status](https://coveralls.io/repos/github/ESeNonFossiIo/MaJOrCA/badge.svg?branch=master)](https://coveralls.io/github/ESeNonFossiIo/MaJOrCA?branch=master) [![codecov.io](https://codecov.io/github/ESeNonFossiIo/MaJOrCA/coverage.svg?branch=master)](https://codecov.io/github/ESeNonFossiIo/MaJOrCA?branch=master) [![Code Issues](https://www.quantifiedcode.com/api/v1/project/18dfccfa2b8b4c36bc65aa7dd95aaba4/badge.svg)](https://www.quantifiedcode.com/app/project/18dfccfa2b8b4c36bc65aa7dd95aaba4)
+[![Build Status](https://travis-ci.org/ESeNonFossiIo/MaJOrCA.svg?branch=master)](https://travis-ci.org/ESeNonFossiIo/MaJOrCA)
+[![Coverage Status](https://coveralls.io/repos/github/ESeNonFossiIo/MaJOrCA/badge.svg?branch=master)](https://coveralls.io/github/ESeNonFossiIo/MaJOrCA?branch=master)
+[![codecov.io](https://codecov.io/github/ESeNonFossiIo/MaJOrCA/coverage.svg?branch=master)](https://codecov.io/github/ESeNonFossiIo/MaJOrCA?branch=master)
+[![Code Issues](https://www.quantifiedcode.com/api/v1/project/18dfccfa2b8b4c36bc65aa7dd95aaba4/badge.svg)](https://www.quantifiedcode.com/app/project/18dfccfa2b8b4c36bc65aa7dd95aaba4)
 
+## `_lib` documentation:
+[`./_lib` documentation](./_lib.html)
 
 ## Configure
 1. modify `./create_job.py -c your_conf.conf`
@@ -38,7 +43,7 @@ In this case the program will generate 3 runs, one for each `NU` and will assign
 - In `conf` file you can generate multiple jobs adding new sections
 - For every varibale you can select multiples choice separating each entry with 
   a semicolon
-
+  
 ## makefile
 - `clean` : remove unused file.
 - `qsub` :  submit all `pbs` file. 
