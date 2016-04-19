@@ -16,7 +16,7 @@ import copy
 # Add path to PUlSe and this module:
 pulse_dir="./_modules/PUlSe/lib/"
 sys.path.append(pulse_dir)
-from PUlSe_directories import *
+import PUlSe_directories as pdir
 
 # Parse CLI parameters:
 ################################################################################ 
@@ -161,7 +161,7 @@ for s in simulations:
     for src, target in simulations[s][n].iteritems():
         local_var[s][n]['FOLDER'] = local_var[s][n]['FOLDER'].replace(local_var[s][n]['PTOKEN']+str(src)+local_var[s][n]['PTOKEN'], target)
 
-    local_var[s][n]['FOLDER'] = make_next_dir( progress_dir=local_var[s][n]['RUN_FOLDER'], 
+    local_var[s][n]['FOLDER'] = pdir.make_next_dir( progress_dir=local_var[s][n]['RUN_FOLDER'], 
                             separation_char=general['RUN_FOLDER-SEP_CHAR'], 
                             base_directory=local_var[s][n]['FOLDER'],
                             lenght=general['RUN_FOLDER-LEN'])
@@ -186,7 +186,7 @@ for s in simulations:
     if not os.path.exists(local_var[s][n]['JOBS_FOLDER_NAME']):
       os.makedirs(local_var[s][n]['JOBS_FOLDER_NAME'])
 
-    local_var[s][n]['JOBS_NAME']=get_next( 
+    local_var[s][n]['JOBS_NAME']=pdir.get_next( 
                                   local_var[s][n]['JOBS_NAME'], 
                                   mode, local_var[s][n]['JOBS_FOLDER_NAME'], 
                                   general['JOBS_NAME-SEP_CHAR'],
