@@ -47,15 +47,16 @@ class Output(object):
     print "\n\n"
     print self.BAR
 
-  def ASSERT(self, check, msg="", error_type=None):
+  def assert_msg(self, check, msg="", error_type=None):
     text = "\n\n" +self.BaR
     text += "\n  ERROR: "
     if error_type == Error.not_found :
       text += "`"+str(msg)+"` does not exist! "
     text += "\n" + self.BaR
     assert check, text
-    
-  def EXCEPTION(self, error, txt):
+
+  @staticmethod
+  def exception_msg(error, txt):
     if error == Error.not_found:
       print '\t{:>20} {:>3} {:12}'.format(str(txt), " -> ", "NOT FOUND") 
     
@@ -69,8 +70,9 @@ class Output(object):
 
   def close_subsection(self):
     print self.bar
-    
-  def var(self,name, val):
+
+  @staticmethod
+  def var(name, val):
     print '\t{:>20} {:>3} {:12}'.format(str(name), "  = ", str(val)) 
 
 class ProcessEntry(object):
@@ -117,7 +119,7 @@ class GetValFromDictionary(object):
   def get(self, value, output=False):
     try:
       return_value=self.dictionary[value]
-    except:
+    except KeyError:
       return_value=""
     return_value = self.PE.process(return_value)
     if output:

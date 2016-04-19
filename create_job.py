@@ -6,12 +6,12 @@ import os
 import sys
 import itertools
 import ConfigParser
-from _lib.utils import *
+import _lib.utils as utils
 import copy
 
 # Add path to PUlSe and this module:
-PUlSe_dir="./_modules/PUlSe/lib/"
-sys.path.append(PUlSe_dir)
+pulse_dir="./_modules/PUlSe/lib/"
+sys.path.append(pulse_dir)
 from PUlSe_directories import *
 
 # Parse CLI parameters:
@@ -35,11 +35,11 @@ parser.add_option("-c", "--conf",
 # Preliminary operations:
 ################################################################################ 
 
-out = Output(100)
+out = utils.Output(100)
 out.title("Configuration ")
 
 if options.new_configuration_file != "":
-  out.ASSERT( os.path.isfile("_template/template.conf"), 
+  out.assert_msg( os.path.isfile("_template/template.conf"), 
               "_template/template.conf", "existence" )
   copyfile(  "_template/template.conf",
               options.new_configuration_file)
@@ -48,8 +48,8 @@ if options.new_configuration_file != "":
   
 # Main:
 ################################################################################ 
-PE = ProcessEntry(out)
-out.ASSERT( os.path.isfile(options.configuration_file), 
+PE = utils.ProcessEntry(out)
+out.assert_msg( os.path.isfile(options.configuration_file), 
             str(options.configuration_file), "existence" )
 
 out.var("Conf file", options.configuration_file)
@@ -59,7 +59,7 @@ config.read(options.configuration_file)
 
 sections = config.sections()
 # Get data from GENERAL section:
-general_val = GetValFromConfParser(out, config, "GENERAL")
+general_val = utils.GetValFromConfParser(out, config, "GENERAL")
 general=dict()
 
 for key in config.items("GENERAL"):
@@ -88,7 +88,7 @@ sections.remove('GENERAL')
 # placeholder for NULL entries
 null_token = general['PTOKEN']+"NULL"+general['PTOKEN']
 # Define ReplaceHelper (see: lib/utils.py)
-rh = ReplaceHelper(general['PTOKEN'])
+rh = utils.ReplaceHelper(general['PTOKEN'])
 
 # Fill the dictionary simulations with all possibile combination of every 
 # parameter of every single simulation:
@@ -99,7 +99,7 @@ for s in sections:
   values=[]
   local_vars=[]
   
-  PE = ProcessEntry(out, section=s)
+  PE = utils.ProcessEntry(out, section=s)
   # Get all value of this simulation: 
   for v in config.options(s):
     values.append( [ [v, PE.process(opt)]  for opt in config.get(s, v).split(general['SEP'])] )
@@ -124,7 +124,7 @@ for s in simulations:
   out.title("SIMULATION "+str(s))
   for n in xrange(len(simulations[s])):
     out.close_subsection()
-    dictionary_val = GetValFromDictionary(out, simulations[s][n])
+    dictionary_val = utils.GetValFromDictionary(out, simulations[s][n])
     local_var[s][n]["EXECUTABLE"] = dictionary_val.get("EXECUTABLE",    output=True)
     local_var[s][n]["ARGS"] = dictionary_val.get("ARGS",    output=True)
     bp_prm     = dictionary_val.get("BLUEPRINT_PRM", output=True)
@@ -215,12 +215,11 @@ for s in simulations:
             if target.strip() == "" :
               line  = line.replace( local_var[s][n]['PTOKEN']+src+local_var[s][n]['PTOKEN'], "" )
               not_found_variables.append(src)
-              pass
           for key, val in local_var[s][n].iteritems():
             line = line.replace("@"+str(key)+"@", str(val))
           fout.write(line)
         for var in list(set(not_found_variables)):
-          out.EXCEPTION(Error.not_found, local_var[s][n]['PTOKEN']+var+local_var[s][n]['PTOKEN'])
+          out.exception_msg(utils.Error.not_found, local_var[s][n]['PTOKEN']+var+local_var[s][n]['PTOKEN'])
   out.close_subsection()
 
 out.close_section()

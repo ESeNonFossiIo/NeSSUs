@@ -1,2 +1,5 @@
 [run]
 source = MaJOrCA,./_lib
+
+[report]
+omit = ./_lib/__init__.py
