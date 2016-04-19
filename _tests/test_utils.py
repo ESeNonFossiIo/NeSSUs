@@ -6,10 +6,16 @@ import os
 
 # Enum Error:
 def test_error():
+  """
+    Test Error Enum Class.
+  """
   assert utils.Error.not_found.value == 1
 
 # Class ReplaceHelper:
 def test_replace_helper():
+  """
+    Test ReplaceHelper Class.
+  """
   # Test for ReplaceHelper.replace
   string = "__TEST__[[]]"
   rh = utils.ReplaceHelper("__")
@@ -26,6 +32,9 @@ def test_replace_helper():
 
 # Class Output:
 def test_output():
+  """
+    Test Output Class.
+  """
   out=utils.Output(5)
   assert out.BAR == "====="
   assert out.bar == "-----"
@@ -52,6 +61,9 @@ def test_output():
 
 # Class ProcessEntry
 def test_process_entry():
+  """
+    Test ProcessEntry Class.
+  """
   out = utils.Output(5)
   pe = utils.ProcessEntry(out, section="section")
   
@@ -68,6 +80,9 @@ def test_process_entry():
 # Class GetValFromConfParser
 import ConfigParser
 def test_get_val_from_conf_parser():
+  """
+    Test GetValFromConfParser Class.
+  """
   out = utils.Output(5)
   config = ConfigParser.RawConfigParser()
   config.add_section('Section1')
@@ -78,6 +93,9 @@ def test_get_val_from_conf_parser():
 
 # Class GetValFromDictionary
 def test_get_val_from_dictionary():
+  """
+    Test GetValFromDictionary Class.
+  """
   out = utils.Output(5)
   dictionary = dict()
   dictionary['item'] = "val"
@@ -88,6 +106,9 @@ def test_get_val_from_dictionary():
   
 # Function get_name_inside:
 def test_get_name_inside():
+  """
+    Test get_name_inside Function.
+  """
   # test1
   string = "val=[num]"
   assert utils.get_name_inside(string, "[", "]") == "num"
