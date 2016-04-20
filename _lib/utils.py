@@ -3,10 +3,9 @@
 """
 
 import os
-from enum import Enum
 
-class Error(Enum):
-  """ Enum class used to deal with errors.  
+class Error(object):
+  """ Class used to deal with errors.  
   
     Members: 
       not_found (int): Error used when a file or more generally 

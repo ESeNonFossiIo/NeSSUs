@@ -4,12 +4,12 @@ sys.path.append("./../_lib/")
 import utils
 import os
 
-# Enum Error:
+# Error Class:
 def test_error():
   """
-    Test Error Enum Class.
+    Test Error Class.
   """
-  assert utils.Error.not_found.value == 1
+  assert utils.Error.not_found == 1
 
 # Class ReplaceHelper:
 def test_replace_helper():
