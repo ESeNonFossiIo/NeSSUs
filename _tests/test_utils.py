@@ -122,3 +122,19 @@ def test_get_name_inside():
   string = "val=__VAL__"
   assert utils.get_name_inside(string, "__VAL__[", "]") == ""
 
+# Class EvalExpression:
+def test_eval_expression():
+  """
+    Test EvalExpression Class.
+  """
+  string = "@EVAL@[for i=0; i<4; i+=1]"
+  ee = utils.EvalExpression(string)
+  ee.grep_expression()
+  assert ee.expression == "for i=0; i<4; i+=1"
+  print ee.evaluate_for_cycle()
+  assert ee() == "0.0 || 1.0 || 2.0 || 3.0"
+  string = "@PWD@"
+  ee = utils.EvalExpression(string)
+  assert ee() == "@PWD@"
+  # assert False
+  

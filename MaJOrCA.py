@@ -106,7 +106,11 @@ for s in sections:
   PE = utils.ProcessEntry(out, section=s)
   # Get all value of this simulation: 
   for v in config.options(s):
-    values.append( [ [v, PE.process(opt)]  for opt in config.get(s, v).split(general['SEP'])] )
+    values_entries = []
+    ee = utils.EvalExpression(config.get(s, v))
+    for opt in ee().split(general['SEP']):
+      values_entries.append([v, PE.process(opt)])
+    values.append(values_entries)
 
   # Evaluate all possibile combiation between values and store this result
   # as a dictionary:

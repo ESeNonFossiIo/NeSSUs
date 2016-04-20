@@ -3,6 +3,7 @@
 """
 
 import os
+import re
 
 class Error(object):
   """ Class used to deal with errors.  
@@ -265,8 +266,8 @@ def get_name_inside(  line,
 
     Args:
       line (str): Text string
-      begin_container (str): This delimiter is before the value to capture.
-      end_container (str): This delimiter is after the value to capture.
+      begin_container (str): This delimiter is the one before the value to capture.
+      end_container (str): This delimiter is the one after the value to capture.
       
     Returns:
       string: value contained between `begin_container` and `end_container`.
@@ -280,3 +281,73 @@ def get_name_inside(  line,
     return line[start:end] 
   else :
     return ""
+
+class EvalExpression(object):
+  """
+    Class used to evaluate a string.
+  """
+  def __init__(self, text, delimiters_start="@EVAL@[", delimiters_end="]", sep="||"):
+    """ Constructor.
+    
+      Args:
+        text (str): text to evaluate (delimiters included).
+        delimiters_start (str): This delimiter is the one before the value to capture..
+        delimiters_end (str): This delimiter is the one after the value to capture.
+    """
+    self.expression = ""
+    self.delimiters_start = delimiters_start
+    self.delimiters_end = delimiters_end
+    self.sep = sep
+    self.text = text
+
+  def grep_expression(self):
+    """ Get the expression to evaluate.
+
+      Get the expression contained between `delimiters_start` and `delimiters_end`.
+      
+      Returns:
+        string: text to evaluate.
+    """
+    self.expression = get_name_inside( self.text, self.delimiters_start, self.delimiters_end)
+
+  def evaluate_for_cycle(self):
+    """ Evaluate a for-cycle expression.
+
+      Assert the expression is a for-cycle and the return its evaluation.
+      Exaple:
+      @EVAL@[for i=0; i<3; i+=1] -> 0 || 1 || 2
+      
+      Returns:
+        string: Evaluation of the for-cycle.
+    """
+    self.grep_expression()
+    
+    for_cycle = self.expression.replace("for"," ").strip().split(";")
+
+    values = []
+    variable, init_value=for_cycle[0].split("=")
+    value = init_value
+    
+    while eval( for_cycle[1].replace(variable, str(value) )):
+      values.append(float(value))
+      value = float( 
+                eval( 
+                  for_cycle[2].replace(variable,  str(value) )
+                              .replace("=", "") 
+                )
+              )
+
+    values_string = ""
+    for i in xrange(len(values)-1):
+      values_string += str(values[i]) + " || "
+    values_string += str(values[len(values)-1])
+    return values_string.strip()
+    
+  def __call__(self):
+    if self.text.find(self.delimiters_start) > -1 and self.text.find(self.delimiters_end) > -1:
+      return self.evaluate_for_cycle()
+    else:
+      return self.text
+    
+    
+  
