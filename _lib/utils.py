@@ -111,7 +111,7 @@ class Output(object):
         txt (str): Text of the message.
     """
     if error == Error.not_found:
-      print '\t{:>20} {:>3} {:12}'.format(str(txt), " -> ", "NOT FOUND") 
+      print '\t{0:>20} {1:>3} {2:12}'.format(str(txt), " -> ", "NOT FOUND") 
     
   def title(self, txt):
     """ Title.
@@ -145,7 +145,7 @@ class Output(object):
         name (str): Name of the variable.
         val (str): Value of the variable.
     """
-    print '\t{:>20} {:>3} {:12}'.format(str(name), "  = ", str(val)) 
+    print '\t{0:>20} {1:>3} {2:12}'.format(str(name), "  = ", str(val)) 
 
 class ProcessEntry(object):
   """
