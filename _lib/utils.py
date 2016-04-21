@@ -4,6 +4,12 @@
 
 import os
 import re
+import sys
+
+# Add path to PUlSe and this module:
+sys.path.append("./_modules/PUlSe/lib/")
+sys.path.append("./../_modules/PUlSe/lib/")
+import PUlSe_string as pstring
 
 class Error(object):
   """ Class used to deal with errors.  
@@ -43,7 +49,7 @@ class ReplaceHelper(object):
     """
     line = line.replace(self.sep+str(src)+self.sep, str(target))    
     if remove_default:
-      val   = get_name_inside(line, "[[", "]]")
+      val   = pstring.get_name_inside(line, "[[", "]]")
       line  = line.replace( "[[" +val+ "]]", "" )
     return line
 
@@ -61,7 +67,7 @@ class ReplaceHelper(object):
     """
     begin = self.sep+src+self.sep+"[["
     end   = "]]"
-    val   = get_name_inside(line, begin, end)
+    val   = pstring.get_name_inside(line, begin, end)
     if val != "":
       line  = line.replace( begin+val+end, val )
     else:
@@ -113,6 +119,16 @@ class Output(object):
     """
     if error == Error.not_found:
       print '\t{0:>20} {1:>3} {2:12}'.format(str(txt), " -> ", "NOT FOUND") 
+
+  @staticmethod
+  def print_dictionary(dictionary):
+    """ Print all entries of a dictionary.
+      
+      Args:
+        dictionary (dict): Dictionary to print.
+    """
+    for key in dictionary:
+      print '\t{0:>20} {1:>3} {2:12}'.format(key, " = ", dictionary[key]) 
     
   def title(self, txt):
     """ Title.
@@ -162,7 +178,17 @@ class ProcessEntry(object):
     """
     self.out = out
     self.section = section
-    
+
+  def process_a_simulation(self, simulation):
+    """ Process a simulation.
+
+      Args:
+        simulaiton (list of dictionaries): Simulation to preocess.
+    """
+    for entry in simulation:
+      for key in entry:
+        entry[key] = self.process(entry[key])
+  
   def process(self, text):
     """ Process a text.
 
@@ -176,7 +202,7 @@ class ProcessEntry(object):
     if return_text.find("PATH") > -1 :
       return_text = os.path.normpath(return_text)
     return_text = return_text.replace("@PWD@", os.getcwd())
-    if self.section != "":
+    if self.section != "" and self.section != "GENERAL":
       return_text = return_text.replace("@SIMULATION@", self.section)
     while return_text.find("@ENV[") > -1 :
       env = return_text[return_text.find("@ENV[")+5:return_text.find("]@")]
@@ -257,31 +283,6 @@ class GetValFromDictionary(object):
       self.out.var(name, value)
     return value
 
-def get_name_inside(  line, 
-                      begin_container="(", 
-                      end_container=")"):
-  """ Get the value inside a container.
-  
-    Capture the text contained between two containers.
-
-    Args:
-      line (str): Text string
-      begin_container (str): This delimiter is the one before the value to capture.
-      end_container (str): This delimiter is the one after the value to capture.
-      
-    Returns:
-      string: value contained between `begin_container` and `end_container`.
-  """
-  assert begin_container!="", " ERROR: `begin_container` is empty."
-  assert end_container!="", " ERROR: `end_container` is empty."
-  size = len(begin_container)
-  start = line.find(begin_container)+size
-  end = line.find(end_container, start)
-  if end > -1 and start > -1:
-    return line[start:end] 
-  else :
-    return ""
-
 class EvalExpression(object):
   """
     Class used to evaluate a string.
@@ -308,7 +309,7 @@ class EvalExpression(object):
       Returns:
         string: text to evaluate.
     """
-    self.expression = get_name_inside( self.text, self.delimiters_start, self.delimiters_end)
+    self.expression = pstring.get_name_inside( self.text, self.delimiters_start, self.delimiters_end)
 
   def evaluate_for_cycle(self):
     """ Evaluate a for-cycle expression.

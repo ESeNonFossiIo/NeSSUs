@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 """
-  TODO
+  MaJOrCA - Multiple JObs CreAtor
 """
 
 from optparse import OptionParser
@@ -17,6 +17,7 @@ import copy
 pulse_dir="./_modules/PUlSe/lib/"
 sys.path.append(pulse_dir)
 import PUlSe_directories as pdir
+import PUlSe_string as pstring
 
 # Parse CLI parameters:
 ################################################################################ 
@@ -52,7 +53,7 @@ if options.new_configuration_file != "":
   
 # Main:
 ################################################################################ 
-PE = utils.ProcessEntry(out)
+
 out.assert_msg( os.path.isfile(options.configuration_file), 
             str(options.configuration_file), "existence" )
 
@@ -64,33 +65,19 @@ config.read(options.configuration_file)
 sections = config.sections()
 # Get data from GENERAL section:
 general_val = utils.GetValFromConfParser(out, config, "GENERAL")
-general=dict()
+general = dict()
 
-for key in config.items("GENERAL"):
-  general[key[0]] = general_val.get(key[0], output=True)
+pstring.fill_dictionary_with_config_parser( dictionary = general, 
+                                            confparser = config, 
+                                            section = "GENERAL" )
 
-# Run folder vars
-general['RUN_FOLDER-LEN']       = general['RUN_FOLDER'].count('$')
-general['RUN_FOLDER']           = general['RUN_FOLDER'].replace('$', '')
-general['RUN_FOLDER-SEP_CHAR']  = general['RUN_FOLDER'][-1]
-general['RUN_FOLDER']           = general['RUN_FOLDER'][0:-1]
-out.var("RUN_FOLDER", general['RUN_FOLDER'])
-out.var("SEP CHAR", general['RUN_FOLDER-SEP_CHAR'])
-out.var("NUM ZEROS", general['RUN_FOLDER-LEN'])
-
-# Jobs name vars:
-general['JOBS_NAME-LEN']      = general['JOBS_NAME'].count('$')
-general['JOBS_NAME']          = general['JOBS_NAME'].replace('$', '')
-general['JOBS_NAME-SEP_CHAR'] = general['JOBS_NAME'][-1]
-general['JOBS_NAME']          = general['JOBS_NAME'][0:-1]
-out.var("JOBS NAME",     general['JOBS_NAME'])
-out.var("SEP CHAR JOBS", general['JOBS_NAME-SEP_CHAR'])
-out.var("JOB NUM ZEROS", general['JOBS_NAME-LEN'])
+out.print_dictionary(dictionary=general)
 
 sections.remove('GENERAL')
 
 # placeholder for NULL entries
 null_token = general['PTOKEN']+"NULL"+general['PTOKEN']
+
 # Define ReplaceHelper (see: lib/utils.py)
 rh = utils.ReplaceHelper(general['PTOKEN'])
 
@@ -102,7 +89,7 @@ for s in sections:
   simulation=[]
   values=[]
   local_vars=[]
-  
+
   PE = utils.ProcessEntry(out, section=s)
   # Get all value of this simulation: 
   for v in config.options(s):
@@ -122,6 +109,8 @@ for s in sections:
         item[1]=null_token
     simulation.append(dict(c))
     local_vars.append(copy.deepcopy(general))
+
+  PE.process_a_simulation(local_vars)
   simulations[s] = simulation
   local_var[s] = local_vars
 
@@ -131,46 +120,48 @@ out.close_section()
 for s in simulations:
   out.title("SIMULATION "+str(s))
   for n in xrange(len(simulations[s])):
+    job = local_var[s][n]
+    
     out.close_subsection()
     dictionary_val = utils.GetValFromDictionary(out, simulations[s][n])
-    local_var[s][n]["EXECUTABLE"] = dictionary_val.get("EXECUTABLE",    output=True)
-    local_var[s][n]["ARGS"] = dictionary_val.get("ARGS",    output=True)
+    job["EXECUTABLE"] = dictionary_val.get("EXECUTABLE",    output=True)
+    job["ARGS"] = dictionary_val.get("ARGS",    output=True)
     bp_prm     = dictionary_val.get("BLUEPRINT_PRM", output=True)
     mode       = dictionary_val.get("MODE",          output=True)
 
     # fix mode:
     if mode == "sh":
-      local_var[s][n]["PBS"] = ""
+      job["PBS"] = ""
     elif mode == "pbs":
-      local_var[s][n]["PBS"] = "\n#PBS -N "
+      job["PBS"] = "\n#PBS -N "
       if dictionary_val.get("PBS_NAME") != null_token :
-        local_var[s][n]["PBS"] += dictionary_val.get("PBS_NAME")
+        job["PBS"] += dictionary_val.get("PBS_NAME")
       else:
-        local_var[s][n]["PBS"] += local_var[s][n]['PRM_FILENAME'].replace(".prm", "")
+        job["PBS"] += job['PRM_FILENAME'].replace(".prm", "")
       if dictionary_val.get("PBS_WALLTIME") != null_token :
-        local_var[s][n]["PBS"] += "\n#PBS -l walltime=" + dictionary_val.get("PBS_WALLTIME")
+        job["PBS"] += "\n#PBS -l walltime=" + dictionary_val.get("PBS_WALLTIME")
       if dictionary_val.get("PBS_NODES") != null_token :
-        local_var[s][n]["PBS"] += "\n#PBS -l " + dictionary_val.get("PBS_NODES")
+        job["PBS"] += "\n#PBS -l " + dictionary_val.get("PBS_NODES")
       if dictionary_val.get("PBS_QUEUE") != null_token :
-        local_var[s][n]["PBS"] += "\n#PBS -q " + dictionary_val.get("PBS_QUEUE") 
+        job["PBS"] += "\n#PBS -q " + dictionary_val.get("PBS_QUEUE") 
       if dictionary_val.get("PBS_MAIL") != null_token :
-        local_var[s][n]["PBS"] += "\n#PBS -M " + dictionary_val.get("PBS_MAIL")
-        local_var[s][n]["PBS"] +=  "\n#PBS -m abe"
-      local_var[s][n]["PBS"] +="\n"
+        job["PBS"] += "\n#PBS -M " + dictionary_val.get("PBS_MAIL")
+        job["PBS"] +=  "\n#PBS -m abe"
+      job["PBS"] +="\n"
     else:
       break    
 
     # create prm folder:
-    local_var[s][n]['FOLDER']=general['BASE_FOLDER']
+    job['FOLDER']=job['BASE_FOLDER']
     for src, target in simulations[s][n].iteritems():
-        local_var[s][n]['FOLDER'] = local_var[s][n]['FOLDER'].replace(local_var[s][n]['PTOKEN']+str(src)+local_var[s][n]['PTOKEN'], target)
+        job['FOLDER'] = job['FOLDER'].replace(job['PTOKEN']+str(src)+job['PTOKEN'], target)
 
-    local_var[s][n]['FOLDER'] = pdir.make_next_dir( progress_dir=local_var[s][n]['RUN_FOLDER'], 
-                            separation_char=general['RUN_FOLDER-SEP_CHAR'], 
-                            base_directory=local_var[s][n]['FOLDER'],
-                            lenght=general['RUN_FOLDER-LEN'])
+    job['FOLDER'] = pdir.make_next_dir( progress_dir=job['RUN_FOLDER'], 
+                            separation_char=job['RUN_FOLDER-SEP_CHAR'], 
+                            base_directory=job['FOLDER'],
+                            lenght=int(job['RUN_FOLDER-LEN']))
 
-    prm=os.path.normpath(local_var[s][n]['FOLDER']+"/"+local_var[s][n]['PRM_FILENAME'])
+    prm=os.path.normpath(job['FOLDER']+"/"+job['PRM_FILENAME'])
     out.var("PRM FILE", prm)
 
     # Write new prm file:
@@ -186,22 +177,22 @@ for s in simulations:
 
     # create job foldes:
     for src, target in simulations[s][n].iteritems():
-        local_var[s][n]['JOBS_FOLDER_NAME'] = local_var[s][n]['JOBS_FOLDER_NAME'].replace(local_var[s][n]['PTOKEN']+str(src)+local_var[s][n]['PTOKEN'], target) 
-    if not os.path.exists(local_var[s][n]['JOBS_FOLDER_NAME']):
-      os.makedirs(local_var[s][n]['JOBS_FOLDER_NAME'])
+        job['JOBS_FOLDER_NAME'] = job['JOBS_FOLDER_NAME'].replace(job['PTOKEN']+str(src)+job['PTOKEN'], target) 
+    if not os.path.exists(job['JOBS_FOLDER_NAME']):
+      os.makedirs(job['JOBS_FOLDER_NAME'])
 
-    local_var[s][n]['JOBS_NAME']=pdir.get_next( 
-                                  local_var[s][n]['JOBS_NAME'], 
-                                  mode, local_var[s][n]['JOBS_FOLDER_NAME'], 
-                                  general['JOBS_NAME-SEP_CHAR'],
-                                  general['JOBS_NAME-LEN'])
-    local_var[s][n]['JOBS_NAME']+="."+mode
-    out.var("JOB FILE", local_var[s][n]['JOBS_FOLDER_NAME']+local_var[s][n]['JOBS_NAME'])
+    job['JOBS_NAME']=pdir.get_next( 
+                                  job['JOBS_NAME'], 
+                                  mode, job['JOBS_FOLDER_NAME'], 
+                                  job['JOBS_NAME-SEP_CHAR'],
+                                  int(job['JOBS_NAME-LEN']))
+    job['JOBS_NAME']+="."+mode
+    out.var("JOB FILE", job['JOBS_FOLDER_NAME']+job['JOBS_NAME'])
 
-    local_var[s][n]['WORK_DIR'] = local_var[s][n]['FOLDER']
+    job['WORK_DIR'] = job['FOLDER']
     
     # Write job file:
-    with open(local_var[s][n]['JOBS_FOLDER_NAME']+local_var[s][n]['JOBS_NAME'], "wt") as fout:
+    with open(job['JOBS_FOLDER_NAME']+job['JOBS_NAME'], "wt") as fout:
       with open("./_template/template.sh", "rt") as fin:
         not_found_variables = []
         for line in fin:  
@@ -218,16 +209,16 @@ for s in simulations:
                         "POSTPROCESS",
                         "PBS",
                         "EXECUTABLE"]:
-            target = local_var[s][n][src]
+            target = job[src]
             line = rh.replace(line, src, target)
             if target.strip() == "" :
-              line  = line.replace( local_var[s][n]['PTOKEN']+src+local_var[s][n]['PTOKEN'], "" )
+              line  = line.replace( job['PTOKEN']+src+job['PTOKEN'], "" )
               not_found_variables.append(src)
-          for key, val in local_var[s][n].iteritems():
+          for key, val in job.iteritems():
             line = line.replace("@"+str(key)+"@", str(val))
           fout.write(line)
         for var in list(set(not_found_variables)):
-          out.exception_msg(utils.Error.not_found, local_var[s][n]['PTOKEN']+var+local_var[s][n]['PTOKEN'])
+          out.exception_msg(utils.Error.not_found, job['PTOKEN']+var+job['PTOKEN'])
   out.close_subsection()
 
 out.close_section()

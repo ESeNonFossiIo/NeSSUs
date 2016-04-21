@@ -47,6 +47,11 @@ def test_output():
   out.exception_msg(utils.Error.not_found, "filename")
   assert True
 
+  dictionary=dict()
+  dictionary["test"]="test"
+  out.print_dictionary(dictionary)
+  assert True
+  
   out.title("Title")
   assert True
 
@@ -77,6 +82,12 @@ def test_process_entry():
   string="@ENV[HOME]@"
   assert pe.process(string) == os.environ['HOME']
 
+  simulation = dict()
+  simulation["test"]="@SIMULATION@"
+  simulations=[simulation]
+  pe.process_a_simulation(simulations)
+  assert simulations[0]["test"] == "section"
+
 # Class GetValFromConfParser
 import ConfigParser
 def test_get_val_from_conf_parser():
@@ -103,24 +114,6 @@ def test_get_val_from_dictionary():
   assert extractor.get("item") == "val"
   assert extractor.get("not") == ""
   assert extractor.get("item", True) == "val"
-  
-# Function get_name_inside:
-def test_get_name_inside():
-  """
-    Test get_name_inside Function.
-  """
-  # test1
-  string = "val=[num]"
-  assert utils.get_name_inside(string, "[", "]") == "num"
-  # test2
-  string = "val=__VAL__[num]"
-  assert utils.get_name_inside(string, "__VAL__[", "]") == "num"
-  # test3
-  string = "val=__VAL__[num]"
-  assert utils.get_name_inside(string, "__VAL__[", "]") == "num"
-  # test4
-  string = "val=__VAL__"
-  assert utils.get_name_inside(string, "__VAL__[", "]") == ""
 
 # Class EvalExpression:
 def test_eval_expression():
