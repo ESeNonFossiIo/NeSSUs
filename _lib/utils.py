@@ -341,7 +341,7 @@ class EvalExpression(object):
     values_string = ""
     for i in xrange(len(values)-1):
       values_string += str(values[i]) + " || "
-    values_string += str(values[len(values)-1])
+    values_string += str(values[-1])
     return values_string.strip()
     
   def __call__(self):
