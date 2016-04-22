@@ -11,6 +11,7 @@ import sys
 import itertools
 import ConfigParser
 import _lib.utils as utils
+import _lib.main as main
 import copy
 
 # Add path to PUlSe and this module:
@@ -25,14 +26,14 @@ parser = OptionParser()
 
 parser.add_option("-f", "--file", 
                   dest="configuration_file",
-                  default="./_template/template.conf",
-                  help="`conf` file. (See _template/template.conf).", 
+                  default="./_conf/template.conf",
+                  help="`conf` file. (See _conf/template.conf).", 
                   metavar="FILE")
 
 parser.add_option("-c", "--conf",
                   dest="new_configuration_file",
                   default="",
-                  help="generate ./filename.conf copying _template/template.conf.", 
+                  help="generate ./filename.conf copying _conf/template.conf.", 
                   metavar="FILE")
 
 (options, args) = parser.parse_args()
@@ -43,12 +44,12 @@ parser.add_option("-c", "--conf",
 out = utils.Output(100)
 out.title("Configuration ")
 
-if options.new_configuration_file != "":
-  out.assert_msg( os.path.isfile("_template/template.conf"), 
-              "_template/template.conf", "existence" )
-  copyfile(  "_template/template.conf",
-              options.new_configuration_file)
-  out.close_section()
+print options.new_configuration_file
+status = main.generate_new_conf_file( 
+            new_file = options.new_configuration_file,
+            old_file = "_conf/template.conf",
+            output = out )
+if status:
   sys.exit(1)
   
 # Main:
@@ -76,17 +77,17 @@ out.print_dictionary(dictionary=general)
 sections.remove('GENERAL')
 
 # placeholder for NULL entries
-null_token = general['PTOKEN']+"NULL"+general['PTOKEN']
+general["NULL_TOKES"] = general['PTOKEN']+"NULL"+general['PTOKEN']
 
 # Define ReplaceHelper (see: lib/utils.py)
 rh = utils.ReplaceHelper(general['PTOKEN'])
 
 # Fill the dictionary simulations with all possibile combination of every 
 # parameter of every single simulation:
-simulations=dict()
+
 local_var=dict()
 for s in sections:
-  simulation=[]
+
   values=[]
   local_vars=[]
 
@@ -106,103 +107,80 @@ for s in sections:
   for c in combinations:
     for item in c:
       if item[1] == '' :
-        item[1]=null_token
-    simulation.append(dict(c))
-    local_vars.append(copy.deepcopy(general))
+        item[1]=general["NULL_TOKES"]
+
+    tmp_dict = copy.deepcopy(general)
+    tmp_dict.update(dict(c))
+    local_vars.append(copy.deepcopy(tmp_dict))
 
   PE.process_a_simulation(local_vars)
-  simulations[s] = simulation
   local_var[s] = local_vars
 
 out.close_section()
 
 # Create folders and jobs:
-for s in simulations:
+for s in local_var:
   out.title("SIMULATION "+str(s))
-  for n in xrange(len(simulations[s])):
-    job = local_var[s][n]
+  for simulation in local_var[s]:
+    job = simulation
     
     out.close_subsection()
-    dictionary_val = utils.GetValFromDictionary(out, simulations[s][n])
-    job["EXECUTABLE"] = dictionary_val.get("EXECUTABLE",    output=True)
-    job["ARGS"] = dictionary_val.get("ARGS",    output=True)
-    bp_prm     = dictionary_val.get("BLUEPRINT_PRM", output=True)
-    mode       = dictionary_val.get("MODE",          output=True)
 
-    # fix mode:
-    if mode == "sh":
-      job["PBS"] = ""
-    elif mode == "pbs":
-      job["PBS"] = "\n#PBS -N "
-      if dictionary_val.get("PBS_NAME") != null_token :
-        job["PBS"] += dictionary_val.get("PBS_NAME")
-      else:
-        job["PBS"] += job['PRM_FILENAME'].replace(".prm", "")
-      if dictionary_val.get("PBS_WALLTIME") != null_token :
-        job["PBS"] += "\n#PBS -l walltime=" + dictionary_val.get("PBS_WALLTIME")
-      if dictionary_val.get("PBS_NODES") != null_token :
-        job["PBS"] += "\n#PBS -l " + dictionary_val.get("PBS_NODES")
-      if dictionary_val.get("PBS_QUEUE") != null_token :
-        job["PBS"] += "\n#PBS -q " + dictionary_val.get("PBS_QUEUE") 
-      if dictionary_val.get("PBS_MAIL") != null_token :
-        job["PBS"] += "\n#PBS -M " + dictionary_val.get("PBS_MAIL")
-        job["PBS"] +=  "\n#PBS -m abe"
-      job["PBS"] +="\n"
-    else:
-      break    
+    # TODO:   - Add a conf file with all varibles name
+    
+    main.sh_pbs_mode(job)
 
     # create prm folder:
-    job['FOLDER']=job['BASE_FOLDER']
-    for src, target in simulations[s][n].iteritems():
-        job['FOLDER'] = job['FOLDER'].replace(job['PTOKEN']+str(src)+job['PTOKEN'], target)
+    for src, target in job.iteritems():
+        job['BASE_FOLDER'] = job['BASE_FOLDER'].replace(job['PTOKEN']+str(src)+job['PTOKEN'], target)
 
-    job['FOLDER'] = pdir.make_next_dir( progress_dir=job['RUN_FOLDER'], 
+    job['BASE_FOLDER'] = pdir.make_next_dir( progress_dir=job['RUN_FOLDER'], 
                             separation_char=job['RUN_FOLDER-SEP_CHAR'], 
-                            base_directory=job['FOLDER'],
+                            base_directory=job['BASE_FOLDER'],
                             lenght=int(job['RUN_FOLDER-LEN']))
-
-    prm=os.path.normpath(job['FOLDER']+"/"+job['PRM_FILENAME'])
+    
+    prm=os.path.normpath(job['BASE_FOLDER']+"/"+job['PRM_FILENAME'])
     out.var("PRM FILE", prm)
 
     # Write new prm file:
     with open(prm, "wt") as fout:
-      with open(bp_prm, "rt") as fin:
+      with open(job["BLUEPRINT_PRM"], "rt") as fin:
         for line in fin:
-            for src, target in simulations[s][n].iteritems():
-              if target != null_token :
+            for src, target in job.iteritems():
+              if target != job["NULL_TOKES"] :
                 line = rh.replace(line, src, target)             
               else:
                 line = rh.replace_with_default_value(line, src)  
             fout.write(line)
 
     # create job foldes:
-    for src, target in simulations[s][n].iteritems():
+    for src, target in job.iteritems():
         job['JOBS_FOLDER_NAME'] = job['JOBS_FOLDER_NAME'].replace(job['PTOKEN']+str(src)+job['PTOKEN'], target) 
+            
     if not os.path.exists(job['JOBS_FOLDER_NAME']):
       os.makedirs(job['JOBS_FOLDER_NAME'])
 
     job['JOBS_NAME']=pdir.get_next( 
                                   job['JOBS_NAME'], 
-                                  mode, job['JOBS_FOLDER_NAME'], 
+                                  job["MODE"], job['JOBS_FOLDER_NAME'], 
                                   job['JOBS_NAME-SEP_CHAR'],
                                   int(job['JOBS_NAME-LEN']))
-    job['JOBS_NAME']+="."+mode
+    job['JOBS_NAME']+="."+job["MODE"]
     out.var("JOB FILE", job['JOBS_FOLDER_NAME']+job['JOBS_NAME'])
 
-    job['WORK_DIR'] = job['FOLDER']
+    job['WORK_DIR'] = job['BASE_FOLDER']
     
     # Write job file:
     with open(job['JOBS_FOLDER_NAME']+job['JOBS_NAME'], "wt") as fout:
-      with open("./_template/template.sh", "rt") as fin:
+      with open("./_conf/template.sh", "rt") as fin:
         not_found_variables = []
         for line in fin:  
-          for src, target in simulations[s][n].iteritems():
-            if target != null_token :  
+          for src, target in job.iteritems():
+            if target != job["NULL_TOKES"] :  
               line = rh.replace(line, src, target)
             else:
               line = rh.replace_with_default_value(line, src) 
-          for src in [  "FOLDER", 
-                        "WORK_DIR",
+          for src in [  "WORK_DIR",
                         "OUTPUT_LOG_FILE", 
                         "ERROR_LOG_FILE",
                         "PREPROCESS",
