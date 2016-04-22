@@ -1,5 +1,5 @@
 """
-  Library used to simplify the code of `create_job.py`
+  Library used to simplify the code of `MaJOrCA.py`.
 """
 
 import os
@@ -199,15 +199,16 @@ class ProcessEntry(object):
         string: Processed text.
     """
     return_text = text
-    if return_text.find("PATH") > -1 :
-      return_text = os.path.normpath(return_text)
     return_text = return_text.replace("@PWD@", os.getcwd())
     if self.section != "" and self.section != "GENERAL":
       return_text = return_text.replace("@SIMULATION@", self.section)
+      return_text = return_text.replace("@HOME@", str(os.path.dirname(os. path.abspath(__file__))[:-4]) )
     while return_text.find("@ENV[") > -1 :
       env = return_text[return_text.find("@ENV[")+5:return_text.find("]@")]
       var = os.environ[env]
       return_text = return_text.replace("@ENV[" + str(env) + "]@", var)
+    if return_text.find("//") > 0 :
+      return_text = os.path.normpath(return_text)
     return return_text.strip()
     
 class GetValFromConfParser(object):

@@ -18,7 +18,6 @@ import copy
 pulse_dir="./_modules/PUlSe/lib/"
 sys.path.append(pulse_dir)
 import PUlSe_directories as pdir
-import PUlSe_string as pstring
 
 # Parse CLI parameters:
 ################################################################################ 
@@ -44,7 +43,6 @@ parser.add_option("-c", "--conf",
 out = utils.Output(100)
 out.title("Configuration ")
 
-print options.new_configuration_file
 status = main.generate_new_conf_file( 
             new_file = options.new_configuration_file,
             old_file = "_conf/template.conf",
@@ -59,22 +57,16 @@ out.assert_msg( os.path.isfile(options.configuration_file),
             str(options.configuration_file), "existence" )
 
 out.var("Conf file", options.configuration_file)
-config = ConfigParser.ConfigParser()
-config.optionxform=str #case sensitive
-config.read(options.configuration_file)
 
-sections = config.sections()
-# Get data from GENERAL section:
-general_val = utils.GetValFromConfParser(out, config, "GENERAL")
+config = main.CP(options.configuration_file)
+system = main.CP("_conf/system.conf")
+
 general = dict()
-
-pstring.fill_dictionary_with_config_parser( dictionary = general, 
-                                            confparser = config, 
-                                            section = "GENERAL" )
+config.fill( dictionary = general, section = "GENERAL" )
 
 out.print_dictionary(dictionary=general)
 
-sections.remove('GENERAL')
+config.remove_section('GENERAL')
 
 # placeholder for NULL entries
 general["NULL_TOKES"] = general['PTOKEN']+"NULL"+general['PTOKEN']
@@ -86,16 +78,16 @@ rh = utils.ReplaceHelper(general['PTOKEN'])
 # parameter of every single simulation:
 
 local_var=dict()
-for s in sections:
+for s in config.get_sections():
 
   values=[]
   local_vars=[]
 
   PE = utils.ProcessEntry(out, section=s)
   # Get all value of this simulation: 
-  for v in config.options(s):
+  for v in config.get_options(s):
     values_entries = []
-    ee = utils.EvalExpression(config.get(s, v))
+    ee = utils.EvalExpression(config[s][v])
     for opt in ee().split(general['SEP']):
       values_entries.append([v, PE.process(opt)])
     values.append(values_entries)
@@ -125,17 +117,14 @@ for s in local_var:
     job = simulation
     
     out.close_subsection()
-
-    # TODO:   - Add a conf file with all varibles name
     
     main.sh_pbs_mode(job)
 
     # create prm folder:
-    for src, target in job.iteritems():
-        job['BASE_FOLDER'] = job['BASE_FOLDER'].replace(job['PTOKEN']+str(src)+job['PTOKEN'], target)
+    main.replace_entry_using_dictionary(job, "BASE_FOLDER")
 
     job['BASE_FOLDER'] = pdir.make_next_dir( progress_dir=job['RUN_FOLDER'], 
-                            separation_char=job['RUN_FOLDER-SEP_CHAR'], 
+                            separation_char=job['RUN_FOLDER-SEP_CHAR'],
                             base_directory=job['BASE_FOLDER'],
                             lenght=int(job['RUN_FOLDER-LEN']))
     
@@ -146,16 +135,11 @@ for s in local_var:
     with open(prm, "wt") as fout:
       with open(job["BLUEPRINT_PRM"], "rt") as fin:
         for line in fin:
-            for src, target in job.iteritems():
-              if target != job["NULL_TOKES"] :
-                line = rh.replace(line, src, target)             
-              else:
-                line = rh.replace_with_default_value(line, src)  
-            fout.write(line)
+          line = main.replace_line_using_dictionary(job, line, rh)
+          fout.write(line)
 
     # create job foldes:
-    for src, target in job.iteritems():
-        job['JOBS_FOLDER_NAME'] = job['JOBS_FOLDER_NAME'].replace(job['PTOKEN']+str(src)+job['PTOKEN'], target) 
+    main.replace_entry_using_dictionary(job, "JOBS_FOLDER_NAME")
             
     if not os.path.exists(job['JOBS_FOLDER_NAME']):
       os.makedirs(job['JOBS_FOLDER_NAME'])
@@ -173,30 +157,19 @@ for s in local_var:
     # Write job file:
     with open(job['JOBS_FOLDER_NAME']+job['JOBS_NAME'], "wt") as fout:
       with open("./_conf/template.sh", "rt") as fin:
-        not_found_variables = []
+        # not_found_variables = []
         for line in fin:  
           for src, target in job.iteritems():
-            if target != job["NULL_TOKES"] :  
-              line = rh.replace(line, src, target)
-            else:
-              line = rh.replace_with_default_value(line, src) 
-          for src in [  "WORK_DIR",
-                        "OUTPUT_LOG_FILE", 
-                        "ERROR_LOG_FILE",
-                        "PREPROCESS",
-                        "POSTPROCESS",
-                        "PBS",
-                        "EXECUTABLE"]:
+            line = main.replace_line_using_dictionary(job, line, rh)
+          for src in system["script"]["DIRS"].split(" "):
             target = job[src]
             line = rh.replace(line, src, target)
-            if target.strip() == "" :
-              line  = line.replace( job['PTOKEN']+src+job['PTOKEN'], "" )
-              not_found_variables.append(src)
-          for key, val in job.iteritems():
-            line = line.replace("@"+str(key)+"@", str(val))
+            # if target.strip() == "" :
+            #   line  = line.replace( job['PTOKEN']+src+job['PTOKEN'], "" )
+            #   not_found_variables.append(src)
           fout.write(line)
-        for var in list(set(not_found_variables)):
-          out.exception_msg(utils.Error.not_found, job['PTOKEN']+var+job['PTOKEN'])
+        # for var in list(set(not_found_variables)):
+          # out.exception_msg(utils.Error.not_found, job['PTOKEN']+var+job['PTOKEN'])
   out.close_subsection()
 
 out.close_section()
