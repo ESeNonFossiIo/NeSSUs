@@ -11,6 +11,61 @@ sys.path.append("./_modules/PUlSe/lib/")
 sys.path.append("./../_modules/PUlSe/lib/")
 import PUlSe_bash_utilities as pbash
 
+def test_cp():
+  """
+    Test CP Class.
+  """
+  cp = main.CP("../_conf/system.conf")
+  dictionary = dict()
+
+  cp.fill(dictionary, "script")
+  assert True
+  
+  cp.get_sections()
+  assert True
+  
+  cp.get_options("script")
+  assert True
+  
+  cp.remove_section("script")
+  assert True
+
+def test_replace_entry_using_dictionary():
+  """ 
+    Test replace_entry_using_dictionary Function.
+  """
+  dictionary = dict()
+  dictionary["PTOKEN"] = "__"
+  dictionary["TEST"] = "@"
+  dictionary["substitute"] = "__TEST__"
+
+  main.replace_entry_using_dictionary(dictionary, "substitute")
+  
+  assert  dictionary["substitute"] == dictionary["TEST"]
+
+def test_replace_line_using_dictionary(): 
+  """ 
+    Test replace_line_using_dictionary Function.
+  """
+  rh = utils.ReplaceHelper("||")
+  dictionary = dict()
+  dictionary["NULL_TOKES"] = "|"
+  dictionary["test1"] = "|"
+  dictionary["test2"] = "-"
+  dictionary["TEST"] = "-TEST-"
+  
+  line = "|"
+  line = main.replace_line_using_dictionary(dictionary, line, rh)
+  assert True
+  
+  line = "-"
+  line = main.replace_line_using_dictionary(dictionary, line, rh)
+  assert True
+  
+  line = "@TEST@"
+  line = main.replace_line_using_dictionary(dictionary, line, rh)
+  assert line == "-TEST-"
+
 def test_generate_new_conf_file():
   """
     Test generate_new_conf_file Function.
