@@ -81,7 +81,9 @@ def test_process_entry():
   assert pe.process(string) == "section"
   string="@ENV[HOME]@"
   assert pe.process(string) == os.environ['HOME']
-
+  string="/home///tmp/"
+  assert pe.process(string) == "/home/tmp"
+  
   simulation = dict()
   simulation["test"]="@SIMULATION@"
   simulations=[simulation]

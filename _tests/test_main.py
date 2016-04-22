@@ -18,6 +18,8 @@ def test_cp():
   cp = main.CP("../_conf/system.conf")
   dictionary = dict()
 
+  assert cp["script"]["DIRS"]
+  
   cp.fill(dictionary, "script")
   assert True
   
