@@ -16,7 +16,7 @@ mpirun __MPIRUN_FLAGS__ \
   __EXECUTABLE__ \
   __ARGS_EXEC__ \
   2>>__ERROR_LOG_FILE__ \
-  | -a tee __OUTPUT_LOG_FILE__
+  | tee -a __OUTPUT_LOG_FILE__
 
 # Postprocess:
 ################################################################################
