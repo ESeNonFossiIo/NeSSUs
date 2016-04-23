@@ -1,3 +1,6 @@
 [submodule "PUlSe"]
 	path = _modules/PUlSe
 	url = https://github.com/ESeNonFossiIo/PUlSe.git
+[submodule "asteval"]
+	path = _module/asteval
+	url = http://github.com/newville/asteval.git

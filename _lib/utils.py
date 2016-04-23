@@ -9,7 +9,11 @@ import sys
 # Add path to PUlSe and this module:
 sys.path.append("./_modules/PUlSe/lib/")
 sys.path.append("./../_modules/PUlSe/lib/")
+sys.path.append("./_modules/_module/asteval/asteval/")
+sys.path.append("./../_modules/_module/asteval/asteval/")
+
 import PUlSe_string as pstring
+from asteval import Interpreter
 
 class Error(object):
   """ Class used to deal with errors.  
@@ -317,35 +321,30 @@ class EvalExpression(object):
 
       Assert the expression is a for-cycle and the return its evaluation.
       Exaple:
-      @EVAL@[for i=0; i<3; i+=1] -> 0 || 1 || 2
+      @EVAL@[i for i in xrange(3)] -> 0 || 1 || 2
       
       Returns:
         string: Evaluation of the for-cycle.
     """
     self.grep_expression()
     
-    for_cycle = self.expression.replace("for"," ").strip().split(";")
-
     values = []
-    variable, init_value=for_cycle[0].split("=")
-    value = init_value
-    
-    while eval( for_cycle[1].replace(variable, str(value) )):
-      values.append(float(value))
-      value = float( 
-                eval( 
-                  for_cycle[2].replace(variable,  str(value) )
-                              .replace("=", "") 
-                )
-              )
+    aeval = Interpreter()
+    values = aeval("["+str(self.expression)+"]")
 
     values_string = ""
     for i in xrange(len(values)-1):
-      values_string += str(values[i]) + " || "
+      values_string += str(values[i]) + " " + self.sep + " "
     values_string += str(values[-1])
+    
     return values_string.strip()
     
   def __call__(self):
+    """ __call__ method.
+      
+      Returns:
+        string: The evaluation of the text.
+    """
     if self.text.find(self.delimiters_start) > -1 and self.text.find(self.delimiters_end) > -1:
       return self.evaluate_for_cycle()
     else:

@@ -122,12 +122,11 @@ def test_eval_expression():
   """
     Test EvalExpression Class.
   """
-  string = "@EVAL@[for i=0; i<4; i+=1]"
+  string = "@EVAL@[i for i in range(4)]"
   ee = utils.EvalExpression(string)
   ee.grep_expression()
-  assert ee.expression == "for i=0; i<4; i+=1"
-  print ee.evaluate_for_cycle()
-  assert ee() == "0.0 || 1.0 || 2.0 || 3.0"
+  assert ee.expression == "i for i in range(4)"
+  assert ee() == "0 || 1 || 2 || 3"
   string = "@PWD@"
   ee = utils.EvalExpression(string)
   assert ee() == "@PWD@"
