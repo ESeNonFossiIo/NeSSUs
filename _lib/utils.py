@@ -330,7 +330,10 @@ class EvalExpression(object):
       from asteval import Interpreter
       aeval = Interpreter()
       values = aeval("["+str(self.expression)+"]")
-      assert values != "["+str(self.expression)+"]"
+      print "-->" 
+      print  type(values)
+      if len(values) == 0:
+        raise ImportError
       
       values_string = ""
       for i in xrange(len(values)-1):
@@ -339,8 +342,8 @@ class EvalExpression(object):
       
       return values_string.strip()
 
-    except ImportError :
-      print  " ERROR: `aeval` not found."
+    except ImportError:
+      print  " ERROR: There are problems with `aeval`. "
       return self.grep_expression()
     
   def __call__(self):

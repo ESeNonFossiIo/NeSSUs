@@ -130,5 +130,10 @@ def test_eval_expression():
   string = "@PWD@"
   ee = utils.EvalExpression(string)
   assert ee() == "@PWD@"
-  # assert False
+
+  string = "@EVAL@[]"
+  ee = utils.EvalExpression(string)
+  ee.grep_expression()
+  assert ee.expression == ""
+  assert not ee()
   
