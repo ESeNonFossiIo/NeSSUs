@@ -150,12 +150,13 @@ for s in local_var:
                                   job['JOBS_NAME-SEP_CHAR'],
                                   int(job['JOBS_NAME-LEN']))
     job['JOBS_NAME']+="."+job["MODE"]
-    out.var("JOB FILE", job['JOBS_FOLDER_NAME']+job['JOBS_NAME'])
+    
+    out.var("JOB FILE", job['JOBS_FOLDER_NAME']+"/"+job['JOBS_NAME'])
 
     job['WORK_DIR'] = job['BASE_FOLDER']
     
     # Write job file:
-    with open(job['JOBS_FOLDER_NAME']+job['JOBS_NAME'], "wt") as fout:
+    with open(job['JOBS_FOLDER_NAME']+"/"+job['JOBS_NAME'], "wt") as fout:
       with open("./_conf/template.sh", "rt") as fin:
         # not_found_variables = []
         for line in fin:  
