@@ -332,7 +332,7 @@ class EvalExpression(object):
       values = aeval("["+str(self.expression)+"]")
       print "-->" 
       print  type(values)
-      if len(values) == 0:
+      if not values:
         raise ImportError
       
       values_string = ""
