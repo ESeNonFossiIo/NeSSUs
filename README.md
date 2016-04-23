@@ -4,6 +4,11 @@
 
 [![Build Status](https://travis-ci.org/ESeNonFossiIo/MaJOrCA.svg?branch=master)](https://travis-ci.org/ESeNonFossiIo/MaJOrCA) [![Coverage Status](https://coveralls.io/repos/github/ESeNonFossiIo/MaJOrCA/badge.svg?branch=master)](https://coveralls.io/github/ESeNonFossiIo/MaJOrCA?branch=master) [![codecov.io](https://codecov.io/github/ESeNonFossiIo/MaJOrCA/coverage.svg?branch=master)](https://codecov.io/github/ESeNonFossiIo/MaJOrCA?branch=master) [![Code Issues](https://www.quantifiedcode.com/api/v1/project/18dfccfa2b8b4c36bc65aa7dd95aaba4/badge.svg)](https://www.quantifiedcode.com/app/project/18dfccfa2b8b4c36bc65aa7dd95aaba4)
 
+# Setup
+
+  - `pip install asteval` [Not mandatory]
+  - `make update`
+
 # Introduction
 
 MaJOrCA is a generator of `prm` files from a blueprint `prm` file

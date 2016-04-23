@@ -9,11 +9,8 @@ import sys
 # Add path to PUlSe and this module:
 sys.path.append("./_modules/PUlSe/lib/")
 sys.path.append("./../_modules/PUlSe/lib/")
-sys.path.append("./_modules/_module/asteval/asteval/")
-sys.path.append("./../_modules/_module/asteval/asteval/")
 
 import PUlSe_string as pstring
-from asteval import Interpreter
 
 class Error(object):
   """ Class used to deal with errors.  
@@ -329,15 +326,22 @@ class EvalExpression(object):
     self.grep_expression()
     
     values = []
-    aeval = Interpreter()
-    values = aeval("["+str(self.expression)+"]")
+    try:
+      from asteval import Interpreter
+      aeval = Interpreter()
+      values = aeval("["+str(self.expression)+"]")
+      assert values != "["+str(self.expression)+"]"
+      
+      values_string = ""
+      for i in xrange(len(values)-1):
+        values_string += str(values[i]) + " " + self.sep + " "
+      values_string += str(values[-1])
+      
+      return values_string.strip()
 
-    values_string = ""
-    for i in xrange(len(values)-1):
-      values_string += str(values[i]) + " " + self.sep + " "
-    values_string += str(values[-1])
-    
-    return values_string.strip()
+    except ImportError :
+      print  " ERROR: `aeval` not found."
+      return self.grep_expression()
     
   def __call__(self):
     """ __call__ method.
