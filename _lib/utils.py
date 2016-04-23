@@ -330,8 +330,7 @@ class EvalExpression(object):
       from asteval import Interpreter
       aeval = Interpreter()
       values = aeval("["+str(self.expression)+"]")
-      print "-->" 
-      print  type(values)
+
       if not values:
         raise ImportError
       

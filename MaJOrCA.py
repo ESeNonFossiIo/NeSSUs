@@ -35,6 +35,12 @@ parser.add_option("-c", "--conf",
                   help="generate ./filename.conf copying _conf/template.conf.", 
                   metavar="FILE")
 
+parser.add_option("-j", "--jobs_file",
+                  dest="jobs_file",
+                  default=False,
+                  help="generate launch.sh.", 
+                  metavar="FILE")
+                  
 (options, args) = parser.parse_args()
 
 # Preliminary operations:
@@ -74,9 +80,11 @@ general["NULL_TOKES"] = general['PTOKEN']+"NULL"+general['PTOKEN']
 # Define ReplaceHelper (see: lib/utils.py)
 rh = utils.ReplaceHelper(general['PTOKEN'])
 
+if options.jobs_file:
+  with open("./launch.sh", "wt") as fout:
+    fout.write("#!/bin/bash\n\n")
 # Fill the dictionary simulations with all possibile combination of every 
 # parameter of every single simulation:
-
 local_var=dict()
 for s in config.get_sections():
 
@@ -152,6 +160,14 @@ for s in local_var:
     job['JOBS_NAME']+="."+job["MODE"]
     
     out.var("JOB FILE", job['JOBS_FOLDER_NAME']+"/"+job['JOBS_NAME'])
+
+    if options.jobs_file:
+      with open("./launch.sh", "at") as fout:
+        if job["MODE"] == "sh":
+          fout.write("bash ")
+        else:
+          fout.write("qsub ") 
+        fout.write(job['JOBS_FOLDER_NAME']+"/"+job['JOBS_NAME']+"\n")
 
     job['WORK_DIR'] = job['BASE_FOLDER']
     
