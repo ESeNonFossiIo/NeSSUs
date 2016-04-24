@@ -123,3 +123,32 @@ def test_sh_pbs_mode():
   test['PRM_FILENAME'] = "PBS_NAME"
   main.sh_pbs_mode(test)
   assert test["PBS"] == result
+
+def test_create_jobs_files():
+  """
+    Test create_jobs_files Function.
+  """
+  out=utils.Output(5)
+  simulations = dict()
+  simulations["s1"]=[dict()]
+  simulations["s2"]=[dict()]
+  
+  simulations["s1"][0]["MODE"] = "sh"
+  simulations["s1"][0]["LAUNCH_JOBS_NAME"] = "launch_s1"
+  simulations["s1"][0]["JOBS_FOLDER_NAME"] = "_tmp/"
+  simulations["s1"][0]["JOBS_NAME"] = "test"
+  
+  simulations["s2"][0]["MODE"] = "pbs"
+  simulations["s2"][0]["LAUNCH_JOBS_NAME"] = "launch_s2"
+  simulations["s2"][0]["JOBS_FOLDER_NAME"] = "_tmp/"
+  simulations["s2"][0]["JOBS_NAME"] = "test"
+  
+  main.create_jobs_files(True, simulations, out)
+
+  assert os.path.isfile("./launch_s1.sh")
+  pbash.rm("launch_s1.sh")
+  
+  assert os.path.isfile("./launch_s2.sh") 
+  pbash.rm("launch_s2.sh")
+
+          

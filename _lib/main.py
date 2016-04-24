@@ -184,3 +184,27 @@ def sh_pbs_mode(job):
       job["PBS"] += "\n#PBS -M " + job["PBS_MAIL"]
       job["PBS"] +=  "\n#PBS -m abe"
     job["PBS"] +="\n"
+
+def create_jobs_files( bool_create, simulations, out):
+  """ Create script to launch all jobs.
+
+    Create script to launch all jobs.
+
+    Args:
+        bool_create (bool): State if create jobs files. 
+        simulations (dict of list of dict): Contain all data of simulations.  
+        out (Output): Output file used to print logs.
+  """
+  if bool_create:
+    out.title("JOBS FILE ")
+    for s in simulations:
+      with open(simulations[s][0]["LAUNCH_JOBS_NAME"]+".sh", "wt") as fout:
+        out.section(" Generate: " + simulations[s][0]["LAUNCH_JOBS_NAME"]+".sh")
+        fout.write("#!/bin/bash\n\n")
+        for simulation in simulations[s]:
+          job = simulation
+          if job["MODE"] == "sh":
+            fout.write("bash ")
+          else:
+            fout.write("qsub ") 
+          fout.write(job['JOBS_FOLDER_NAME']+"/"+job['JOBS_NAME']+"\n")

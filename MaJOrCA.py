@@ -36,10 +36,10 @@ parser.add_option("-c", "--conf",
                   metavar="FILE")
 
 parser.add_option("-j", "--jobs_file",
-                  dest="jobs_file",
+                  action='store_true',
                   default=False,
-                  help="generate launch.sh.", 
-                  metavar="FILE")
+                  dest="jobs_file",
+                  help="generate launch.sh.")
                   
 (options, args) = parser.parse_args()
 
@@ -80,9 +80,7 @@ general["NULL_TOKES"] = general['PTOKEN']+"NULL"+general['PTOKEN']
 # Define ReplaceHelper (see: lib/utils.py)
 rh = utils.ReplaceHelper(general['PTOKEN'])
 
-if options.jobs_file:
-  with open("./launch.sh", "wt") as fout:
-    fout.write("#!/bin/bash\n\n")
+
 # Fill the dictionary simulations with all possibile combination of every 
 # parameter of every single simulation:
 local_var=dict()
@@ -161,14 +159,6 @@ for s in local_var:
     
     out.var("JOB FILE", job['JOBS_FOLDER_NAME']+"/"+job['JOBS_NAME'])
 
-    if options.jobs_file:
-      with open("./launch.sh", "at") as fout:
-        if job["MODE"] == "sh":
-          fout.write("bash ")
-        else:
-          fout.write("qsub ") 
-        fout.write(job['JOBS_FOLDER_NAME']+"/"+job['JOBS_NAME']+"\n")
-
     job['WORK_DIR'] = job['BASE_FOLDER']
     
     # Write job file:
@@ -190,3 +180,7 @@ for s in local_var:
   out.close_subsection()
 
 out.close_section()
+
+# Create Jobs file:
+main.create_jobs_files( options.jobs_file, local_var, out)
+          

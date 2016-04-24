@@ -141,6 +141,16 @@ class Output(object):
     print " " + str(txt)
     print self.BaR
 
+  def section(self, txt):
+    """ Section.
+      
+      Args:
+        txt (str): Text of the section.
+    """
+    print self.bar
+    print " " + str(txt)
+    print self.bar
+    
   def close_section(self):
     """ Close a section.
       

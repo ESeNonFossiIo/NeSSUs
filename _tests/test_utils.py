@@ -55,6 +55,9 @@ def test_output():
   out.title("Title")
   assert True
 
+  out.section("Title")
+  assert True
+  
   out.close_section()
   assert True
 
