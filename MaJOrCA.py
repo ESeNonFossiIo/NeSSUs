@@ -137,9 +137,10 @@ for s in local_var:
                             base_directory=job['BASE_FOLDER'],
                             lenght=int(job['RUN_FOLDER-LEN']))
     
+    # PRM FILE:
     prm=os.path.normpath(job['BASE_FOLDER']+"/"+job['PRM_FILENAME'])
     out.var("PRM FILE", prm)
-
+    
     # Write new prm file:
     with open(prm, "wt") as fout:
       with open(job["BLUEPRINT_PRM"], "rt") as fin:
@@ -180,6 +181,14 @@ for s in local_var:
           fout.write(line)
         # for var in list(set(not_found_variables)):
           # out.exception_msg(utils.Error.not_found, job['PTOKEN']+var+job['PTOKEN'])
+
+    # VARIABLES LOG:
+    variables_log_file=os.path.normpath(job['BASE_FOLDER']+"/"+job['VARIABLES_LOG_FILE'])
+    with open(variables_log_file, "wt") as fout:
+      for src, target in job.iteritems():
+        fout.write('{0:30s} = {1:30s} \n'.format(src,target) )
+    out.var("Variables LOG", variables_log_file)
+    
   out.close_subsection()
 
 out.close_section()
