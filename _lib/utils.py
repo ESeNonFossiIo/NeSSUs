@@ -11,6 +11,7 @@ sys.path.append("./_modules/PUlSe/lib/")
 sys.path.append("./../_modules/PUlSe/lib/")
 
 import PUlSe_string as pstring
+import PUlSe_color as pcolor
 
 class Error(object):
   """ Class used to deal with errors.  
@@ -137,8 +138,9 @@ class Output(object):
       Args:
         txt (str): Text of the title.
     """
+    style = pcolor.FormattedText("bold","red", "black")
     print self.BaR
-    print " " + str(txt)
+    print " " + str(style.write(txt))
     print self.BaR
 
   def section(self, txt):
@@ -173,7 +175,8 @@ class Output(object):
         name (str): Name of the variable.
         val (str): Value of the variable.
     """
-    print '\t{0:>20} {1:>3} {2:12}'.format(str(name), "  = ", str(val)) 
+    style = pcolor.FormattedText("italics","white", "black")
+    print '\t{0:>20} {1:>3} {2:12}'.format(str(name), "  = ", str(style.write(val))) 
 
 class ProcessEntry(object):
   """
