@@ -74,8 +74,10 @@ out.print_dictionary(dictionary=general)
 
 config.remove_section('GENERAL')
 
-for section_to_remove in general["SECTIONS_DISABLED"].split(general["SEP"]):
-  config.remove_section(section_to_remove.strip())
+sections_to_remove = general["SECTIONS_DISABLED"].split(general["SEP"])
+if sections_to_remove[0].strip() != "":
+  for section_to_remove in sections_to_remove:
+    config.remove_section(section_to_remove.strip())
 
 # placeholder for NULL entries
 general["NULL_TOKES"] = general['PTOKEN']+"NULL"+general['PTOKEN']
