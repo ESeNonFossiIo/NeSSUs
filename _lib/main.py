@@ -69,6 +69,10 @@ class CP(object):
       Args:
         section (str): Name of the section to remove. 
     """
+    assert section in self.sections, "\n\n"\
+      + "==========================================\n"\
+      + "  --> '{0}' is not in sections            \n".format(section)\
+      + "==========================================\n"
     self.sections.remove(section)
 
   def get_sections(self):
